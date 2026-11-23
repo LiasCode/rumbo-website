@@ -1,0 +1,150 @@
+---
+title: Un harness per agenti minimale e open source per il tuo terminale
+description: rumbo è un harness per agenti minimale e open source. Dagli un compito e qualsiasi modello, Claude, OpenAI, ChatGPT o uno locale, e lavora con quattro strumenti finché il compito è finito. Sessioni che puoi rigiocare, provider e interfacce che puoi sostituire.
+template: splash
+head:
+  - tag: title
+    content: rumbo · Un harness per agenti minimale e open source per il tuo terminale
+hero:
+  title: Un harness per agenti minimale per il tuo terminale
+  tagline: Dai a rumbo un compito e qualsiasi modello. Legge, scrive, modifica ed esegue comandi finché il lavoro è fatto, e conserva una sessione che puoi leggere, rigiocare e diramare.
+  image:
+    file: ../../../assets/logo.svg
+    alt: La bussola di rumbo
+  actions:
+    - text: Inizia
+      link: /it/start/quick-start/
+      icon: right-arrow
+    - text: Metti una stella su GitHub
+      link: https://github.com/LiasCode/rumbo
+      icon: github
+      variant: minimal
+---
+
+import { Card, CardGrid, Code, LinkCard } from '@astrojs/starlight/components';
+import release from '../../../generated/release.json';
+
+export const install = `go install github.com/LiasCode/rumbo/cmd/rumbo@latest   # or download rumbo ${release.version} for Linux or macOS
+
+export ANTHROPIC_API_KEY=...
+rumbo "add a --json flag to the export command"   # one task, in this project
+rumbo                                             # or the terminal UI`;
+
+<Code code={install} lang="sh" title="Terminal" frame="terminal" />
+
+## Perché rumbo
+
+<CardGrid>
+	<Card title="Qualsiasi modello, interfaccia o linguaggio" icon="puzzle">
+		I provider e le interfacce sono programmi che parlano un piccolo protocollo JSON-RPC su stdio.
+		Quelli integrati usano gli stessi protocolli di quelli che scrivi tu; nessuno ha scorciatoie.
+	</Card>
+	<Card title="Una cronologia che puoi rigiocare" icon="document">
+		Una sessione è un registro in sola aggiunta che puoi leggere. Ogni richiesta inviata al modello
+		si può ricostruire da esso, un'esecuzione interrotta riprende da dove si era fermata e un ramo
+		riparte da uno qualsiasi dei tuoi messaggi.
+	</Card>
+	<Card title="Pensato per la cache del provider" icon="rocket">
+		Ogni richiesta estende la precedente, così il provider la legge dalla sua cache. rumbo ti avvisa
+		quando una richiesta la manca, perché il resto si paga di nuovo.
+	</Card>
+	<Card title="Un host, molte sessioni" icon="list-format">
+		Le esecuzioni continuano in altre sessioni mentre lavori in una nuova, e puoi dire qualcosa a
+		un'esecuzione senza fermarla.
+	</Card>
+	<Card title="I provider si descrivono da soli" icon="setting">
+		I loro modelli, opzioni e funzioni, fino a un accesso che ti chiede un codice, compaiono in ogni
+		interfaccia senza che l'interfaccia li conosca.
+	</Card>
+	<Card title="Piccolo e generale" icon="star">
+		Un prompt di sistema breve e fisso, quattro strumenti, nessuna telemetria. Non conosce alcun
+		tipo di lavoro: fa ciò che chiedono il tuo compito e il tuo `AGENTS.md`, che sia programmare o
+		no.
+	</Card>
+</CardGrid>
+
+## Come funziona
+
+<div class="diagram">
+	<img
+		src="/diagrams/how-it-works.svg"
+		alt="Le interfacce parlano l'Agent Frontend Protocol con l'host di rumbo, che esegue il ciclo dell'agente con quattro strumenti, conserva ogni sessione come un registro in sola aggiunta e chiede ogni messaggio a un provider tramite l'Agent Provider Protocol."
+		width="1000"
+		height="520"
+		loading="lazy"
+	/>
+</div>
+
+L'host è l'unica parte che è sempre rumbo. Esegue il ciclo: chiede a un provider il messaggio
+successivo, esegue gli strumenti che il modello chiama (`read`, `write`, `edit` e `bash`) e ripete
+finché il modello non smette di chiamare strumenti. L'interfaccia che usi e il modello dietro sono
+programmi separati che puoi sostituire. Maggiori dettagli nell'[architettura](/it/reference/architecture/).
+
+## I modelli che usi già
+
+<CardGrid>
+	<Card title="Anthropic">
+		I modelli Claude tramite l'API, con una chiave API, il tuo profilo `ant` o una chiave data a
+		`/login`.
+	</Card>
+	<Card title="OpenAI">
+		La Responses API di OpenAI, di cui i modelli di ragionamento hanno bisogno per usare strumenti
+		con un livello di impegno.
+	</Card>
+	<Card title="Abbonamento ChatGPT">
+		Accedi con ChatGPT e usa il tuo abbonamento invece di una chiave API, come OpenAI offre alle app
+		open source.
+	</Card>
+	<Card title="Modelli locali" icon="laptop">
+		Qualsiasi server compatibile con Chat Completions di OpenAI, come Ollama, llama.cpp o vLLM.
+	</Card>
+</CardGrid>
+
+Oppure [scrivi un provider](/it/extend/provider/) per qualsiasi altro, in qualsiasi linguaggio. Vedi
+[modelli e provider](/it/guides/providers/).
+
+## Usalo a modo tuo
+
+<CardGrid>
+	<LinkCard
+		title="Interfaccia da terminale"
+		description="Le sessioni in una barra laterale, la conversazione, una palette di comandi e ciò che è cambiato in Git."
+		href="/it/guides/terminal-ui/"
+	/>
+	<LinkCard
+		title="Script e pipe"
+		description="Testo semplice in uscita, l'avanzamento su stderr e un codice di uscita che uno script può controllare."
+		href="/it/guides/scripting/"
+	/>
+	<LinkCard
+		title="App desktop"
+		description="rumbo-gui: tutti i progetti e le sessioni in una finestra, senza terminale."
+		href="/it/guides/desktop-app/"
+	/>
+	<LinkCard
+		title="La tua interfaccia"
+		description="Un'estensione per l'editor, un bot o qualsiasi altra cosa che parli JSON-RPC."
+		href="/it/extend/front-end/"
+	/>
+</CardGrid>
+
+## Ciò che lascia fuori, di proposito
+
+rumbo è un harness per agenti generale, e queste sono scelte, non lacune. Non giudica il lavoro del
+modello, non invia contesto che nessuno ha chiesto, non limita ciò che l'agente può fare e non traccia i
+tuoi file. Non c'è modalità di pianificazione, né subagenti, né richieste di permesso: una shell arriva
+a tutto il resto, e ciò di cui un compito ha bisogno viene dal compito e dalle tue istruzioni. Scopri
+perché in [progettazione](/it/concepts/design/).
+
+<CardGrid>
+	<LinkCard
+		title="Installa rumbo"
+		description={`rumbo ${release.version} per Linux e macOS, oppure go install.`}
+		href="/it/start/installation/"
+	/>
+	<LinkCard
+		title="Leggi il codice"
+		description="Con licenza MIT, su GitHub. Issue e stelle sono benvenute."
+		href="https://github.com/LiasCode/rumbo"
+	/>
+</CardGrid>

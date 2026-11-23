@@ -1,0 +1,71 @@
+---
+title: Installation
+description: Install rumbo on Linux or macOS from a release archive or with go install, and find where it keeps its configuration, credentials, and sessions.
+---
+
+import { Code, Tabs, TabItem } from '@astrojs/starlight/components';
+import release from '../../../generated/release.json';
+
+export const archive = (platform) => `rumbo-${release.version}-${platform}`;
+
+export const download = (
+	platform,
+) => `curl -LO https://github.com/LiasCode/rumbo/releases/download/v${release.version}/${archive(platform)}.tar.gz
+tar -xzf ${archive(platform)}.tar.gz
+install -m 755 ${archive(platform)}/rumbo ~/.local/bin/rumbo   # or anywhere on your PATH`;
+
+rumbo is a single binary for Linux and macOS, on amd64 and arm64. Windows is not supported.
+
+## From a release
+
+Each [release](https://github.com/LiasCode/rumbo/releases) has an archive per platform, with the
+binary, the README, the changelog, and the license, and a `SHA256SUMS` file to check them. The
+latest is rumbo {release.version}, from {release.date}.
+
+<Tabs syncKey="platform">
+	<TabItem label="Linux (amd64)">
+		<Code code={download('linux-amd64')} lang="sh" />
+	</TabItem>
+	<TabItem label="Linux (arm64)">
+		<Code code={download('linux-arm64')} lang="sh" />
+	</TabItem>
+	<TabItem label="macOS (Apple silicon)">
+		<Code code={download('darwin-arm64')} lang="sh" />
+	</TabItem>
+	<TabItem label="macOS (Intel)">
+		<Code code={download('darwin-amd64')} lang="sh" />
+	</TabItem>
+</Tabs>
+
+## With Go
+
+With Go 1.27.3 or later:
+
+```sh
+go install github.com/LiasCode/rumbo/cmd/rumbo@latest
+```
+
+## Check it
+
+```sh
+rumbo version
+```
+
+It prints the version, and the version of the protocols it speaks.
+
+## Where rumbo keeps things
+
+Everything rumbo keeps is a file a person can read.
+
+| What                                        | Linux                            | macOS                                              |
+| ------------------------------------------- | -------------------------------- | -------------------------------------------------- |
+| What you set, in `config.yaml`              | `~/.config/rumbo/`               | `~/Library/Application Support/rumbo/`             |
+| Your instructions and skills                | `~/.config/rumbo/`               | `~/Library/Application Support/rumbo/`             |
+| Keys and sign-ins of the built-in providers | `~/.config/rumbo/credentials/`   | `~/Library/Application Support/rumbo/credentials/` |
+| Sessions, one directory each                | `~/.local/share/rumbo/sessions/` | `~/.local/share/rumbo/sessions/`                   |
+
+To uninstall rumbo, delete the binary, and these directories if you no longer want what they hold.
+
+## Next
+
+[Run your first task](/start/quick-start/), after reading [before you run it](/start/safety/).

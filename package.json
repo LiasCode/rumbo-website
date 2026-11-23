@@ -1,0 +1,32 @@
+{
+	"name": "rumbo-web",
+	"version": "0.0.1",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"sync": "bun scripts/sync-reference.ts",
+		"dev": "bun run sync && astro dev",
+		"build": "bun run sync && astro build",
+		"preview": "astro preview",
+		"check": "bun run sync && astro check",
+		"format": "oxfmt",
+		"format:check": "oxfmt --check",
+		"lint": "oxlint",
+		"verify": "bun run format:check && bun run lint && bun run translations && bun run check && bun run build",
+		"og": "resvg -w 1200 design/og.svg public/og.png",
+		"astro": "astro",
+		"translations": "bun scripts/check-translations.ts"
+	},
+	"dependencies": {
+		"@astrojs/starlight": "^0.43.1",
+		"astro": "^7.3.6",
+		"sharp": "^0.35.3"
+	},
+	"devDependencies": {
+		"@astrojs/check": "^0.9.12",
+		"oxfmt": "^0.79.0",
+		"oxlint": "^1.94.0",
+		"starlight-links-validator": "^0.27.0",
+		"typescript": "^6.0.3"
+	}
+}
