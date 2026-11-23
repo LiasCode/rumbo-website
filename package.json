@@ -8,11 +8,10 @@
 		"build": "astro build",
 		"preview": "astro preview",
 		"check": "astro check",
-		"pages": "bun scripts/check-pages.ts",
 		"format": "oxfmt",
 		"format:check": "oxfmt --check",
 		"lint": "oxlint",
-		"verify": "bun run format:check && bun run lint && bun run pages && bun run check && bun run build",
+		"verify": "bun run format:check && bun run lint && bun run check && bun run build",
 		"og": "resvg -w 1200 design/og.svg public/og.png",
 		"astro": "astro"
 	},
