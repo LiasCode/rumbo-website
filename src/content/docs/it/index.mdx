@@ -22,7 +22,7 @@ hero:
 ---
 
 import { Card, CardGrid, Code, LinkCard } from '@astrojs/starlight/components';
-import release from '../../../generated/release.json';
+import { release } from '../../../site.mjs';
 
 export const install = `go install github.com/LiasCode/rumbo/cmd/rumbo@latest   # or download rumbo ${release.version} for Linux or macOS
 

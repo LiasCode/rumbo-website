@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 520" width="1000" height="520" role="img" aria-labelledby="title desc">
+  <title id="title">How rumbo works</title>
+  <desc id="desc">Front ends such as the terminal UI, a plain printer, an editor, or one you write speak the Agent Frontend Protocol with the rumbo host: tasks and steers go in, events come out. The host runs the agent loop: it builds each request from the session, asks a provider for a message, and runs its tool calls, until the model calls no tool. It has four tools, read, write, edit, and bash, keeps each session as an append-only log in a file you can read, sends the environment, the AGENTS.md files, and what each skill is for as context, and applies settings from the system down to the session. Providers such as anthropic, openai, or one you write speak the Agent Provider Protocol with the host: the conversation goes in, the next message comes out. Every one of them is a separate program, the built-in ones included.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2328; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .head { font-size: 15px; font-weight: 600; }
+    .name { font-size: 14px; font-weight: 600; }
+    .step { font-size: 13px; }
+    .sub, .small, .label { font-size: 12px; fill: #59636e; }
+    .card { fill: #ffffff; stroke: #d0d7de; }
+    .front { fill: #ddf4ff; stroke: #0969da; }
+    .front-ink { fill: #0969da; }
+    .prov { fill: #fff1e5; stroke: #bc4c00; }
+    .prov-ink { fill: #bc4c00; }
+    .yours { stroke-dasharray: 5 4; }
+    .host { fill: #f6f8fa; stroke: #8c959f; }
+    .loop { fill: #ffffff; stroke: #d0d7de; }
+    .chip { fill: #eaeef2; }
+    .wire { stroke: #59636e; stroke-width: 1.5; fill: none; }
+    .tip { fill: #59636e; }
+    @media (prefers-color-scheme: dark) {
+      text { fill: #e6edf3; }
+      .sub, .small, .label { fill: #9198a1; }
+      .card { fill: #0d1117; stroke: #30363d; }
+      .front { fill: #0c2d6b; stroke: #4493f8; }
+      .front-ink { fill: #4493f8; }
+      .prov { fill: #3d1d00; stroke: #f0883e; }
+      .prov-ink { fill: #f0883e; }
+      .host { fill: #161b22; stroke: #6e7681; }
+      .loop { fill: #0d1117; stroke: #30363d; }
+      .chip { fill: #262c36; }
+      .wire { stroke: #9198a1; }
+      .tip { fill: #9198a1; }
+    }
+  </style>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" class="tip"/>
+    </marker>
+  </defs>
+
+  <rect class="card" x="0.5" y="0.5" width="999" height="519" rx="16"/>
+
+  <!-- Front ends -->
+  <text class="head front-ink" x="124" y="52" text-anchor="middle">Front ends</text>
+
+  <rect class="front" x="24" y="72" width="200" height="52" rx="10"/>
+  <text class="name mono" x="40" y="95">tui</text>
+  <text class="sub" x="40" y="113">the terminal UI</text>
+
+  <rect class="front" x="24" y="136" width="200" height="52" rx="10"/>
+  <text class="name mono" x="40" y="159">plain</text>
+  <text class="sub" x="40" y="177">pipes and scripts</text>
+
+  <rect class="front" x="24" y="200" width="200" height="52" rx="10"/>
+  <text class="name" x="40" y="223">an editor</text>
+  <text class="sub" x="40" y="241">starts rumbo serve itself</text>
+
+  <rect class="front yours" x="24" y="264" width="200" height="52" rx="10"/>
+  <text class="name" x="40" y="287">yours</text>
+  <text class="sub" x="40" y="305">in any language</text>
+
+  <!-- Agent Frontend Protocol -->
+  <text class="label" x="284" y="144" text-anchor="middle">Agent Frontend</text>
+  <text class="label" x="284" y="159" text-anchor="middle">Protocol</text>
+  <line class="wire" x1="232" y1="204" x2="336" y2="204" marker-end="url(#arrow)"/>
+  <text class="small" x="284" y="198" text-anchor="middle">tasks, steers</text>
+  <line class="wire" x1="336" y1="232" x2="232" y2="232" marker-end="url(#arrow)"/>
+  <text class="small" x="284" y="250" text-anchor="middle">events</text>
+
+  <!-- Host -->
+  <rect class="host" x="344" y="24" width="312" height="408" rx="14"/>
+  <text x="364" y="56"><tspan class="head">rumbo</tspan><tspan class="sub" dx="8">the host</tspan></text>
+
+  <rect class="loop" x="360" y="72" width="280" height="156" rx="10"/>
+  <text class="label" x="376" y="95">the agent loop</text>
+  <text class="step" x="398" y="124">1  build the request from the session</text>
+  <text class="step" x="398" y="152">2  ask the provider for a message</text>
+  <text class="step" x="398" y="180">3  run its tool calls</text>
+  <path class="wire" d="M392 176 C 370 176, 370 120, 392 120" marker-end="url(#arrow)"/>
+  <text class="small" x="398" y="210">until the model calls no tool</text>
+
+  <text class="label" x="364" y="258">tools</text>
+  <rect class="chip" x="364" y="268" width="62" height="26" rx="6"/>
+  <text class="step mono" x="395" y="286" text-anchor="middle">read</text>
+  <rect class="chip" x="434" y="268" width="62" height="26" rx="6"/>
+  <text class="step mono" x="465" y="286" text-anchor="middle">write</text>
+  <rect class="chip" x="504" y="268" width="62" height="26" rx="6"/>
+  <text class="step mono" x="535" y="286" text-anchor="middle">edit</text>
+  <rect class="chip" x="574" y="268" width="62" height="26" rx="6"/>
+  <text class="step mono" x="605" y="286" text-anchor="middle">bash</text>
+
+  <text class="label" x="364" y="330">session</text>
+  <text class="step" x="440" y="330">an append-only log, in a file</text>
+  <text class="label" x="364" y="362">context</text>
+  <text class="step" x="440" y="362">environment, AGENTS.md, skills</text>
+  <text class="label" x="364" y="394">settings</text>
+  <text class="step" x="440" y="394">system, then the session's own</text>
+
+  <!-- Agent Provider Protocol -->
+  <text class="label" x="716" y="144" text-anchor="middle">Agent Provider</text>
+  <text class="label" x="716" y="159" text-anchor="middle">Protocol</text>
+  <line class="wire" x1="664" y1="204" x2="768" y2="204" marker-end="url(#arrow)"/>
+  <text class="small" x="716" y="198" text-anchor="middle">conversation</text>
+  <line class="wire" x1="768" y1="232" x2="664" y2="232" marker-end="url(#arrow)"/>
+  <text class="small" x="716" y="250" text-anchor="middle">next message</text>
+
+  <!-- Providers -->
+  <text class="head prov-ink" x="876" y="52" text-anchor="middle">Providers</text>
+
+  <rect class="prov" x="776" y="104" width="200" height="52" rx="10"/>
+  <text class="name mono" x="792" y="127">anthropic</text>
+  <text class="sub" x="792" y="145">the Claude API</text>
+
+  <rect class="prov" x="776" y="168" width="200" height="52" rx="10"/>
+  <text class="name mono" x="792" y="191">openai</text>
+  <text class="sub" x="792" y="209">OpenAI, Ollama, vLLM, …</text>
+
+  <rect class="prov yours" x="776" y="232" width="200" height="52" rx="10"/>
+  <text class="name" x="792" y="255">yours</text>
+  <text class="sub" x="792" y="273">any model, any language</text>
+
+  <!-- Caption -->
+  <text class="small" x="500" y="472" text-anchor="middle">Front ends, the host, and providers are programs of their own, speaking JSON-RPC over stdio.</text>
+  <text class="small" x="500" y="492" text-anchor="middle">The built-in front ends and providers cross the same protocols as the ones you write.</text>
+</svg>

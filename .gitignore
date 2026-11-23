@@ -19,9 +19,3 @@ pnpm-debug.log*
 
 # macOS-specific files
 .DS_Store
-
-# copied from rumbo's repository by scripts/sync-reference.ts
-/src/content/docs/reference/*
-!/src/content/docs/reference/command-line.md
-/public/diagrams/
-/src/generated/

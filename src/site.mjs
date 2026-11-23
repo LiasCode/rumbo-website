@@ -9,3 +9,7 @@ export const repository = 'https://github.com/LiasCode/rumbo';
 
 export const description =
 	'rumbo is a minimal, open-source agent harness for your terminal. Bring any model and any interface: Claude, OpenAI, ChatGPT, or a local model, with sessions you can replay.';
+
+// rumbo's latest release, which the install instructions name: the first
+// dated section of the changelog, "## X.Y.Z (YYYY-MM-DD)".
+export const release = { version: '0.7.0', date: '2026-11-21' };

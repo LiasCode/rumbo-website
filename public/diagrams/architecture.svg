@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 580" width="1000" height="580" role="img" aria-labelledby="title desc">
+  <title id="title">rumbo's architecture</title>
+  <desc id="desc">The front end process, built in or written by the user, speaks the Agent Frontend Protocol with the host process, rumbo: JSON-RPC, tasks in and events out. Inside the host, the agent loop reports to an Observer, and depends on four interfaces: Provider, Tool for actions, Collector for the ambient context, and Store for the history. The Provider speaks the Agent Provider Protocol with the provider process, built in or written by the user: JSON-RPC, the conversation in and the next message out.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2328; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .head { font-size: 15px; font-weight: 600; }
+    .name { font-size: 14px; font-weight: 600; }
+    .step { font-size: 13px; }
+    .sub, .small, .label { font-size: 12px; fill: #59636e; }
+    .card { fill: #ffffff; stroke: #d0d7de; }
+    .front { fill: #ddf4ff; stroke: #0969da; }
+    .front-ink { fill: #0969da; }
+    .prov { fill: #fff1e5; stroke: #bc4c00; }
+    .prov-ink { fill: #bc4c00; }
+    .host { fill: #f6f8fa; stroke: #8c959f; }
+    .loop { fill: #ffffff; stroke: #d0d7de; }
+    .chip { fill: #eaeef2; }
+    .wire { stroke: #59636e; stroke-width: 1.5; fill: none; }
+    .tip { fill: #59636e; }
+    @media (prefers-color-scheme: dark) {
+      text { fill: #e6edf3; }
+      .sub, .small, .label { fill: #9198a1; }
+      .card { fill: #0d1117; stroke: #30363d; }
+      .front { fill: #0c2d6b; stroke: #4493f8; }
+      .front-ink { fill: #4493f8; }
+      .prov { fill: #3d1d00; stroke: #f0883e; }
+      .prov-ink { fill: #f0883e; }
+      .host { fill: #161b22; stroke: #6e7681; }
+      .loop { fill: #0d1117; stroke: #30363d; }
+      .chip { fill: #262c36; }
+      .wire { stroke: #9198a1; }
+      .tip { fill: #9198a1; }
+    }
+  </style>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" class="tip"/>
+    </marker>
+  </defs>
+
+  <rect class="card" x="0.5" y="0.5" width="999" height="579" rx="16"/>
+
+  <!-- Front end process -->
+  <rect class="front" x="250" y="24" width="500" height="60" rx="10"/>
+  <text class="name front-ink" x="500" y="49" text-anchor="middle">front end process</text>
+  <text class="sub" x="500" y="69" text-anchor="middle">built-in tui or plain, or written by the user</text>
+
+  <!-- Agent Frontend Protocol -->
+  <line class="wire" x1="480" y1="90" x2="480" y2="144" marker-end="url(#arrow)"/>
+  <line class="wire" x1="520" y1="144" x2="520" y2="90" marker-end="url(#arrow)"/>
+  <text class="label" x="540" y="112">Agent Frontend Protocol</text>
+  <text class="small" x="540" y="129">JSON-RPC: tasks in, events out</text>
+
+  <!-- Host process -->
+  <rect class="host" x="100" y="150" width="800" height="270" rx="14"/>
+  <text x="124" y="180"><tspan class="head">rumbo</tspan><tspan class="sub" dx="8">the host process</tspan></text>
+
+  <rect class="chip" x="420" y="196" width="160" height="32" rx="6"/>
+  <text class="step mono" x="500" y="217" text-anchor="middle">Observer</text>
+  <line class="wire" x1="500" y1="262" x2="500" y2="232" marker-end="url(#arrow)"/>
+
+  <rect class="loop" x="130" y="262" width="740" height="134" rx="10"/>
+  <text x="150" y="288"><tspan class="label">the agent loop</tspan><tspan class="small mono" dx="8">internal/agent</tspan></text>
+
+  <rect class="chip" x="160" y="316" width="150" height="56" rx="8"/>
+  <text class="name mono" x="235" y="340" text-anchor="middle">Provider</text>
+  <text class="sub" x="235" y="359" text-anchor="middle">the next message</text>
+
+  <rect class="chip" x="337" y="316" width="150" height="56" rx="8"/>
+  <text class="name mono" x="412" y="340" text-anchor="middle">Tool</text>
+  <text class="sub" x="412" y="359" text-anchor="middle">actions</text>
+
+  <rect class="chip" x="513" y="316" width="150" height="56" rx="8"/>
+  <text class="name mono" x="588" y="340" text-anchor="middle">Collector</text>
+  <text class="sub" x="588" y="359" text-anchor="middle">ambient context</text>
+
+  <rect class="chip" x="690" y="316" width="150" height="56" rx="8"/>
+  <text class="name mono" x="765" y="340" text-anchor="middle">Store</text>
+  <text class="sub" x="765" y="359" text-anchor="middle">history</text>
+
+  <!-- Agent Provider Protocol -->
+  <line class="wire" x1="235" y1="378" x2="235" y2="486" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+  <text class="label" x="255" y="447">Agent Provider Protocol</text>
+  <text class="small" x="255" y="464">JSON-RPC: conversation in, message out</text>
+
+  <!-- Provider process -->
+  <rect class="prov" x="100" y="492" width="500" height="60" rx="10"/>
+  <text class="name prov-ink" x="350" y="517" text-anchor="middle">provider process</text>
+  <text class="sub" x="350" y="537" text-anchor="middle">built-in anthropic, openai, or chatgpt, or the user's</text>
+</svg>

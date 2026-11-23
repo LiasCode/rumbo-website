@@ -4,18 +4,17 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"sync": "bun scripts/sync-reference.ts",
-		"dev": "bun run sync && astro dev",
-		"build": "bun run sync && astro build",
+		"dev": "astro dev",
+		"build": "astro build",
 		"preview": "astro preview",
-		"check": "bun run sync && astro check",
+		"check": "astro check",
+		"pages": "bun scripts/check-pages.ts",
 		"format": "oxfmt",
 		"format:check": "oxfmt --check",
 		"lint": "oxlint",
-		"verify": "bun run format:check && bun run lint && bun run translations && bun run check && bun run build",
+		"verify": "bun run format:check && bun run lint && bun run pages && bun run check && bun run build",
 		"og": "resvg -w 1200 design/og.svg public/og.png",
-		"astro": "astro",
-		"translations": "bun scripts/check-translations.ts"
+		"astro": "astro"
 	},
 	"dependencies": {
 		"@astrojs/starlight": "0.43.1",

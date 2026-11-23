@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 448" width="1000" height="448" role="img" aria-labelledby="title desc">
+  <title id="title">The lifecycle of a provider</title>
+  <desc id="desc">The host sends initialize, and the provider answers with a result. Then for each complete request, such as id 2, the provider sends zero or more delta notifications and then the result. More completes follow. Finally the host sends shutdown, the provider answers with a result, and then exits.</desc>
+  <style>
+    text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2328; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .head { font-size: 15px; font-weight: 600; }
+    .name { font-size: 14px; font-weight: 600; }
+    .step { font-size: 13px; }
+    .sub, .small, .label { font-size: 12px; fill: #59636e; }
+    .card { fill: #ffffff; stroke: #d0d7de; }
+    .front { fill: #ddf4ff; stroke: #0969da; }
+    .front-ink { fill: #0969da; }
+    .prov { fill: #fff1e5; stroke: #bc4c00; }
+    .prov-ink { fill: #bc4c00; }
+    .host { fill: #f6f8fa; stroke: #8c959f; }
+    .loop { fill: #ffffff; stroke: #d0d7de; }
+    .chip { fill: #eaeef2; }
+    .wire { stroke: #59636e; stroke-width: 1.5; fill: none; }
+    .tip { fill: #59636e; }
+    .life { stroke: #d0d7de; stroke-width: 1.5; stroke-dasharray: 4 4; }
+    .notify { stroke-dasharray: 6 4; }
+    @media (prefers-color-scheme: dark) {
+      text { fill: #e6edf3; }
+      .sub, .small, .label { fill: #9198a1; }
+      .card { fill: #0d1117; stroke: #30363d; }
+      .front { fill: #0c2d6b; stroke: #4493f8; }
+      .front-ink { fill: #4493f8; }
+      .prov { fill: #3d1d00; stroke: #f0883e; }
+      .prov-ink { fill: #f0883e; }
+      .host { fill: #161b22; stroke: #6e7681; }
+      .loop { fill: #0d1117; stroke: #30363d; }
+      .chip { fill: #262c36; }
+      .wire { stroke: #9198a1; }
+      .tip { fill: #9198a1; }
+      .life { stroke: #30363d; }
+    }
+  </style>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" class="tip"/>
+    </marker>
+  </defs>
+
+  <rect class="card" x="0.5" y="0.5" width="999" height="447" rx="16"/>
+
+  <rect class="host" x="120" y="24" width="160" height="40" rx="10"/>
+  <text class="name " x="200" y="49" text-anchor="middle">host</text>
+  <line class="life" x1="200" y1="64" x2="200" y2="420"/>
+  <rect class="prov" x="560" y="24" width="160" height="40" rx="10"/>
+  <text class="name prov-ink" x="640" y="49" text-anchor="middle">provider</text>
+  <line class="life" x1="640" y1="64" x2="640" y2="420"/>
+
+  <line class="wire" x1="202" y1="104" x2="638" y2="104" marker-end="url(#arrow)"/>
+  <text class="step mono" x="420" y="96" text-anchor="middle">initialize</text>
+  <line class="wire" x1="638" y1="144" x2="202" y2="144" marker-end="url(#arrow)"/>
+  <text class="step mono" x="420" y="136" text-anchor="middle">result</text>
+  <line class="wire" x1="202" y1="184" x2="638" y2="184" marker-end="url(#arrow)"/>
+  <text class="step mono" x="420" y="176" text-anchor="middle">complete (id 2)</text>
+  <line class="wire notify" x1="638" y1="224" x2="202" y2="224" marker-end="url(#arrow)"/>
+  <text class="step mono" x="420" y="216" text-anchor="middle">delta (notification)</text>
+  <text class="small" x="664" y="228">zero or more</text>
+  <line class="wire" x1="638" y1="264" x2="202" y2="264" marker-end="url(#arrow)"/>
+  <text class="step mono" x="420" y="256" text-anchor="middle">result</text>
+  <text class="small" x="420" y="308" text-anchor="middle">… more completes …</text>
+  <line class="wire" x1="202" y1="344" x2="638" y2="344" marker-end="url(#arrow)"/>
+  <text class="step mono" x="420" y="336" text-anchor="middle">shutdown</text>
+  <line class="wire" x1="638" y1="384" x2="202" y2="384" marker-end="url(#arrow)"/>
+  <text class="step mono" x="420" y="376" text-anchor="middle">result</text>
+  <text class="small" x="664" y="388">then the provider exits</text>
+
+  <text class="small" x="80" y="436">Dashed: a notification, which has no answer.</text>
+</svg>

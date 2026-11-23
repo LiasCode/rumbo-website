@@ -4,7 +4,7 @@ description: Installa rumbo su Linux o macOS da un archivio di rilascio o con go
 ---
 
 import { Code, Tabs, TabItem } from '@astrojs/starlight/components';
-import release from '../../../../generated/release.json';
+import { release } from '../../../../site.mjs';
 
 export const archive = (platform) => `rumbo-${release.version}-${platform}`;
 
