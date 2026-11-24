@@ -32,9 +32,7 @@ dirección, y elige uno de sus modelos. Consulta
 
 ## ¿Puedo usar mi suscripción de ChatGPT o de Claude?
 
-Un plan de ChatGPT, sí: el proveedor integrado `chatgpt` inicia sesión con ChatGPT, como OpenAI ofrece
-a las aplicaciones de código abierto. Una suscripción de Claude, no: los términos de Anthropic no
-permiten que otras aplicaciones la usen, así que el proveedor `anthropic` usa una clave de API.
+El proveedor integrado `chatgpt` permite iniciar sesión con un plan de ChatGPT. El proveedor integrado `anthropic` usa una clave de API, no una suscripción de Claude. El plugin externo [rumbo-claude](https://github.com/LiasCode/rumbo-claude) documenta su propia compatibilidad, inicio de sesión y limitaciones.
 
 ## ¿Funciona en Windows?
 

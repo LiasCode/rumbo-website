@@ -11,10 +11,10 @@ puntatore e la sua tastiera. È disattivato finché non lo attivi.
 rumbo system set computer=on
 ```
 
-:::danger
-Con lo strumento attivo, il modello agisce su ciò che ha il focus, con il tuo puntatore e la tua
-tastiera. Leggi [prima di eseguirlo](/it/start/safety/), e dagli un desktop suo quando puoi.
-:::
+> **Avvertenza**
+>
+> Con lo strumento attivo, il modello agisce su ciò che ha il focus, con il tuo puntatore e la tua
+> tastiera. Leggi [prima di eseguirlo](/it/start/safety/), e dagli un desktop suo quando puoi.
 
 ## Di cosa ha bisogno
 

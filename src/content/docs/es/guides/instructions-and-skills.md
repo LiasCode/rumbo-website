@@ -49,6 +49,8 @@ Las skills van en:
 - `~/.config/rumbo/skills/<name>/` (`~/Library/Application Support/rumbo/skills/` en macOS), las tuyas;
 - `.agents/skills/<name>/` en un proyecto, desde su raíz hasta donde estás. Una skill del proyecto
   reemplaza a una tuya con el mismo nombre.
+- `skills/<name>/` en un [plugin](/es/guides/plugins/) que añadiste. Una tuya con el mismo nombre la
+  reemplaza.
 
 Con cada petición solo se envían el nombre, la descripción y la ruta. El modelo lee la skill cuando una
 tarea la necesita, así que una skill cuesta una línea hasta que se usa.

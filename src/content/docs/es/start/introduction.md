@@ -12,7 +12,51 @@ No está atado a la programación. No sabe de ningún tipo de trabajo: hace lo q
 [instrucciones](/es/guides/instructions-and-skills/), ya sea arreglar un test que falla, resumir una
 carpeta de notas o manejar un programa de escritorio.
 
-## Las tres partes
+## Qué trae de serie
+
+rumbo se puede usar tal como se instala. Un solo binario trae:
+
+- **Una interfaz de terminal completa**: las sesiones en una barra lateral, la conversación como
+  Markdown, una paleta de comandos, paneles y un editor. Es lo que abre `rumbo`. Consulta la
+  [interfaz de terminal](/es/guides/terminal-ui/).
+- **Tres proveedores**: `anthropic` para Claude mediante la API de Anthropic, `openai` para las API
+  de OpenAI y cualquier servidor compatible con Chat Completions, incluidos los locales, y `chatgpt`
+  para un plan de ChatGPT. Consulta [modelos y proveedores](/es/guides/providers/).
+- **Una interfaz de texto plano** para [scripts y tuberías](/es/guides/scripting/), y **una extensión
+  para servidores MCP**, que añades [una vez por servidor](/es/guides/extensions/).
+
+## Qué puedes añadir
+
+Hay dos más que se publican aparte, como [plugins](/es/guides/plugins/) que añades si los quieres:
+
+| Plugin                                                   | Añade                                                                                                                              |
+| -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| [rumbo-claude](https://github.com/LiasCode/rumbo-claude) | Un proveedor, `claude`, que usa una suscripción Claude Pro o Max. No es una integración oficial de Anthropic: lee antes su README. |
+| [rumbo-gui](https://github.com/LiasCode/rumbo-gui)       | Una interfaz, `gui`: una [ventana de escritorio](/es/guides/desktop-app/) para rumbo. Necesita un rumbo posterior a 0.9.0.         |
+
+```sh
+rumbo plugin add https://github.com/LiasCode/rumbo-claude
+rumbo plugin add https://github.com/LiasCode/rumbo-gui
+```
+
+rumbo compila un plugin donde lo añades, así que el primero necesita Go en tu máquina y el segundo
+Rust.
+
+## Crea los tuyos y compártelos
+
+Lo que trae rumbo es un punto de partida, no el producto. rumbo está hecho para que **escribas tú
+las piezas que te faltan**, en cualquier lenguaje, con los mismos protocolos que usan las suyas:
+
+- una [interfaz](/es/extend/front-end/), para la forma en que quieres trabajar: en tu editor, en un
+  chat, en una página web;
+- un [proveedor](/es/extend/provider/), para el modelo que usas;
+- una [extensión](/es/extend/extension/), para las herramientas que necesita tu trabajo;
+- un [plugin](/es/reference/plugins/), para reunirlas con tus skills.
+
+Si quieres que otros tengan lo que hiciste, ponlo en un repositorio Git como plugin: cualquiera lo
+añade con `rumbo plugin add <dirección>`.
+
+## Las partes
 
 - **El host** es rumbo en sí. Es dueño de las sesiones, las herramientas y el bucle: pide a un
   proveedor el siguiente mensaje, ejecuta las herramientas que llama el modelo y repite hasta que el
@@ -24,9 +68,12 @@ carpeta de notas o manejar un programa de escritorio.
   una salida de texto plano para [scripts y tuberías](/es/guides/scripting/), la
   [aplicación de escritorio](/es/guides/desktop-app/) o una que escribas tú.
 
-Los proveedores y las interfaces hablan un pequeño protocolo JSON-RPC con el host por stdio, como hace
+Los proveedores y las interfaces hablan un pequeño protocolo JSON-RPC con el host por tuberías, como hace
 el Language Server Protocol entre editores y lenguajes. Los integrados cruzan los mismos protocolos que
 los que [escribes tú](/es/extend/provider/), así que todo lo que ellos pueden hacer, los tuyos también.
+
+- [Extensiones y MCP](/es/guides/extensions/) — Añade al modelo herramientas de programas propios o de servidores Model Context Protocol.
+- [Plugins](/es/guides/plugins/) — Instala y distribuye juntos proveedores, interfaces, extensiones y skills.
 
 ## Qué lo hace distinto
 

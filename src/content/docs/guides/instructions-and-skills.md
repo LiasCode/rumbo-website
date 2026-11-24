@@ -49,6 +49,8 @@ Skills go in:
 - `~/.config/rumbo/skills/<name>/` (`~/Library/Application Support/rumbo/skills/` on macOS), yours;
 - `.agents/skills/<name>/` in a project, from its root down to where you are. A project's skill
   replaces one of yours with the same name.
+- `skills/<name>/` in a [plugin](/guides/plugins/) you added. One of yours with the same name replaces
+  it.
 
 Only the name, the description, and the path are sent with every request. The model reads the
 skill when a task needs it, so a skill costs a line until it is used.

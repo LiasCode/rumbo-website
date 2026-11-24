@@ -1,0 +1,25 @@
+---
+import { render } from 'astro:content';
+import Landing from '../components/Landing.astro';
+import Article from '../layouts/Article.astro';
+import { directory, documents } from '../documents';
+import { entryId, locales, type Locale } from '../navigation';
+
+export async function getStaticPaths() {
+	const docs = await documents();
+	const sidebars = Object.fromEntries(locales.map((locale) => [locale, directory(docs, locale)]));
+
+	return [
+		...locales.filter((locale) => locale !== 'en').map((locale) => ({ params: { path: locale }, props: { locale, doc: undefined } })),
+		...docs.map((doc) => ({
+			params: { path: entryId(doc.locale, doc.slug) },
+			props: { locale: doc.locale, doc, sidebar: sidebars[doc.locale], alternates: docs.filter((candidate) => candidate.slug === doc.slug && !candidate.fallback).map((candidate) => candidate.locale) },
+		})),
+	];
+}
+
+const { locale, doc, sidebar, alternates } = Astro.props;
+const page = doc ? await render(doc.entry) : undefined;
+---
+
+{doc && page && sidebar ? <Article {locale} {doc} {sidebar} alternates={alternates as Locale[]} headings={page.headings}><page.Content /></Article> : <Landing {locale} />}

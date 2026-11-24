@@ -62,6 +62,8 @@ I comandi vengono da ciò che descrivono l'host e il provider, quindi le funzion
 `/copy` (l'ultima risposta del modello, o `/copy code` per il suo ultimo blocco di codice) e `/export`
 (la sessione come Markdown).
 
+I comandi di un’estensione riportano il suo nome registrato, per esempio `/notes-forget`. L’output è contrassegnato da `[extension]` o `[extension <name>]`. Vedi [Estensioni e MCP](/it/guides/extensions/).
+
 ## Modello e opzioni
 
 Un clic sul modello sotto il campo di scrittura, o Model and options nella palette, apre il selettore.

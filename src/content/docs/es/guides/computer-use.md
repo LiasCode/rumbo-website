@@ -11,10 +11,10 @@ puntero y su teclado. Está desactivada hasta que la activas.
 rumbo system set computer=on
 ```
 
-:::danger
-Con la herramienta activada, el modelo actúa sobre lo que tenga el foco, con tu puntero y tu teclado.
-Lee [antes de ejecutarlo](/es/start/safety/), y dale un escritorio propio cuando puedas.
-:::
+> **Advertencia**
+>
+> Con la herramienta activada, el modelo actúa sobre lo que tenga el foco, con tu puntero y tu teclado.
+> Lee [antes de ejecutarlo](/es/start/safety/), y dale un escritorio propio cuando puedas.
 
 ## Qué necesita
 

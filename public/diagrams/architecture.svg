@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 580" width="1000" height="580" role="img" aria-labelledby="title desc">
   <title id="title">rumbo's architecture</title>
-  <desc id="desc">The front end process, built in or written by the user, speaks the Agent Frontend Protocol with the host process, rumbo: JSON-RPC, tasks in and events out. Inside the host, the agent loop reports to an Observer, and depends on four interfaces: Provider, Tool for actions, Collector for the ambient context, and Store for the history. The Provider speaks the Agent Provider Protocol with the provider process, built in or written by the user: JSON-RPC, the conversation in and the next message out.</desc>
+  <desc id="desc">The front end process, rumbo's own or written by the user, speaks the Agent Frontend Protocol with the host process, rumbo: JSON-RPC, tasks and steers in and events out. Inside the host, the agent loop takes what the person says to a run from an Inbox, reports to an Observer, and depends on four interfaces: Provider, Tool for actions, Collector for the ambient context, and Store for the history. The Provider speaks the Agent Provider Protocol with the provider process, rumbo's own or written by the user: JSON-RPC, the conversation in and the next message out. Tool and Collector speak the Agent Extension Protocol with the extension processes, the user's own, those a plugin brings, and the mcp of rumbo's own plugin: JSON-RPC, tool calls and events in; results, sections of context, and commands for the person out.</desc>
   <style>
     text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2328; }
     .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
@@ -13,6 +13,8 @@
     .front-ink { fill: #0969da; }
     .prov { fill: #fff1e5; stroke: #bc4c00; }
     .prov-ink { fill: #bc4c00; }
+    .ext { fill: #dafbe1; stroke: #1a7f37; }
+    .ext-ink { fill: #1a7f37; }
     .host { fill: #f6f8fa; stroke: #8c959f; }
     .loop { fill: #ffffff; stroke: #d0d7de; }
     .chip { fill: #eaeef2; }
@@ -26,6 +28,8 @@
       .front-ink { fill: #4493f8; }
       .prov { fill: #3d1d00; stroke: #f0883e; }
       .prov-ink { fill: #f0883e; }
+      .ext { fill: #0f2d1a; stroke: #3fb950; }
+      .ext-ink { fill: #3fb950; }
       .host { fill: #161b22; stroke: #6e7681; }
       .loop { fill: #0d1117; stroke: #30363d; }
       .chip { fill: #262c36; }
@@ -45,21 +49,25 @@
   <!-- Front end process -->
   <rect class="front" x="250" y="24" width="500" height="60" rx="10"/>
   <text class="name front-ink" x="500" y="49" text-anchor="middle">front end process</text>
-  <text class="sub" x="500" y="69" text-anchor="middle">built-in tui or plain, or written by the user</text>
+  <text class="sub" x="500" y="69" text-anchor="middle">rumbo's tui or plain, or written by the user</text>
 
   <!-- Agent Frontend Protocol -->
   <line class="wire" x1="480" y1="90" x2="480" y2="144" marker-end="url(#arrow)"/>
   <line class="wire" x1="520" y1="144" x2="520" y2="90" marker-end="url(#arrow)"/>
   <text class="label" x="540" y="112">Agent Frontend Protocol</text>
-  <text class="small" x="540" y="129">JSON-RPC: tasks in, events out</text>
+  <text class="small" x="540" y="129">JSON-RPC: tasks and steers in, events out</text>
 
   <!-- Host process -->
   <rect class="host" x="100" y="150" width="800" height="270" rx="14"/>
   <text x="124" y="180"><tspan class="head">rumbo</tspan><tspan class="sub" dx="8">the host process</tspan></text>
 
-  <rect class="chip" x="420" y="196" width="160" height="32" rx="6"/>
-  <text class="step mono" x="500" y="217" text-anchor="middle">Observer</text>
-  <line class="wire" x1="500" y1="262" x2="500" y2="232" marker-end="url(#arrow)"/>
+  <rect class="chip" x="330" y="196" width="160" height="32" rx="6"/>
+  <text class="step mono" x="410" y="217" text-anchor="middle">Inbox</text>
+  <line class="wire" x1="410" y1="232" x2="410" y2="258" marker-end="url(#arrow)"/>
+
+  <rect class="chip" x="510" y="196" width="160" height="32" rx="6"/>
+  <text class="step mono" x="590" y="217" text-anchor="middle">Observer</text>
+  <line class="wire" x1="590" y1="262" x2="590" y2="232" marker-end="url(#arrow)"/>
 
   <rect class="loop" x="130" y="262" width="740" height="134" rx="10"/>
   <text x="150" y="288"><tspan class="label">the agent loop</tspan><tspan class="small mono" dx="8">internal/agent</tspan></text>
@@ -86,7 +94,19 @@
   <text class="small" x="255" y="464">JSON-RPC: conversation in, message out</text>
 
   <!-- Provider process -->
-  <rect class="prov" x="100" y="492" width="500" height="60" rx="10"/>
-  <text class="name prov-ink" x="350" y="517" text-anchor="middle">provider process</text>
-  <text class="sub" x="350" y="537" text-anchor="middle">built-in anthropic, openai, or chatgpt, or the user's</text>
+  <rect class="prov" x="100" y="492" width="420" height="60" rx="10"/>
+  <text class="name prov-ink" x="310" y="517" text-anchor="middle">provider process</text>
+  <text class="sub" x="310" y="537" text-anchor="middle">rumbo's anthropic, openai, or chatgpt, or the user's</text>
+
+  <!-- Agent Extension Protocol -->
+  <path class="wire" d="M412 378 V408 H680 V486" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+  <line class="wire" x1="588" y1="408" x2="588" y2="378" marker-end="url(#arrow)"/>
+  <text class="label" x="700" y="440">Agent Extension Protocol</text>
+  <text class="small" x="700" y="457">JSON-RPC: calls and events in;</text>
+  <text class="small" x="700" y="473">results, sections, commands out</text>
+
+  <!-- Extension processes -->
+  <rect class="ext" x="560" y="492" width="340" height="60" rx="10"/>
+  <text class="name ext-ink" x="730" y="517" text-anchor="middle">extension processes</text>
+  <text class="sub" x="730" y="537" text-anchor="middle">rumbo's mcp, a plugin's, or the user's</text>
 </svg>

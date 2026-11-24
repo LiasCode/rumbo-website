@@ -99,12 +99,13 @@ says where it is, instead of guessing.
 
 ## Environment variables
 
-| Variable                           | What it changes                                           |
-| ---------------------------------- | --------------------------------------------------------- |
-| `RUMBO_CONFIG`                     | The configuration file to use instead of `config.yaml`    |
-| `RUMBO_DATA`                       | The directory of rumbo's data, which holds the sessions   |
-| `XDG_CONFIG_HOME`, `XDG_DATA_HOME` | Where those are by default, on Linux                      |
-| `NO_COLOR`                         | The terminal UI shows no colors, with its default `theme` |
+| Variable          | What it changes                                           |
+| ----------------- | --------------------------------------------------------- |
+| `RUMBO_CONFIG`    | The configuration file to use instead of `config.yaml`    |
+| `RUMBO_DATA`      | The directory of rumbo's data, which holds the sessions   |
+| `XDG_CONFIG_HOME` | Base directory for `rumbo/config.yaml` on Linux           |
+| `XDG_DATA_HOME`   | Base directory for `rumbo/` data on Linux and macOS       |
+| `NO_COLOR`        | The terminal UI shows no colors, with its default `theme` |
 
 The providers read their own, such as `ANTHROPIC_API_KEY` and `OPENAI_API_KEY`. See
 [models and providers](/guides/providers/).

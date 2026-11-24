@@ -63,6 +63,8 @@ fournisseur, comme `/login`, apparaissent sans que l'interface les connaisse. Ce
 sont `/help`, `/copy` (la dernière réponse du modèle, ou `/copy code` pour son dernier bloc de code) et
 `/export` (la session en Markdown).
 
+Les commandes d’une extension portent son nom enregistré, par exemple `/notes-forget`. Sa sortie est marquée `[extension]` ou `[extension <name>]`. Voir [Extensions et MCP](/fr/guides/extensions/).
+
 ## Modèle et options
 
 Un clic sur le modèle sous la zone de saisie, ou Model and options dans la palette, ouvre le

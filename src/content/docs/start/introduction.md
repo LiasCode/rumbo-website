@@ -12,7 +12,50 @@ It is not tied to programming. It knows no kind of work: it does what your task 
 [instructions](/guides/instructions-and-skills/) ask, whether that is fixing a failing test,
 summarizing a folder of notes, or driving a desktop program.
 
-## The three parts
+## What comes with it
+
+rumbo is ready to use as it is installed. One binary brings:
+
+- **A complete terminal UI**: sessions in a sidebar, the conversation as Markdown, a command
+  palette, panels, and a composer. It is what `rumbo` opens. See the
+  [terminal UI](/guides/terminal-ui/).
+- **Three providers**: `anthropic` for Claude through Anthropic's API, `openai` for OpenAI's APIs
+  and any server compatible with Chat Completions, local ones included, and `chatgpt` for a ChatGPT
+  plan. See [models and providers](/guides/providers/).
+- **A plain front end** for [scripts and pipes](/guides/scripting/), and **an extension for MCP
+  servers**, which you add [once for each server](/guides/extensions/).
+
+## What you can add
+
+Two more are published apart, as [plugins](/guides/plugins/) you add if you want them:
+
+| Plugin                                                   | Adds                                                                                                                                  |
+| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| [rumbo-claude](https://github.com/LiasCode/rumbo-claude) | A provider, `claude`, that uses a Claude Pro or Max subscription. It is not an official Anthropic integration: read its README first. |
+| [rumbo-gui](https://github.com/LiasCode/rumbo-gui)       | A front end, `gui`: a [desktop window](/guides/desktop-app/) for rumbo. It needs a rumbo newer than 0.9.0.                            |
+
+```sh
+rumbo plugin add https://github.com/LiasCode/rumbo-claude
+rumbo plugin add https://github.com/LiasCode/rumbo-gui
+```
+
+rumbo builds a plugin where you add it, so the first needs Go on your machine and the second Rust.
+
+## Make your own, and share it
+
+What comes with rumbo is a starting point, not the product. rumbo is built so that **you write the
+parts you are missing**, in any language, through the same protocols its own parts use:
+
+- a [front end](/extend/front-end/), for the way you want to work: in your editor, in a chat, on a
+  web page;
+- a [provider](/extend/provider/), for the model you use;
+- an [extension](/extend/extension/), for the tools your work needs;
+- a [plugin](/reference/plugins/), to put them together with your skills.
+
+If you want others to have what you made, put it in a Git repository as a plugin: anyone adds it
+with `rumbo plugin add <address>`.
+
+## The parts
 
 - **The host** is rumbo itself. It owns the sessions, the tools, and the loop: it asks a provider
   for the next message, runs the tools the model calls, and repeats until the model stops calling
@@ -24,10 +67,13 @@ summarizing a folder of notes, or driving a desktop program.
   [scripts and pipes](/guides/scripting/), the [desktop app](/guides/desktop-app/), or one you
   write.
 
-Providers and front ends speak a small JSON-RPC protocol with the host over stdio, like the
+Providers and front ends speak a small JSON-RPC protocol with the host over pipes, like the
 Language Server Protocol does between editors and languages. The built-in ones cross the same
 protocols as the ones you [write yourself](/extend/provider/), so anything they can do, yours can
 too.
+
+- [Extensions and MCP](/guides/extensions/) — Give the model tools from your own programs or from Model Context Protocol servers.
+- [Plugins](/guides/plugins/) — Install and distribute providers, front ends, extensions, and skills together.
 
 ## What makes it different
 

@@ -51,9 +51,9 @@ These are decisions, not gaps:
 - **It has no permission system.** The agent acts with the rights of the user who started it.
   Someone who needs limits runs rumbo inside a sandbox of their choice. See
   [before you run it](/start/safety/).
-- **It uses a subscription only where its maker allows it.** `chatgpt` signs in with ChatGPT as
-  OpenAI offers open-source apps. Anthropic's terms keep a Claude subscription to its own apps, so
-  no provider signs in to one; `anthropic` takes an API key.
+- **It signs in to a plan only where a provider implements it.** `chatgpt` signs in with a ChatGPT
+  plan. `anthropic` takes API credentials and has no subscription sign-in. Any other way in is a
+  provider of its own, added like any other.
 - **It does not track files.** A session keeps the conversation, not the disk: there are no restore
   points, and a branch starts from an earlier point of the conversation with the files as they are.
 

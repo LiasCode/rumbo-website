@@ -22,7 +22,7 @@ rumbo serve [flags]            be the host for a front end on stdin/stdout
 | `-p <provider>`     | Fournisseur de la session (par défaut : le réglage `default_provider`)                                                                     |
 | `-m <model>`        | Modèle de la session (par défaut : le modèle réglé pour son fournisseur)                                                                   |
 | `-o <name>=<value>` | Une option du fournisseur pour la session, comme `-o effort=high` ; peut être répétée, et une valeur vide la ramène à celle du fournisseur |
-| `-f <name>`         | Interface pour ce démarrage (par défaut : `tui` dans un terminal, sinon `plain`)                                                           |
+| `-f <name>`         | Interface pour ce lancement (par défaut : le réglage `frontend` ; sinon `tui` dans un terminal, ou `plain`)                                |
 | `-single`           | Travailler dans une seule session à la fois ; par défaut l'hôte travaille dans plusieurs sessions du projet à la fois                      |
 
 La session garde ce que choisissent `-p`, `-m` et `-o`, par-dessus les réglages du système.
@@ -95,8 +95,33 @@ Une interface est tout programme qui parle l'Agent Frontend Protocol sur les des
 ```text
 rumbo provide <name>           run a built-in provider on stdin/stdout
 rumbo attach <name>            run a built-in front end on descriptors 3/4
+rumbo extend mcp [command...]  run the built-in MCP extension on stdin/stdout
 rumbo version                  print the version
 ```
 
 `provide` et `attach` sont la façon dont rumbo démarre ses propres fournisseurs et interfaces, via les
 mêmes protocoles que n'importe quels autres.
+
+## Extensions et MCP
+
+```text
+rumbo extension list
+rumbo extension show <name>
+rumbo extension add [-config <json>] [-replaces <tools>] <name> <command>...
+rumbo extension set <name> <field>=<value>...
+rumbo extension rm <name>
+```
+
+[Extensions et MCP](/fr/guides/extensions/)
+
+## Plugins
+
+```text
+rumbo plugin list
+rumbo plugin show <name>
+rumbo plugin add [-replaces <tools>] <source>
+rumbo plugin update <name>
+rumbo plugin rm <name>
+```
+
+[Plugins](/fr/guides/plugins/) · [v2 →](/fr/reference/next/)

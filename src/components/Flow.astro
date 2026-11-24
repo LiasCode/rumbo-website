@@ -1,0 +1,108 @@
+---
+import { href, type Locale } from '../navigation';
+import Icon from './Icon.astro';
+
+// The three steps of the quick start, as plates on one line that a signal
+// runs along, one step after the other.
+const { locale } = Astro.props as { locale: Locale };
+const [label, ...steps] = {
+	en: ['Steps', 'Connect a model', 'Run a task', 'Continue a session'],
+	es: ['Pasos', 'Conecta un modelo', 'Ejecuta una tarea', 'Continúa una sesión'],
+	fr: ['Étapes', 'Connecter un modèle', 'Lancer une tâche', 'Reprendre une session'],
+	it: ['Passi', 'Collega un modello', 'Esegui un’attività', 'Riprendi una sessione'],
+}[locale];
+const pages = ['guides/providers', 'guides/scripting', 'guides/sessions'];
+---
+
+<ol class="flow" aria-label={label}>
+	{steps.map((step, index) => (
+		<li style={`--order:${index}`}>
+			<a href={href(locale, pages[index])}><span>0{index + 1}</span>{step}<Icon name="arrow-up-right" /></a>
+		</li>
+	))}
+</ol>
+
+<style>
+	.flow {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 0.5rem;
+		margin: 0 0 1.75rem;
+		padding: 0;
+		list-style: none;
+	}
+
+	li {
+		position: relative;
+		background: var(--surface);
+		border: 1px solid var(--line);
+		border-bottom: 3px solid var(--ink);
+	}
+
+	/* The signal: it crosses each plate in turn, and starts over. */
+	li::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: -3px;
+		height: 3px;
+		background: var(--seal);
+		transform: scaleX(0);
+		transform-origin: left;
+		animation: cross 4.8s calc(var(--order) * 1.6s) cubic-bezier(0.45, 0, 0.25, 1) infinite backwards;
+	}
+
+	a {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		gap: 0.5rem;
+		align-items: center;
+		height: 100%;
+		padding: 0.75rem 0.8rem;
+		font-size: 0.88rem;
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	a:hover {
+		background: var(--wash);
+	}
+
+	span,
+	a :global(.icon) {
+		color: var(--accent);
+	}
+
+	span {
+		font: 0.7rem var(--mono);
+	}
+
+	@keyframes cross {
+		0% {
+			transform: scaleX(0);
+			opacity: 1;
+		}
+		30% {
+			transform: scaleX(1);
+			opacity: 1;
+		}
+		40%,
+		100% {
+			transform: scaleX(1);
+			opacity: 0;
+		}
+	}
+
+	@media (max-width: 34rem) {
+		.flow {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		li::after {
+			animation: none;
+		}
+	}
+</style>

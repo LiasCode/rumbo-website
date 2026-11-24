@@ -31,10 +31,7 @@ son adresse, et choisissez l'un de ses modèles. Voir
 
 ## Puis-je utiliser mon abonnement ChatGPT ou Claude ?
 
-Un abonnement ChatGPT, oui : le fournisseur intégré `chatgpt` se connecte avec ChatGPT, comme OpenAI le
-propose aux applications open source. Un abonnement Claude, non : les conditions d'Anthropic ne
-permettent pas à d'autres applications de l'utiliser, donc le fournisseur `anthropic` utilise une clé
-d'API.
+Le fournisseur intégré `chatgpt` peut se connecter avec un abonnement ChatGPT. Le fournisseur intégré `anthropic` utilise une clé API, pas un abonnement Claude. Le plugin externe [rumbo-claude](https://github.com/LiasCode/rumbo-claude) documente sa compatibilité, sa procédure de connexion et ses limites.
 
 ## Fonctionne-t-il sous Windows ?
 

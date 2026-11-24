@@ -40,10 +40,7 @@ rumbo -p anthropic
 It lists the models your account can use, offers an `effort` option, and keeps the model's thinking
 so it can continue it.
 
-:::note
-Anthropic's terms do not let other applications use a Claude subscription, so no built-in provider
-signs in to one; `anthropic` takes an API key.
-:::
+> The built-in `anthropic` provider uses API credentials. It does not implement Claude subscription sign-in.
 
 ## OpenAI
 

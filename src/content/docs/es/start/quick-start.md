@@ -32,10 +32,10 @@ rumbo abre la interfaz de terminal, y el modelo trabaja con sus herramientas has
 llamarlas. Cada llamada a una herramienta se muestra mientras se ejecuta, y la ejecución termina con
 una línea que dice cómo acabó, cuánto tardó y cuántos turnos y tokens usó.
 
-:::caution
-El modelo lee, escribe y ejecuta comandos como tú, sin preguntar. Lee primero
-[antes de ejecutarlo](/es/start/safety/).
-:::
+> **Precaución**
+>
+> El modelo lee, escribe y ejecuta comandos como tú, sin preguntar. Lee primero
+> [antes de ejecutarlo](/es/start/safety/).
 
 ## 3. Sigue adelante
 

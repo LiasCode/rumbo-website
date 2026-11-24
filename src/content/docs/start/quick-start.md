@@ -32,10 +32,10 @@ rumbo opens the terminal UI, and the model works with its tools until it stops c
 tool call shows as it runs, and the run ends with a line that says how it ended, how long it took,
 and the turns and tokens it used.
 
-:::caution
-The model reads, writes, and runs commands as you, without asking. Read
-[before you run it](/start/safety/) first.
-:::
+> **Caution**
+>
+> The model reads, writes, and runs commands as you, without asking. Read
+> [before you run it](/start/safety/) first.
 
 ## 3. Keep going
 

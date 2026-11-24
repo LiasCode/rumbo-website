@@ -23,6 +23,8 @@ Un'interfaccia avviata da rumbo mantiene il terminale su stdin e stdout, quindi 
 i tasti liberamente. Chiudere la connessione termina l'host: annulla le esecuzioni in corso, le registra
 e ferma i suoi provider.
 
+[Confronta le due direzioni di avvio nella traccia interattiva.](/it/#run-trace)
+
 ## La sua forma
 
 1. **`initialize`**: l'host parla per primo, con la directory, la sessione, il provider e il modello a
@@ -39,7 +41,7 @@ richiamare ciò che la persona ha chiesto prima (`recall`).
 
 ## Un esempio completo
 
-[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/main/examples/frontend.py) è
+[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.9.0/examples/frontend.py) è
 un'interfaccia completa in un solo file Python: chiede compiti con `input()` e stampa gli eventi man mano
 che arrivano.
 
@@ -53,7 +55,11 @@ def run(objective, request_id):
 
         if frame.get("method") == "event":
             show(frame["params"])
-        elif frame.get("id") == request_id:
+        elif frame.get("id") == request_id and "method" not in frame:
+            if "error" in frame:
+                print(frame["error"]["message"])
+                return
+
             result = frame["result"]
             print(f"\n[{result['status']}] {result.get('error', '')}")
             return
@@ -66,7 +72,7 @@ rumbo frontend add simple python3 /path/to/examples/frontend.py
 rumbo -f simple
 ```
 
-In Go, il pacchetto [`protocol`](https://github.com/LiasCode/rumbo/tree/main/protocol) contiene i tipi
+In Go, il pacchetto [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.9.0/protocol) contiene i tipi
 e `DialFrontend`, una connessione pronta all'uso.
 
 ## Comandi senza conoscerli

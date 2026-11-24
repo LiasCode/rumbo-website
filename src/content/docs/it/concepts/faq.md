@@ -31,9 +31,7 @@ indirizzo, e scegli uno dei suoi modelli. Vedi
 
 ## Posso usare il mio abbonamento ChatGPT o Claude?
 
-Un abbonamento ChatGPT, sì: il provider integrato `chatgpt` accede con ChatGPT, come OpenAI offre alle
-app open source. Un abbonamento Claude, no: i termini di Anthropic non permettono ad altre applicazioni
-di usarlo, quindi il provider `anthropic` usa una chiave API.
+Il provider integrato `chatgpt` permette di accedere con un abbonamento ChatGPT. Il provider integrato `anthropic` usa una chiave API, non un abbonamento Claude. Il plugin esterno [rumbo-claude](https://github.com/LiasCode/rumbo-claude) documenta compatibilità, accesso e limitazioni.
 
 ## Funziona su Windows?
 

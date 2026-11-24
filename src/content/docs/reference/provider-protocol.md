@@ -1,327 +1,111 @@
 ---
-title: 'Agent Provider Protocol'
-description: 'The Agent Provider Protocol: the JSON-RPC contract between the rumbo host and a provider, the program that reaches a model.'
+title: Agent Provider Protocol
+description: Version 1 of the protocol between the rumbo host and a provider, the program that turns a conversation into one request to a model. Every method, field, and error code, from the source.
 ---
 
-Version 1.
+A provider is a program the host starts as a child process. They exchange **JSON-RPC 2.0 objects, one per line**, on the provider's stdin and stdout. Whatever the provider prints on stderr reaches the person as a diagnostic, and a line on stdout that is not JSON is skipped rather than fatal.
 
-The protocol connects the rumbo host to a **provider**: a program that turns a
-conversation into the next assistant message. It plays the role the Language
-Server Protocol plays for editors: the host does not know how a provider
-reaches its model, and a provider written once works with any host.
+This page describes protocol **version 1**, which rumbo 0.9.0 and the development branch both speak.
 
-The Go types are in the [`protocol`](https://github.com/LiasCode/rumbo/tree/main/protocol) package, which also contains
-`Serve`, a ready-made server for providers written in Go.
-[examples/provider.py](https://github.com/LiasCode/rumbo/blob/main/examples/provider.py) is a provider in Python.
+## The methods
 
-## Transport
+| Method       | Direction       | Kind         | What it does                                                                     |
+| ------------ | --------------- | ------------ | -------------------------------------------------------------------------------- |
+| `initialize` | Host → provider | Request      | Opens the connection and asks the provider what it is and what it offers.        |
+| `complete`   | Host → provider | Request      | Asks for the next assistant message of a conversation.                           |
+| `delta`      | Provider → host | Notification | Streams visible text for the request named by `id`.                              |
+| `invoke`     | Host → provider | Request      | Calls one of the functions the provider described.                               |
+| `ask`        | Provider → host | Request      | A function asks the person a question, while its `invoke` is in progress.        |
+| `cancel`     | Host → provider | Notification | Asks the provider to stop the request named by `id`: a completion or a function. |
+| `shutdown`   | Host → provider | Request      | The provider answers and exits.                                                  |
 
-- The host starts the provider as a child process.
-- Messages are JSON-RPC 2.0 objects, **one per line**, UTF-8, on the
-  provider's stdin (host to provider) and stdout (provider to host).
-- stdout carries only protocol messages. Diagnostics go to stderr, which the
-  host shows to the user.
-- The host sends one `complete` at a time.
+## `initialize`
 
-## Lifecycle
+The host sends `protocol` and the provider's registered `config`, which it never interprets. The provider answers:
 
-![The host sends initialize and the provider answers; for each complete, the provider sends zero or more delta notifications, then the result; more completes follow, until the host sends shutdown, the provider answers, and exits.](/diagrams/provider-lifecycle.svg)
+| Field       | Required | Meaning                                                                                                         |
+| ----------- | -------- | --------------------------------------------------------------------------------------------------------------- |
+| `protocol`  | Yes      | `1`.                                                                                                            |
+| `name`      | Yes      | What the provider calls itself.                                                                                 |
+| `config`    | No       | The configuration in force: what it was given, plus its own default for each field left out. Shown, not stored. |
+| `model`     | No       | An option that says how a model is chosen, usually by naming in `values` the function that lists them.          |
+| `options`   | No       | What it accepts with each request besides the model, such as `effort`.                                          |
+| `fields`    | No       | The fields of its configuration that a person can set, each with its default.                                   |
+| `functions` | No       | What it can be asked through `invoke`.                                                                          |
 
-## Methods
+An **option** is a small subset of JSON Schema: `name`, `type` (`string`, `number`, or `boolean`), `description`, `enum` for fixed values or `values` naming the function that returns them, `default`, and `optional` for a function's parameter. A **function** has a `name`, a `description`, `params`, an optional `confirm` text for one that cannot be undone, and `lists` when it exists only to supply another function's values. The host checks what a person sets against these descriptions and passes them to every front end, which is how a provider's settings and commands appear in an interface that has never heard of it.
 
-### `initialize` (request)
-
-```json
-{ "jsonrpc": "2.0", "id": 1, "method": "initialize", "params": { "protocol": 1, "config": {} } }
-```
-
-`config` is what the user chose for the provider (`rumbo provider set`,
-or its `config` in rumbo's `config.yaml`), as JSON. Its meaning is the
-provider's own. A value the user set for one of the provider's options is a
-field of it too, under the option's name; the host sends it in the `options`
-of every request as well, unless the session or the run chose another, so a
-provider may read its options in either place. Credentials should not be in
-it: read them from the environment or from the provider's own storage.
-
-Result: `{"protocol":1,"name":"my-provider","config":{"base_url":"https://example"}}`.
-The host refuses a provider that answers with a different protocol version.
-
-`config` in the result is the configuration in force: the one given, with
-the provider's own default for every field it was not given. A provider
-says it, so that every field has a value the user can see: `rumbo provider
-show` prints it next to what was chosen. The host stores none of it. Only
-what the user chose is kept, so a default the provider changes reaches
-everyone who chose nothing else.
-
-The result may also carry what the provider says about itself. See
-[Describing the provider](#describing-the-provider).
-
-### `complete` (request)
-
-```json
-{"jsonrpc":"2.0","id":2,"method":"complete","params":{
-  "model": "some-model",
-  "system": "You are an agent running in rumbo...",
-  "messages": [ ... ],
-  "tools": [{"name":"bash","description":"...","schema":{ JSON Schema }}],
-  "max_tokens": 0
-}}
-```
-
-- `messages` is the whole conversation, every time. Roles alternate between
-  `user` and `assistant`, starting with `user`.
-- `max_tokens` of `0` or absent means the provider's default.
-- `options`, when present, is an object with the values chosen for the
-  options the provider described. Answer with an error for a value or a name
-  you do not accept: the host does not check them.
-
-Result:
-
-```json
-{"message":{"role":"assistant","content":[ ... ]},
- "stop":"end",
- "usage":{"input":1200,"output":85,"cache_read":0,"cache_write":0},
- "context_window":200000}
-```
-
-`context_window` is how many tokens the model's context holds. It is
-optional, and worth sending when the provider knows it: the host uses it to
-summarize the conversation before the context fills, which matters most for
-models with small contexts. Without it the host works to a fixed limit.
-
-In `usage`, `cache_read` is how much of the request came from the
-provider's cache, `cache_write` how much of it was written there, and
-`input` the rest. The host expects the next request to read at least the
-two together, and tells the person when it reads less.
-
-`stop` is one of:
-
-| Value        | Meaning                                              |
-| ------------ | ---------------------------------------------------- |
-| `end`        | The model finished its message.                      |
-| `tool_calls` | The message contains tool calls for the host to run. |
-| `max_tokens` | The output limit cut the message.                    |
-| `refusal`    | The model declined the request.                      |
-
-A failure is a JSON-RPC error; its `message` is shown to the user.
-
-An error with `code` `1` is **transient**: a rate limit, an overloaded
-server, a dropped connection. The host waits and sends the same request
-again, a few times, with growing pauses. Use it only for failures that can
-succeed unchanged later; any other code ends the run at once.
-
-```json
-{ "jsonrpc": "2.0", "id": 2, "error": { "code": 1, "message": "429 rate limited" } }
-```
-
-An error with `code` `2` says the request **did not fit** in the model's
-context. The host summarizes the conversation, leaving out the last step,
-which is what tipped it over, and sends the shorter request. A second such
-error in a row ends the run.
-
-### `invoke` (request)
-
-```json
-{ "jsonrpc": "2.0", "id": 3, "method": "invoke", "params": { "name": "models", "params": {} } }
-```
-
-Calls one of the functions the provider described. The result is whatever
-JSON the function returns; the host passes it to whoever asked, unread. A
-provider that described no functions answers with an error.
-
-A function can talk with the person while it works, as a login does when it
-says where to sign in and asks for the code it gets back. What it says is a
-`delta` with the id of the `invoke`, and what it asks is an `ask`. It can
-take as long as the person does; the host sets no limit, and sends `cancel`
-when the person gives up. In Go, a provider whose functions talk implements
-`DialogInvoker` instead of `Invoker`.
-
-### `delta` (notification, provider to host)
-
-```json
-{ "jsonrpc": "2.0", "method": "delta", "params": { "id": 2, "text": "Let me look" } }
-```
-
-Visible text of the running request `id`, for display. Optional. For a
-`complete` it is a piece of the answer, and the result is the authoritative
-message. For an `invoke` it is something the function says to the person,
-shown as it arrives.
-
-### `ask` (request, provider to host)
+## `complete`
 
 ```json
 {
 	"jsonrpc": "2.0",
-	"id": 1,
-	"method": "ask",
-	"params": { "id": 3, "text": "Paste the code the page shows", "secret": true }
+	"id": 7,
+	"method": "complete",
+	"params": {
+		"model": "some-model",
+		"system": "You are an agent running in rumbo…",
+		"messages": [{ "role": "user", "content": [{ "type": "text", "text": "list the files" }] }],
+		"tools": [{ "name": "bash", "description": "…", "schema": { "type": "object" } }],
+		"options": { "effort": "high" }
+	}
 }
 ```
 
-A question for the person, from the function of the running `invoke` `id`.
-The request's own id is the provider's to choose, an integer. The host asks
-the front end and answers with what the person typed:
+The host **always sends the whole conversation**, and the conversation only grows by appending, so a provider can cache its prefix. `max_tokens` is left out, or zero, when the provider's own limit applies. `options` holds only the options a value was chosen for.
 
-```json
-{ "jsonrpc": "2.0", "id": 1, "result": { "text": "4711-0815" } }
-```
+A message has a `role` (`user` or `assistant`) and `content`, a list of blocks:
 
-or with an error when the person declines, the function is cancelled, or
-nobody can be asked, such as when the question belongs to no `invoke` in
-progress. With `secret` the answer, such as a password, is not shown while
-it is typed, and the host and the front end record it nowhere.
+| Block `type`  | Fields                                         | In                                                                                                                       |
+| ------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `text`        | `text`, and `images` in a user message         | Both roles.                                                                                                              |
+| `tool_call`   | `id`, `name`, `args`                           | Assistant messages.                                                                                                      |
+| `tool_result` | `id` of the call, `text`, `is_error`, `images` | User messages.                                                                                                           |
+| `opaque`      | `data`                                         | Whatever the provider needs back unchanged, such as signed reasoning. The host stores and replays it without reading it. |
 
-### `cancel` (notification, host to provider)
+An image is `{ "media_type", "data" }`, with the file in base64 and a type of `image/png`, `image/jpeg`, `image/gif`, or `image/webp`.
 
-```json
-{ "jsonrpc": "2.0", "method": "cancel", "params": { "id": 2 } }
-```
+The answer is the finished message:
 
-Abort request `id`: a completion, or a function. The provider must still
-answer the request, normally with an error. The host kills a provider that
-does not answer within a few seconds.
+| Field            | Meaning                                                                                      |
+| ---------------- | -------------------------------------------------------------------------------------------- |
+| `message`        | The assistant message. This, not the deltas, is what the session records.                    |
+| `stop`           | `end`, `tool_calls`, `max_tokens`, or `refusal`.                                             |
+| `usage`          | `input`, `output`, and optionally `cache_read` and `cache_write`, in tokens.                 |
+| `context_window` | How many tokens the model's context holds, when the provider knows. The host compacts by it. |
 
-### `shutdown` (request)
+## What the host does with the answer
 
-Answer with `{}` and exit.
+| The provider says         | The host                                                                                                     |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `stop: "tool_calls"`      | Runs each call in order, records the results, and asks again.                                                |
+| `stop: "end"`             | Ends the run, unless the person said something the model has not read yet.                                   |
+| `stop: "max_tokens"`      | Tells the model it was cut and asks it to continue. Its tool calls are not run. Three in a row fail the run. |
+| `stop: "refusal"`         | Fails the run.                                                                                               |
+| Error with code `1`       | Waits 2 s, 10 s, 30 s, then 1 min, sending the request again each time, and then fails the run.              |
+| Error with code `2`       | Summarizes the conversation without the last step and tries once more.                                       |
+| Any other error           | Fails the run with its message.                                                                              |
+| Nothing, after a `cancel` | Kills the process after 5 seconds.                                                                           |
 
-## Describing the provider
+Codes `1` (transient: a rate limit, an overloaded server, a dropped connection) and `2` (the request did not fit in the model's context) are the two a provider chooses. The standard JSON-RPC codes `-32601`, `-32602`, and `-32603` keep their meaning.
 
-A provider can say what may be chosen and asked of it. The host knows
-nothing of what it means: it hands the description to the front end, sends
-the chosen values back with every `complete`, and relays `invoke`. It does
-read the description for one thing, to check a value a person sets before
-keeping it: a name the provider does not describe is refused, and a value is
-read as its `type` says and must be one of its `enum`. That is how a front
-end offers a provider's settings without knowing the provider, and how a
-provider adds a setting without anything else changing.
+## Functions and questions
 
-The description travels in the `initialize` result. Every part is optional.
+`invoke` carries the function's `name` and its `params`. A function listed in an option's `values` answers `{ "values": [{ "value", "label", "description" }] }`; any other answers with whatever JSON it likes. While it works, a function can:
 
-```json
-{
-	"protocol": 1,
-	"name": "my-provider",
-	"model": { "type": "string", "values": "models", "description": "Model to use" },
-	"options": [
-		{
-			"name": "effort",
-			"type": "string",
-			"enum": ["low", "high"],
-			"default": "low",
-			"description": "How thorough the model is"
-		},
-		{ "name": "web", "type": "boolean", "description": "Let the model search the web" }
-	],
-	"fields": [
-		{
-			"name": "base_url",
-			"type": "string",
-			"default": "https://example",
-			"description": "Where the server listens"
-		}
-	],
-	"functions": [{ "name": "models", "description": "List the available models" }]
-}
-```
+- send `delta` with the `id` of its `invoke`, to say something to the person;
+- send `ask` as a request of its own, with that `id`, a `text`, and `secret` when the answer must not be shown or recorded. The answer is `{ "text" }`, or an error when the person declines or nobody can answer.
 
-**An option** is one value the provider accepts with a request:
+That is all a sign-in needs: say where to go, ask for the code.
 
-| Field         | Meaning                                                                                                                                                                                           |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`        | The key it has in `options`.                                                                                                                                                                      |
-| `type`        | `string`, `number`, or `boolean`.                                                                                                                                                                 |
-| `description` | For a person choosing it.                                                                                                                                                                         |
-| `enum`        | The accepted values of a string option, when they are fixed.                                                                                                                                      |
-| `values`      | The name of a function that returns the accepted values, when they are not.                                                                                                                       |
-| `default`     | What applies when nothing is chosen, for a person to see. It may be empty when that means the model decides. The host stores no default, and sends an option only when a value was chosen for it. |
-| `optional`    | For a parameter of a function: it may be left out. Optional parameters come last.                                                                                                                 |
+## One request at a time
 
-This is a small subset of JSON Schema on purpose: a front end can offer it
-without a validator.
+A provider process answers one request at a time. When the host needs several at once, it starts more processes of the same provider, and any of them may get any request, since each request carries the whole conversation. A provider must therefore keep nothing between requests that the next one depends on. A process that exits is replaced, and the request it was answering is treated as a transient failure.
 
-**`model`** describes the model the same way, without a `name`. The model is
-not an option: it stays the `model` field of `complete`, because every
-provider has one and the host records it with each answer. The model a new
-session starts with is kept by the host, with what the person set for the
-provider, and is not part of its `config`.
+No process starts until a request needs one. On `shutdown` the provider has 5 seconds to answer and exit before it is killed.
 
-**`fields`** describe the fields of the provider's `config` besides its
-options, the same way, each with its `default`: what a person can set for
-the provider, which it reads when it starts. A person sets a field and an
-option alike, and the host checks both against what describes them. A
-field the provider does not describe can still be set when the `config` in
-force names it, and is read as the value it has there; one neither names is
-refused. The host also starts the provider with the changed `config` before
-keeping it, so a value the provider refuses at `initialize` is not kept.
+## In Go
 
-**A function** has a `name`, a `description`, and `params`, a list of options
-describing its arguments. What it does and returns is the provider's own. A
-function that cannot be undone adds `confirm`, a sentence saying what it
-does; a front end shows it and calls the function only after the person
-agrees.
+The [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.9.0/protocol) package has these types and `Serve`, which turns a `Handler` into a provider.
 
-One convention ties the two together. A function that an option names in
-`values` returns the accepted values in this shape, so a front end can build
-a picker from any provider:
-
-```json
-{ "values": [{ "value": "big-1", "label": "Big 1", "description": "Slow and careful" }] }
-```
-
-Only `value` is required. A front end calls it with what was given for the
-parameters before the option, those the function takes as its own, so the
-values of one parameter can depend on another.
-
-## Content blocks
-
-A message's `content` is a list of blocks.
-
-| `type`        | Fields                                           | Appears in |
-| ------------- | ------------------------------------------------ | ---------- |
-| `text`        | `text`, and `images` in a user message           | both roles |
-| `tool_call`   | `id`, `name`, `args` (JSON)                      | assistant  |
-| `tool_result` | `id` (of the call), `text`, `is_error`, `images` | user       |
-| `opaque`      | `data` (any JSON)                                | assistant  |
-
-**`text`.** In a user message, `images` are pictures the person gave with
-what they said, such as a pasted screenshot, in the form a tool's result
-uses below; the text may then be empty. They go to the model with the text.
-
-**`tool_call`.** `args` should be the JSON object the model produced. If the
-model produced something that is not valid JSON, send it as a JSON string: the
-host rejects it and tells the model.
-
-**`tool_result`.** Every `tool_call` of an assistant message has a
-`tool_result` in the next user message, before any text.
-
-`images`, when present, are what the result shows the model, such as a
-screenshot: a list of `{"media_type": "image/png", "data": "<base64>"}`,
-where the type is `image/png`, `image/jpeg`, `image/gif`, or `image/webp`.
-The text always says what each image is, so a provider whose model API
-takes no images in a tool result sends the text alone, and the model still
-knows what it was not shown.
-
-**`opaque`.** State the provider needs back to continue the conversation, such
-as signed reasoning. The host stores it and returns it in place, unread and
-unchanged. A provider ignores opaque blocks it does not recognize, which is
-what makes switching providers mid-session safe.
-
-An opaque block is treated as valid only after the exact conversation that
-produced it. When the host changes what comes before, it does not send the
-block back: after a compaction nothing earlier is replayed at all, and after
-a change of system prompt the earlier opaque blocks are left out.
-
-## What the host guarantees
-
-- **Append-only history.** The `messages` of a request extend those of the
-  previous request in the session; earlier content never changes. `system` and
-  `tools` are stable across a session. A provider can cache the prefix. The
-  one exception is a compaction: when the context is nearly full, the host
-  starts the conversation over from a summary, and the prefix is new from
-  there on.
-- **Summaries come through `complete`.** To compact, the host sends the
-  conversation with one more instruction and takes the text of the answer as
-  the summary. A provider needs nothing special for it.
-- **Complete tool results.** A call interrupted before it finished gets an
-  error result, so the history is always valid.
+**Source:** [`protocol/types.go`](https://github.com/LiasCode/rumbo/blob/v0.9.0/protocol/types.go) for the wire, [`internal/provider/stdio.go`](https://github.com/LiasCode/rumbo/blob/v0.9.0/internal/provider/stdio.go) and [`pool.go`](https://github.com/LiasCode/rumbo/blob/v0.9.0/internal/provider/pool.go) for the host's side, and [`internal/agent/agent.go`](https://github.com/LiasCode/rumbo/blob/v0.9.0/internal/agent/agent.go) for what the loop does with each answer. [Write a provider](/extend/provider/).

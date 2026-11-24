@@ -21,7 +21,7 @@ rumbo serve [flags]            be the host for a front end on stdin/stdout
 | `-p <provider>`     | Provider of the session (default: the `default_provider` setting)                                                                |
 | `-m <model>`        | Model of the session (default: the model set for its provider)                                                                   |
 | `-o <name>=<value>` | A provider option of the session, such as `-o effort=high`; may be repeated, and an empty value gives one back to the provider's |
-| `-f <name>`         | Front end for this start (default: `tui` in a terminal, else `plain`)                                                            |
+| `-f <name>`         | Front end for this start (default: the `frontend` setting, else `tui` in a terminal, else `plain`)                               |
 | `-single`           | Work in one session at a time; by default the host works in several sessions of the project at once                              |
 
 The session keeps what `-p`, `-m`, and `-o` choose, over the system settings.
@@ -92,8 +92,33 @@ A front end is any program that speaks the Agent Frontend Protocol on file descr
 ```text
 rumbo provide <name>           run a built-in provider on stdin/stdout
 rumbo attach <name>            run a built-in front end on descriptors 3/4
+rumbo extend mcp [command...]  run the built-in MCP extension on stdin/stdout
 rumbo version                  print the version
 ```
 
 `provide` and `attach` are how rumbo starts its own providers and front ends, through the same
 protocols as any other.
+
+## Extensions and MCP
+
+```text
+rumbo extension list
+rumbo extension show <name>
+rumbo extension add [-config <json>] [-replaces <tools>] <name> <command>...
+rumbo extension set <name> <field>=<value>...
+rumbo extension rm <name>
+```
+
+[Extensions and MCP](/guides/extensions/)
+
+## Plugins
+
+```text
+rumbo plugin list
+rumbo plugin show <name>
+rumbo plugin add [-replaces <tools>] <source>
+rumbo plugin update <name>
+rumbo plugin rm <name>
+```
+
+[Plugins](/guides/plugins/) · [v2 →](/reference/next/)

@@ -32,10 +32,10 @@ rumbo apre l'interfaccia da terminale, e il modello lavora con i suoi strumenti 
 chiamarli. Ogni chiamata a uno strumento compare mentre viene eseguita, e l'esecuzione termina con una
 riga che dice come è finita, quanto è durata e quanti turni e token ha usato.
 
-:::caution
-Il modello legge, scrive ed esegue comandi come te, senza chiedere. Leggi prima
-[prima di eseguirlo](/it/start/safety/).
-:::
+> **Attenzione**
+>
+> Il modello legge, scrive ed esegue comandi come te, senza chiedere. Leggi prima
+> [prima di eseguirlo](/it/start/safety/).
 
 ## 3. Vai avanti
 

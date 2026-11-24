@@ -52,6 +52,8 @@ Les skills se placent dans :
   vôtres ;
 - `.agents/skills/<name>/` dans un projet, de sa racine jusqu'à l'endroit où vous êtes. Une skill du
   projet remplace l'une des vôtres portant le même nom.
+- `skills/<name>/` dans un [plugin](/fr/guides/plugins/) que vous avez ajouté. L'une des vôtres
+  portant le même nom la remplace.
 
 Seuls le nom, la description et le chemin sont envoyés avec chaque requête. Le modèle lit la skill
 quand une tâche en a besoin, donc une skill coûte une ligne tant qu'elle n'est pas utilisée.

@@ -1,0 +1,749 @@
+---
+import { href, type Locale } from '../navigation';
+import Icon from './Icon.astro';
+import { arc, brush, cubic, hairs, line, pressed, tapered, type Point } from './ink';
+
+// The whole of rumbo as one drawing that grows: the host at the heart, the
+// six things it is made to be extended through, and what people build with
+// each. compact leaves the last ring out, for the articles.
+const { locale, compact = false } = Astro.props as { locale: Locale; compact?: boolean };
+
+const copy = {
+	en: {
+		title: 'From the heart outwards',
+		summary: 'The host is small. Everything else grows from three protocols, a log, and plain files.',
+		play: 'Play',
+		pause: 'Pause',
+		position: 'Position in the drawing',
+		organs: ['agent loop', 'read · write · edit · bash', 'append-only log'],
+		branches: [
+			['Front ends', 'Agent Frontend Protocol', ['Terminal UI', 'Plain output for scripts', 'Desktop app', 'Inside your editor', 'Yours: a bot, a web page']],
+			['Providers', 'Agent Provider Protocol', ['Claude API', 'OpenAI APIs', 'A ChatGPT plan', 'Local: Ollama, llama.cpp, vLLM', 'Yours: any model']],
+			['Extensions', 'Agent Extension Protocol', ['MCP servers', 'Tools of your own', 'A guarded or sandboxed bash', 'Context: notes, memory', 'Listeners: notify, count cost', 'Commands such as /docs-login']],
+			['Sessions', 'entries.jsonl', ['Continue and resume', 'Branch before any message', 'Replay the exact request', 'Compaction near the limit', 'Export as Markdown']],
+			['Instructions', 'AGENTS.md · SKILL.md', ['Your guide, everywhere', 'A guide for each project', 'Skills, read when needed']],
+			['Plugins', 'plugin.yaml', ['All of it in one package', 'From Git or a folder', 'Built when installed', 'Consent to replace a tool']],
+		],
+	},
+	es: {
+		title: 'Del corazón hacia fuera',
+		summary: 'El host es pequeño. Todo lo demás crece a partir de tres protocolos, un registro y archivos de texto.',
+		play: 'Reproducir',
+		pause: 'Pausar',
+		position: 'Posición en el dibujo',
+		organs: ['bucle del agente', 'read · write · edit · bash', 'registro de solo anexar'],
+		branches: [
+			['Interfaces', 'Agent Frontend Protocol', ['Interfaz de terminal', 'Texto plano para scripts', 'Aplicación de escritorio', 'Dentro de tu editor', 'La tuya: un bot, una web']],
+			['Proveedores', 'Agent Provider Protocol', ['API de Claude', 'APIs de OpenAI', 'Un plan de ChatGPT', 'Local: Ollama, llama.cpp, vLLM', 'El tuyo: cualquier modelo']],
+			['Extensiones', 'Agent Extension Protocol', ['Servidores MCP', 'Herramientas propias', 'Un bash vigilado o aislado', 'Contexto: notas, memoria', 'Oyentes: avisar, contar coste', 'Comandos como /docs-login']],
+			['Sesiones', 'entries.jsonl', ['Continuar y reanudar', 'Ramificar antes de un mensaje', 'Repetir la petición exacta', 'Compactar cerca del límite', 'Exportar a Markdown']],
+			['Instrucciones', 'AGENTS.md · SKILL.md', ['Tu guía, en todas partes', 'Una guía por proyecto', 'Skills, leídas al necesitarse']],
+			['Plugins', 'plugin.yaml', ['Todo en un solo paquete', 'Desde Git o una carpeta', 'Se compila al instalar', 'Permiso para sustituir']],
+		],
+	},
+	fr: {
+		title: 'Du cœur vers l’extérieur',
+		summary: 'L’hôte est petit. Tout le reste pousse à partir de trois protocoles, d’un journal et de fichiers texte.',
+		play: 'Lire',
+		pause: 'Pause',
+		position: 'Position dans le dessin',
+		organs: ['boucle de l’agent', 'read · write · edit · bash', 'journal en ajout seul'],
+		branches: [
+			['Interfaces', 'Agent Frontend Protocol', ['Interface en terminal', 'Texte brut pour les scripts', 'Application de bureau', 'Dans votre éditeur', 'La vôtre : un bot, une page']],
+			['Fournisseurs', 'Agent Provider Protocol', ['API de Claude', 'API d’OpenAI', 'Une offre ChatGPT', 'Local : Ollama, llama.cpp, vLLM', 'Le vôtre : tout modèle']],
+			['Extensions', 'Agent Extension Protocol', ['Serveurs MCP', 'Vos propres outils', 'Un bash surveillé ou isolé', 'Contexte : notes, mémoire', 'Écoute : notifier, compter', 'Commandes comme /docs-login']],
+			['Sessions', 'entries.jsonl', ['Continuer et reprendre', 'Bifurquer avant un message', 'Rejouer la requête exacte', 'Compacter près de la limite', 'Exporter en Markdown']],
+			['Instructions', 'AGENTS.md · SKILL.md', ['Votre guide, partout', 'Un guide par projet', 'Skills, lus au besoin']],
+			['Plugins', 'plugin.yaml', ['Le tout en un paquet', 'Depuis Git ou un dossier', 'Compilé à l’installation', 'Accord pour remplacer']],
+		],
+	},
+	it: {
+		title: 'Dal cuore verso l’esterno',
+		summary: 'L’host è piccolo. Tutto il resto cresce da tre protocolli, un registro e file di testo.',
+		play: 'Riproduci',
+		pause: 'Pausa',
+		position: 'Posizione nel disegno',
+		organs: ['ciclo dell’agente', 'read · write · edit · bash', 'registro in sola aggiunta'],
+		branches: [
+			['Interfacce', 'Agent Frontend Protocol', ['Interfaccia da terminale', 'Testo semplice per gli script', 'Applicazione desktop', 'Dentro il tuo editor', 'La tua: un bot, una pagina']],
+			['Provider', 'Agent Provider Protocol', ['API di Claude', 'API di OpenAI', 'Un piano ChatGPT', 'Locale: Ollama, llama.cpp, vLLM', 'Il tuo: qualsiasi modello']],
+			['Estensioni', 'Agent Extension Protocol', ['Server MCP', 'Strumenti tuoi', 'Un bash sorvegliato o isolato', 'Contesto: note, memoria', 'Ascolto: notifiche, costi', 'Comandi come /docs-login']],
+			['Sessioni', 'entries.jsonl', ['Continuare e riprendere', 'Diramare prima di un messaggio', 'Ripetere la richiesta esatta', 'Compattare vicino al limite', 'Esportare in Markdown']],
+			['Istruzioni', 'AGENTS.md · SKILL.md', ['La tua guida, ovunque', 'Una guida per progetto', 'Skill, lette al bisogno']],
+			['Plugin', 'plugin.yaml', ['Tutto in un pacchetto', 'Da Git o da una cartella', 'Compilato all’installazione', 'Consenso per sostituire']],
+		],
+	},
+}[locale];
+
+// Where each branch sits around the heart, the page its plate opens, and
+// the page of each of its leaves.
+const places = [
+	{ side: -1, row: -1, path: 'extend/front-end', leaves: ['guides/terminal-ui', 'guides/scripting', 'guides/desktop-app', 'extend/front-end', 'extend/front-end'] },
+	{ side: 1, row: -1, path: 'extend/provider', leaves: ['guides/providers', 'guides/providers', 'guides/providers', 'guides/providers', 'extend/provider'] },
+	{ side: 1, row: 0, path: 'extend/extension', leaves: ['guides/extensions', 'extend/extension', 'reference/extension-protocol', 'reference/extension-protocol', 'reference/extension-protocol', 'guides/extensions'] },
+	{ side: -1, row: 0, path: 'guides/sessions', leaves: ['guides/sessions', 'guides/sessions', 'guides/sessions', 'guides/sessions', 'guides/sessions'] },
+	{ side: -1, row: 1, path: 'guides/instructions-and-skills', leaves: ['guides/instructions-and-skills', 'guides/instructions-and-skills', 'guides/instructions-and-skills'] },
+	{ side: 1, row: 1, path: 'guides/plugins', leaves: ['reference/plugins', 'guides/plugins', 'reference/plugins', 'guides/plugins'] },
+];
+
+const width = compact ? 800 : 1380;
+const height = compact ? 640 : 800;
+const heart: Point = [width / 2, height / 2];
+const plate = { width: 176, height: 60 };
+const reach = compact ? 262 : 250;
+const rise = compact ? 215 : 250;
+const share = (value: number) => value.toFixed(3);
+
+const enso = arc(heart, 88, -98, 338, 5);
+const ensoShape = brush(enso, pressed(27), 11, 0.24);
+const ensoHairs = hairs(enso, 19, 5, 5);
+
+const branches = copy.branches.map(([name, caption, leaves], index) => {
+	const { side, row, path, leaves: pages } = places[index];
+	const center: Point = [heart[0] + side * reach, heart[1] + row * rise];
+	// Each branch leaves the ring of the heart sideways and reaches its plate
+	// from the heart's side, so the axis above and below the seal stays free
+	// for what the host holds.
+	const angle = ((side < 0 ? 180 - row * 24 : row * 24) * Math.PI) / 180;
+	const away: Point = [Math.cos(angle), Math.sin(angle)];
+	const from: Point = [heart[0] + away[0] * 84, heart[1] + away[1] * 84];
+	const to: Point = row ? [center[0] - side * 46, center[1] - (row * plate.height) / 2 + row * 6] : [center[0] - (side * plate.width) / 2 + side * 6, center[1]];
+	const spine = cubic(from, [from[0] + away[0] * 76, from[1] + away[1] * 76], [to[0] - side * 8, to[1] - row * 104], to);
+	const start = 0.16 + index * 0.125;
+	const outer: Point = [center[0] + (side * plate.width) / 2, center[1]];
+
+	return {
+		name: name as string,
+		caption: caption as string,
+		side,
+		center,
+		href: href(locale, path),
+		spine: line(spine),
+		shape: brush(spine, tapered(21, 6), 30 + index, 0.26),
+		hairs: hairs(spine, 9, 60 + index, 2),
+		spans: { stroke: `${share(start)} ${share(start + 0.075)}`, plate: `${share(start + 0.05)} ${share(start + 0.105)}` },
+		leaves: (leaves as string[]).map((label, leaf, all) => {
+			const end: Point = [outer[0] + side * 76, center[1] + (leaf - (all.length - 1) / 2) * 38];
+			const begin = start + 0.095 + leaf * 0.014;
+
+			return {
+				label,
+				end,
+				href: href(locale, pages[leaf]),
+				chain: line(cubic(outer, [outer[0] + side * 44, outer[1]], [end[0] - side * 46, end[1]], end, 16)),
+				spans: { chain: `${share(begin)} ${share(begin + 0.05)}`, label: `${share(begin + 0.03)} ${share(begin + 0.075)}` },
+			};
+		}),
+	};
+});
+---
+
+<ink-growth class:list={[{ compact }]} data-play={copy.play} data-pause={copy.pause}>
+	<figure aria-label={copy.title}>
+		<svg class="growth-map" viewBox={`0 0 ${width} ${height}`} role="group" aria-label={copy.title}>
+			<defs>
+				<mask id="growth-enso" maskUnits="userSpaceOnUse" x="0" y="0" {width} {height}>
+					<path class="draw" data-span="0 0.1" d={line(enso)} pathLength="1" stroke="#fff" stroke-width="56" fill="none" />
+				</mask>
+				{branches.map(({ spine, spans }, index) => (
+					<mask id={`growth-branch-${index}`} maskUnits="userSpaceOnUse" x="0" y="0" {width} {height}>
+						<path class="draw" data-span={spans.stroke} d={spine} pathLength="1" stroke="#fff" stroke-width="40" stroke-linecap="round" fill="none" />
+					</mask>
+				))}
+			</defs>
+
+			{branches.map(({ shape, hairs, spine }, index) => (
+				<g class="branch">
+					<g mask={`url(#growth-branch-${index})`}>
+						<path class="ink" d={shape} />
+						{hairs.map((hair) => <path class="hair" d={hair} />)}
+					</g>
+					<circle class="pulse" r="5" style={`offset-path:path('${spine}');--delay:${index * 0.55}s`} />
+				</g>
+			))}
+
+			<g class="heart">
+				<g mask="url(#growth-enso)">
+					<path class="ink" d={ensoShape} />
+					{ensoHairs.map((hair) => <path class="hair" d={hair} />)}
+				</g>
+				<circle class="beat" cx={heart[0]} cy={heart[1]} r="52" />
+				<circle class="beat late" cx={heart[0]} cy={heart[1]} r="52" />
+				<a href={href(locale, 'reference/architecture')}>
+					<g class="seal press" data-span="0.07 0.14">
+						<rect x={heart[0] - 50} y={heart[1] - 44} width="100" height="88" rx="3" />
+						<text class="seal-kind" x={heart[0] - 38} y={heart[1] - 20}>HOST</text>
+						<text class="seal-name" x={heart[0]} y={heart[1] + 18} text-anchor="middle">rumbo</text>
+					</g>
+				</a>
+				{copy.organs.map((organ, index) => (
+					<text class="organ settle" data-span={`${share(0.1 + index * 0.02)} ${share(0.16 + index * 0.02)}`} x={heart[0]} y={heart[1] + (index ? 126 + index * 19 : -118)} text-anchor="middle">{organ}</text>
+				))}
+			</g>
+
+			{branches.map(({ name, caption, center, side, href, spans, leaves }, index) => (
+				<g class="limb">
+					{!compact && leaves.map(({ chain, spans }) => (
+						<g class="chain settle" data-span={spans.chain}>
+							<path class="link" d={chain} />
+							<path class="hole" d={chain} />
+							<path class="pin" d={chain} />
+						</g>
+					))}
+					<a href={href}>
+						<g class="plate press" data-span={spans.plate}>
+							<rect x={center[0] - plate.width / 2} y={center[1] - plate.height / 2} width={plate.width} height={plate.height} rx="3" />
+							<text class="plate-index" x={center[0] - plate.width / 2 + 12} y={center[1] - 9}>0{index + 1}</text>
+							<text class="plate-name" x={center[0] - plate.width / 2 + 34} y={center[1] - 5}>{name}</text>
+							<text class="plate-caption" x={center[0] - plate.width / 2 + 12} y={center[1] + 17}>{caption}</text>
+						</g>
+					</a>
+					{!compact && leaves.map(({ label, end, href, spans }) => (
+						<a class="leaf settle" data-span={spans.label} style={`--from:${side * -14}px`} href={href}>
+							<circle cx={end[0]} cy={end[1]} r="4.5" />
+							<text x={end[0] + side * 14} y={end[1] + 5} text-anchor={side < 0 ? 'end' : 'start'}>{label}</text>
+						</a>
+					))}
+				</g>
+			))}
+		</svg>
+
+		{!compact && (
+			<ol class="growth-list">
+				<li class="list-heart settle" data-span="0 0.12"><strong>rumbo</strong><span>{copy.organs.join(' · ')}</span></li>
+				{branches.map(({ name, caption, href, spans, leaves }, index) => (
+					<li class="list-branch">
+						<i class="list-stem" data-span={spans.stroke}></i>
+						<a class="list-plate settle" data-span={spans.plate} href={href}><b>0{index + 1}</b><strong>{name}</strong><span>{caption}</span></a>
+						<ul>{leaves.map(({ label, href, spans }) => <li class="settle" data-span={spans.label}><a href={href}>{label}</a></li>)}</ul>
+					</li>
+				))}
+			</ol>
+		)}
+
+		<figcaption>{copy.summary}</figcaption>
+	</figure>
+
+	<div class="growth-controls" hidden>
+		<button type="button" class="button small" data-toggle><Icon name="play" class="when-off" /><Icon name="pause" class="when-on" /><span data-label>{copy.play}</span></button>
+		<input type="range" min="0" max="1000" value="1000" aria-label={copy.position} />
+	</div>
+</ink-growth>
+
+<script>
+	import { reducedMotion, spans, whenSeen } from './timeline';
+
+	// How long the drawing takes to grow by itself, in milliseconds.
+	const length = 11000;
+
+	class InkGrowth extends HTMLElement {
+		connectedCallback() {
+			const show = spans(this);
+			const toggle = this.querySelector<HTMLButtonElement>('[data-toggle]')!;
+			const label = toggle.querySelector('[data-label]')!;
+			const range = this.querySelector<HTMLInputElement>('input')!;
+			let progress = 1;
+			let frame = 0;
+			let before = 0;
+
+			const render = () => {
+				show(progress);
+				range.value = String(Math.round(progress * 1000));
+				this.classList.toggle('alive', progress === 1);
+			};
+
+			const stop = () => {
+				cancelAnimationFrame(frame);
+				frame = 0;
+				delete toggle.dataset.on;
+				label.textContent = this.dataset.play!;
+			};
+
+			const step = (now: number) => {
+				progress = Math.min(1, progress + (now - before) / length);
+				before = now;
+				render();
+
+				if (progress < 1) {
+					frame = requestAnimationFrame(step);
+				} else {
+					stop();
+				}
+			};
+
+			const play = () => {
+				if (progress === 1) {
+					progress = 0;
+				}
+
+				before = performance.now();
+				toggle.dataset.on = '';
+				label.textContent = this.dataset.pause!;
+				frame = requestAnimationFrame(step);
+			};
+
+			toggle.addEventListener('click', () => (frame ? stop() : play()));
+			range.addEventListener('input', () => {
+				stop();
+				progress = Number(range.value) / 1000;
+				render();
+			});
+
+			this.querySelector<HTMLElement>('.growth-controls')!.hidden = false;
+
+			if (reducedMotion.matches) {
+				render();
+				return;
+			}
+
+			// Nothing is drawn until the figure is seen, so the growth is not
+			// spent above or below the screen.
+			progress = 0;
+			render();
+			whenSeen(this, () => {
+				if (progress === 0) {
+					play();
+				}
+			});
+		}
+	}
+
+	customElements.define('ink-growth', InkGrowth);
+</script>
+
+<style>
+	ink-growth {
+		display: block;
+		min-width: 0;
+	}
+
+	figure {
+		margin: 0;
+	}
+
+	figcaption {
+		max-width: 46ch;
+		margin: 0.4rem auto 0;
+		color: var(--muted);
+		font: italic 1.05rem/1.45 var(--serif);
+		text-align: center;
+	}
+
+	.growth-map {
+		display: block;
+		width: 100%;
+		height: auto;
+		overflow: visible;
+	}
+
+	/* What the timeline moves. Without a script --t stays at 1, so the
+	   whole drawing is there. */
+	[data-span] {
+		--t: 1;
+	}
+
+	.draw {
+		stroke-dasharray: 1;
+		stroke-dashoffset: calc(1 - var(--t));
+	}
+
+	.press {
+		opacity: var(--t);
+		transform: scale(calc(1.28 - 0.28 * var(--t)));
+		transform-box: fill-box;
+		transform-origin: center;
+	}
+
+	.seal.press {
+		transform: rotate(-4deg) scale(calc(1.5 - 0.5 * var(--t)));
+	}
+
+	.settle {
+		opacity: var(--t);
+		transform: translateX(calc((1 - var(--t)) * var(--from, 0px)));
+	}
+
+	.ink {
+		fill: var(--ink);
+	}
+
+	.hair {
+		fill: none;
+		stroke: var(--paper);
+		stroke-width: 1.1;
+		opacity: 0.55;
+	}
+
+	.seal rect {
+		fill: var(--seal);
+	}
+
+	.seal-kind {
+		fill: #ffe9dc;
+		font: 600 11px var(--mono);
+		letter-spacing: 0.16em;
+	}
+
+	.seal-name {
+		fill: #fff7ee;
+		font: 900 31px var(--sans);
+		letter-spacing: -0.07em;
+	}
+
+	.organ {
+		fill: var(--muted);
+		font: 12.5px var(--mono);
+		letter-spacing: 0.04em;
+	}
+
+	.beat {
+		fill: none;
+		stroke: var(--seal);
+		stroke-width: 2;
+		opacity: 0;
+		transform-box: fill-box;
+		transform-origin: center;
+	}
+
+	.pulse {
+		fill: var(--seal);
+		opacity: 0;
+		offset-rotate: 0deg;
+	}
+
+	.plate rect {
+		fill: var(--ink);
+		transition: fill 0.2s;
+	}
+
+	a:hover .plate rect,
+	a:focus-visible .plate rect {
+		fill: var(--accent);
+	}
+
+	.plate-index {
+		fill: #ff8a66;
+		font: 11px var(--mono);
+	}
+
+	.plate-name {
+		fill: var(--surface);
+		font: 700 18px var(--sans);
+		letter-spacing: -0.02em;
+	}
+
+	.plate-caption {
+		fill: #cfc6b6;
+		font: 10.5px var(--mono);
+		letter-spacing: 0.03em;
+	}
+
+	/* A chain seen from its side: links, the hole in each, and the pins
+	   that join one to the next. */
+	.chain path {
+		fill: none;
+		stroke-linecap: round;
+		stroke-dasharray: 8 9;
+	}
+
+	.link {
+		stroke: var(--ink);
+		stroke-width: 5.5;
+	}
+
+	.hole {
+		stroke: var(--paper);
+		stroke-width: 2.2;
+	}
+
+	.chain .pin {
+		stroke: var(--ink);
+		stroke-width: 1.4;
+		stroke-dasharray: 7 10;
+		stroke-dashoffset: -9;
+	}
+
+	.leaf circle {
+		fill: var(--paper);
+		stroke: var(--seal);
+		stroke-width: 2.4;
+		transition: fill 0.2s;
+	}
+
+	.leaf text {
+		fill: var(--ink);
+		font: 15.5px var(--sans);
+		transition: fill 0.2s;
+	}
+
+	.leaf:hover circle {
+		fill: var(--seal);
+	}
+
+	.leaf:hover text {
+		fill: var(--accent);
+	}
+
+	svg a:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 3px;
+	}
+
+	/* Once grown, the drawing goes on living: the heart beats, the chains
+	   run, and a signal travels each branch. */
+	.alive .beat {
+		animation: beat 2.6s ease-out infinite;
+	}
+
+	.alive .beat.late {
+		animation-delay: 0.45s;
+	}
+
+	.alive .pulse {
+		animation: travel 3.3s var(--delay) cubic-bezier(0.5, 0, 0.3, 1) infinite;
+	}
+
+	.alive .chain path {
+		animation: run 1.5s linear infinite;
+	}
+
+	.alive .seal rect {
+		animation: throb 2.6s ease-in-out infinite;
+		transform-box: fill-box;
+		transform-origin: center;
+	}
+
+	@keyframes beat {
+		0% {
+			opacity: 0.75;
+			transform: scale(1);
+		}
+		70%,
+		100% {
+			opacity: 0;
+			transform: scale(2.1);
+		}
+	}
+
+	@keyframes throb {
+		0%,
+		24%,
+		100% {
+			transform: scale(1);
+		}
+		8% {
+			transform: scale(1.07);
+		}
+		16% {
+			transform: scale(0.98);
+		}
+	}
+
+	@keyframes travel {
+		0% {
+			offset-distance: 4%;
+			opacity: 0;
+		}
+		12%,
+		80% {
+			opacity: 1;
+		}
+		100% {
+			offset-distance: 100%;
+			opacity: 0;
+		}
+	}
+
+	@keyframes run {
+		to {
+			stroke-dashoffset: -17;
+		}
+	}
+
+	.alive .chain .pin {
+		animation-name: run-pin;
+	}
+
+	@keyframes run-pin {
+		to {
+			stroke-dashoffset: -26;
+		}
+	}
+
+	.growth-controls {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		max-width: 34rem;
+		margin: 1.1rem auto 0;
+	}
+
+	.growth-controls .button {
+		min-width: 7rem;
+	}
+
+	/* The slider is a line of ink with the seal as its handle. */
+	.growth-controls input {
+		flex: 1;
+		min-width: 0;
+		height: 2rem;
+		margin: 0;
+		appearance: none;
+		background: none;
+		cursor: pointer;
+	}
+
+	.growth-controls input::-webkit-slider-runnable-track {
+		height: 2px;
+		background: var(--ink);
+	}
+
+	.growth-controls input::-moz-range-track {
+		height: 2px;
+		background: var(--ink);
+	}
+
+	.growth-controls input::-webkit-slider-thumb {
+		width: 0.9rem;
+		height: 0.9rem;
+		margin-top: calc(-0.45rem + 1px);
+		appearance: none;
+		border: 0;
+		border-radius: 2px;
+		background: var(--seal);
+	}
+
+	.growth-controls input::-moz-range-thumb {
+		width: 0.9rem;
+		height: 0.9rem;
+		border: 0;
+		border-radius: 2px;
+		background: var(--seal);
+	}
+
+	.growth-list {
+		display: none;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.compact {
+		max-width: 44rem;
+		margin-block: 1.5rem 2.25rem;
+	}
+
+	.compact .plate-name {
+		font-size: 19px;
+	}
+
+	/* A screen too narrow to read the drawing gets the same growth as a
+	   column: the heart, then each branch under a stem of ink. */
+	@media (max-width: 56rem) {
+		ink-growth:not(.compact) .growth-map {
+			display: none;
+		}
+
+		.growth-list {
+			display: grid;
+			gap: 0.4rem;
+		}
+
+		.list-heart {
+			display: grid;
+			justify-items: center;
+			gap: 0.3rem;
+			margin: 0 auto 0.3rem;
+			padding: 0.9rem 1.2rem;
+			background: var(--seal);
+			color: #fff7ee;
+			transform-origin: center;
+		}
+
+		.list-heart strong {
+			font: 900 1.9rem/1 var(--sans);
+			letter-spacing: -0.07em;
+		}
+
+		.list-heart span {
+			font: 0.68rem var(--mono);
+			text-align: center;
+		}
+
+		.list-branch {
+			position: relative;
+			padding: 0 0 0.5rem 1.4rem;
+		}
+
+		.list-stem {
+			--t: 1;
+			position: absolute;
+			left: 0.3rem;
+			top: -0.4rem;
+			bottom: 0.4rem;
+			width: 5px;
+			border-radius: 3px 3px 60% 60%;
+			background: var(--ink);
+			transform: scaleY(var(--t));
+			transform-origin: top;
+		}
+
+		.list-plate {
+			--from: -10px;
+			display: grid;
+			grid-template-columns: auto 1fr;
+			gap: 0 0.5rem;
+			padding: 0.55rem 0.75rem;
+			background: var(--ink);
+			color: var(--surface);
+			text-decoration: none;
+		}
+
+		.list-plate b {
+			color: #ff8a66;
+			font: 0.72rem/1.9 var(--mono);
+		}
+
+		.list-plate span {
+			grid-column: 1 / -1;
+			color: #cfc6b6;
+			font: 0.68rem var(--mono);
+		}
+
+		.list-branch ul {
+			display: grid;
+			gap: 0.1rem;
+			margin: 0.45rem 0 0;
+			padding: 0;
+			list-style: none;
+		}
+
+		.list-branch ul li {
+			--from: -10px;
+			position: relative;
+			padding-left: 1.1rem;
+			font-size: 0.93rem;
+		}
+
+		.list-branch ul li::before {
+			content: '';
+			position: absolute;
+			left: 0;
+			top: 0.52em;
+			width: 0.45rem;
+			height: 0.45rem;
+			border: 2px solid var(--seal);
+			border-radius: 50%;
+		}
+
+		.list-branch ul a {
+			text-decoration: none;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.alive * {
+			animation: none !important;
+		}
+	}
+</style>

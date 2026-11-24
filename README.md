@@ -1,23 +1,20 @@
 # rumbo-web
 
-The website of [rumbo](https://github.com/LiasCode/rumbo), the minimal agent
-harness: a landing page and the documentation.
+The multilingual website and documentation for [rumbo](https://github.com/LiasCode/rumbo).
+Astro renders the site to static HTML; documentation and search do not need a server.
 
 ## Develop
 
-It needs [Bun](https://bun.sh).
+Use [Bun](https://bun.sh) and Node.js 22.23.4 or newer (Astro 7).
 
 ```sh
 bun install
-bun run dev        # http://localhost:4321
+bun run dev    # http://localhost:4321
+bun run verify
 ```
 
-| Command           | Does                                                                             |
-| ----------------- | -------------------------------------------------------------------------------- |
-| `bun run dev`     | Serve the site while you edit it                                                 |
-| `bun run build`   | Build the site into `dist/`                                                      |
-| `bun run preview` | Serve what `build` made                                                          |
-| `bun run pages`   | Check that every page exists in every language, and that no diagram is ASCII art |
-| `bun run verify`  | Format check, lint, pages, type check, and the production build                  |
-| `bun run format`  | Format the code                                                                  |
-| `bun run og`      | Render `design/og.svg` to `public/og.png` (needs `resvg`)                        |
+`bun run verify` checks formatting, lint, types, the production build, and the
+built documentation. `bun run preview` serves the output in `dist/` locally.
+
+To regenerate the social image, install `resvg` and the GNU FreeFont fonts and run
+`bun run og`. See [AGENTS.md](AGENTS.md) for content and release conventions.

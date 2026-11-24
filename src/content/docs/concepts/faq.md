@@ -31,9 +31,7 @@ address, and choose one of its models. See
 
 ## Can I use my ChatGPT or Claude subscription?
 
-A ChatGPT plan, yes: the built-in `chatgpt` provider signs in with ChatGPT, as OpenAI offers
-open-source apps. A Claude subscription, no: Anthropic's terms do not let other applications use
-one, so the `anthropic` provider takes an API key.
+The built-in `chatgpt` provider can sign in with a ChatGPT plan. The built-in `anthropic` provider uses an API key, not a Claude subscription. The separate [rumbo-claude](https://github.com/LiasCode/rumbo-claude) plugin documents its own compatibility, sign-in flow, and limitations.
 
 ## Does it run on Windows?
 

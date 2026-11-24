@@ -11,10 +11,10 @@ utilise son pointeur et son clavier. Il est désactivé tant que vous ne l'activ
 rumbo system set computer=on
 ```
 
-:::danger
-Avec l'outil activé, le modèle agit sur ce qui a le focus, avec votre pointeur et votre clavier. Lisez
-[avant de le lancer](/fr/start/safety/), et donnez-lui un bureau à lui quand vous le pouvez.
-:::
+> **Avertissement**
+>
+> Avec l'outil activé, le modèle agit sur ce qui a le focus, avec votre pointeur et votre clavier. Lisez
+> [avant de le lancer](/fr/start/safety/), et donnez-lui un bureau à lui quand vous le pouvez.
 
 ## Ce dont il a besoin
 

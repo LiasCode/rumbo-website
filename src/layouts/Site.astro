@@ -1,0 +1,62 @@
+---
+import Search from '../components/Search.astro';
+import Icon from '../components/Icon.astro';
+import { href, interfaceCopy, languageNames, locales, type Locale } from '../navigation';
+import { repository, release } from '../site.mjs';
+import '../styles/site.css';
+
+interface Props {
+	locale: Locale;
+	title: string;
+	description: string;
+	slug?: string;
+	canonicalLocale?: Locale;
+	alternates?: Locale[];
+}
+
+const { locale, title, description, slug = '', canonicalLocale = locale, alternates = [...locales] } = Astro.props;
+const copy = interfaceCopy[locale];
+const canonical = new URL(href(canonicalLocale, slug), Astro.site);
+const image = new URL('/og.png', Astro.site);
+---
+
+<!doctype html>
+<html lang={locale}>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>{slug ? `${title} · rumbo` : `rumbo — ${title}`}</title>
+		<meta name="description" content={description} />
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		<link rel="canonical" href={canonical} />
+		{alternates.map((language) => <link rel="alternate" hreflang={language} href={new URL(href(language, slug), Astro.site)} />)}
+		<link rel="alternate" hreflang="x-default" href={new URL(href('en', slug), Astro.site)} />
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content={`${title} · rumbo`} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonical} />
+		<meta property="og:image" content={image} />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta name="twitter:card" content="summary_large_image" />
+	</head>
+	<body>
+		<a class="skip-link" href="#main">{copy.skip}</a>
+		<header class="masthead">
+			<div class="masthead-inner">
+				<a class="wordmark" href={href(locale)}><img src="/favicon.svg" alt="" width="29" height="29" />rumbo<span>.</span></a>
+				<nav class="top-nav" aria-label={copy.docs}>
+					<a href={href(locale, 'start/introduction')}>{copy.docs}</a>
+					<a class="top-github with-icon" href={repository}>GitHub <Icon name="arrow-up-right" /></a>
+					<Search locale={locale} />
+					<details class="language-menu">
+						<summary class="button small" aria-label={`${copy.language}: ${languageNames[locale]}`}>{locale.toUpperCase()} <Icon name="chevron-down" /></summary>
+						<ul>{locales.map((language) => <li><a lang={language} aria-current={language === locale ? 'page' : undefined} href={href(language, slug)}>{languageNames[language]}</a></li>)}</ul>
+					</details>
+				</nav>
+			</div>
+		</header>
+		<slot />
+		<footer class="site-footer"><a class="wordmark" href={href(locale)}>rumbo<span>.</span></a><a href={href(locale, 'reference/changelog')}>v{release.version}</a><a class="with-icon" href={repository}>GitHub <Icon name="arrow-up-right" /></a><a href={`${repository}/blob/main/LICENSE`}>MIT</a></footer>
+	</body>
+</html>

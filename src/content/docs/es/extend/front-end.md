@@ -19,9 +19,11 @@ Los mensajes son objetos JSON-RPC 2.0, uno por línea, iguales en los dos casos:
 | rumbo arranca una interfaz registrada (`rumbo -f <name>`) | el descriptor de archivo 3 | el descriptor de archivo 4 |
 | La interfaz arranca `rumbo serve`, como haría un editor   | el stdout del host         | el stdin del host          |
 
-Una interfaz que arranca rumbo conserva la terminal en stdin y stdout, así que puede dibujar y leer
+Una interfaz iniciada por rumbo conserva la terminal en stdin y stdout, así que puede dibujar y leer
 teclas libremente. Cerrar la conexión termina el host: cancela las ejecuciones en curso, las registra
 y detiene sus proveedores.
+
+[Compara ambos sentidos de arranque en la traza interactiva.](/es/#run-trace)
 
 ## Su forma
 
@@ -39,7 +41,7 @@ la persona preguntó antes (`recall`).
 
 ## Un ejemplo completo
 
-[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/main/examples/frontend.py) es una
+[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.9.0/examples/frontend.py) es una
 interfaz entera en un archivo de Python: pide tareas con `input()` e imprime los eventos según llegan.
 
 ```python
@@ -52,7 +54,11 @@ def run(objective, request_id):
 
         if frame.get("method") == "event":
             show(frame["params"])
-        elif frame.get("id") == request_id:
+        elif frame.get("id") == request_id and "method" not in frame:
+            if "error" in frame:
+                print(frame["error"]["message"])
+                return
+
             result = frame["result"]
             print(f"\n[{result['status']}] {result.get('error', '')}")
             return
@@ -65,7 +71,7 @@ rumbo frontend add simple python3 /path/to/examples/frontend.py
 rumbo -f simple
 ```
 
-En Go, el paquete [`protocol`](https://github.com/LiasCode/rumbo/tree/main/protocol) tiene los tipos
+En Go, el paquete [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.9.0/protocol) tiene los tipos
 y `DialFrontend`, una conexión ya hecha.
 
 ## Comandos sin conocerlos

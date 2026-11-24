@@ -1,0 +1,259 @@
+---
+import type { Locale } from '../navigation';
+
+// A conversation between two or three programs, drawn as lanes and the
+// frames that cross them, which redraw themselves one after the other for
+// as long as the page is open. The articles that have one are named here,
+// with the frames their protocol really has; an answer is drawn dashed.
+const { locale, slug } = Astro.props as { locale: Locale; slug: string };
+
+const words = {
+	en: { host: 'Host', provider: 'Provider', frontend: 'Front end', extension: 'Extension', bridge: 'rumbo extend mcp', server: 'MCP server', you: 'You', rumbo: 'rumbo', plugin: 'Plugin', label: 'Sequence of frames' },
+	es: { host: 'Host', provider: 'Proveedor', frontend: 'Interfaz', extension: 'Extensión', bridge: 'rumbo extend mcp', server: 'Servidor MCP', you: 'Tú', rumbo: 'rumbo', plugin: 'Plugin', label: 'Secuencia de mensajes' },
+	fr: { host: 'Hôte', provider: 'Fournisseur', frontend: 'Interface', extension: 'Extension', bridge: 'rumbo extend mcp', server: 'Serveur MCP', you: 'Vous', rumbo: 'rumbo', plugin: 'Plugin', label: 'Séquence de messages' },
+	it: { host: 'Host', provider: 'Provider', frontend: 'Interfaccia', extension: 'Estensione', bridge: 'rumbo extend mcp', server: 'Server MCP', you: 'Tu', rumbo: 'rumbo', plugin: 'Plugin', label: 'Sequenza di messaggi' },
+}[locale];
+
+type Step = [from: number, to: number, label: string, answer?: boolean];
+
+const provider: Step[] = [
+	[0, 1, 'initialize { protocol, config }'],
+	[1, 0, '{ protocol, name, model, options, functions }', true],
+	[0, 1, 'complete { model, system, messages, tools }'],
+	[1, 0, 'delta { id, text }'],
+	[1, 0, '{ message, stop, usage }', true],
+	[0, 1, 'cancel { id }'],
+	[0, 1, 'shutdown'],
+];
+
+const frontend: Step[] = [
+	[1, 0, 'initialize { protocol, dir, provider, model }'],
+	[0, 1, '{ protocol, name }', true],
+	[0, 1, 'describe'],
+	[0, 1, 'run { objective }'],
+	[1, 0, 'event { type: "text" | "tool_started" | … }'],
+	[0, 1, 'steer { text }'],
+	[1, 0, 'ask { text, secret }'],
+	[0, 1, '{ text }', true],
+	[1, 0, '{ status, session }', true],
+];
+
+const extension: Step[] = [
+	[0, 1, 'initialize { protocol, config }'],
+	[1, 0, '{ protocol, name, tools, sections, events, functions }', true],
+	[0, 1, 'section { name, dir }'],
+	[1, 0, '{ text }', true],
+	[0, 1, 'call { name, args, dir, session }'],
+	[1, 0, 'call { id, name: "bash", args }'],
+	[0, 1, '{ text, is_error }', true],
+	[1, 0, '{ text, images, is_error }', true],
+	[0, 1, 'event { type: "ended" }'],
+];
+
+const diagrams: Record<string, { lanes: string[]; steps: Step[] }> = {
+	'reference/provider-protocol': { lanes: [words.host, words.provider], steps: provider },
+	'extend/provider': { lanes: [words.host, words.provider], steps: provider },
+	'reference/frontend-protocol': { lanes: [words.frontend, words.host], steps: frontend },
+	'extend/front-end': { lanes: [words.frontend, words.host], steps: frontend },
+	'reference/extension-protocol': { lanes: [words.host, words.extension], steps: extension },
+	'extend/extension': { lanes: [words.host, words.extension], steps: extension },
+	'guides/extensions': {
+		lanes: [words.host, words.bridge, words.server],
+		steps: [
+			[0, 1, 'initialize'],
+			[1, 2, 'initialize'],
+			[1, 2, 'tools/list'],
+			[1, 0, '{ tools }', true],
+			[0, 1, 'call { name, args }'],
+			[1, 2, 'tools/call'],
+			[2, 1, '{ content }', true],
+			[1, 0, '{ text }', true],
+		],
+	},
+	'guides/plugins': {
+		lanes: [words.you, words.rumbo, words.plugin],
+		steps: [
+			[0, 1, 'rumbo plugin add <source>'],
+			[1, 2, 'git clone · or read the folder'],
+			[2, 1, 'plugin.yaml', true],
+			[1, 2, 'build'],
+			[1, 2, 'initialize'],
+			[2, 1, '{ protocol, name, … }', true],
+			[1, 0, 'added'],
+		],
+	},
+};
+
+diagrams['reference/plugins'] = diagrams['guides/plugins'];
+
+const { lanes, steps } = diagrams[slug];
+// Each frame takes this long to be drawn, and the whole drawing goes round
+// once all of them have had their turn.
+const beat = 1.15;
+const round = steps.length * beat;
+const drawn = ((0.75 / round) * 100).toFixed(2);
+const turn = ((beat / round) * 100).toFixed(2);
+const name = `sequence-${slug.replace('/', '-')}`;
+const percent = (value: number) => `${((value / lanes.length) * 100).toFixed(3)}%`;
+---
+
+<figure class="sequence" aria-label={words.label} style={`--round:${round}s;--beat:${beat}s;--draw:${name}-draw;--dot:${name}-dot;--dot-back:${name}-dot-back;--lit:${name}-lit`}>
+	<ol class="lanes" aria-hidden="true">{lanes.map((lane) => <li>{lane}</li>)}</ol>
+	<div class="track">
+		{lanes.map((_, lane) => <i class="lifeline" style={`left:${percent(lane + 0.5)}`}></i>)}
+		<ol class="steps">
+			{steps.map(([from, to, label, answer], index) => (
+				<li class:list={[to < from ? 'leftward' : 'rightward', { answer }]} style={`--order:${index};--left:${percent(Math.min(from, to) + 0.5)};--span:${percent(Math.abs(to - from))}`}>
+					<span class="arrow" aria-hidden="true"><i></i></span>
+					<code><span class="who">{lanes[from]} → {lanes[to]}: </span>{label}</code>
+				</li>
+			))}
+		</ol>
+	</div>
+</figure>
+
+<style is:inline set:html={`
+@keyframes ${name}-draw { 0% { transform: scaleX(0); opacity: 1; } ${drawn}%, 96% { transform: scaleX(1); opacity: 1; } 100% { transform: scaleX(1); opacity: 0; } }
+@keyframes ${name}-dot { 0% { left: 0; opacity: 1; } ${drawn}% { left: 100%; opacity: 1; } ${(Number(drawn) + 1).toFixed(2)}%, 100% { left: 100%; opacity: 0; } }
+@keyframes ${name}-dot-back { 0% { left: 100%; opacity: 1; } ${drawn}% { left: 0; opacity: 1; } ${(Number(drawn) + 1).toFixed(2)}%, 100% { left: 0; opacity: 0; } }
+@keyframes ${name}-lit { 0%, ${turn}% { color: var(--accent); background: var(--surface); } ${(Number(turn) + 2).toFixed(2)}%, 100% { color: var(--ink); background: var(--paper); } }
+`}></style>
+
+<style>
+	.sequence {
+		margin: 1.6rem 0 2.2rem;
+		padding: 1rem clamp(0.5rem, 2vw, 1.2rem) 1.2rem;
+		border: 1px solid var(--line);
+		border-top: 3px solid var(--ink);
+		background: var(--paper);
+	}
+
+	.lanes,
+	.steps {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.lanes {
+		display: grid;
+		grid-auto-flow: column;
+		grid-auto-columns: minmax(0, 1fr);
+		gap: 0.5rem;
+	}
+
+	.lanes li {
+		justify-self: center;
+		max-width: 100%;
+		padding: 0.35rem 0.7rem;
+		background: var(--ink);
+		color: var(--surface);
+		font: 700 0.82rem/1.3 var(--sans);
+		text-align: center;
+		overflow-wrap: anywhere;
+	}
+
+	.track {
+		position: relative;
+		padding-block: 0.5rem 0.2rem;
+	}
+
+	.lifeline {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		width: 0;
+		border-left: 1.5px dashed var(--line);
+	}
+
+	.steps li {
+		position: relative;
+		padding-top: 1.15rem;
+	}
+
+	.arrow {
+		position: absolute;
+		top: 0.72rem;
+		left: var(--left);
+		width: var(--span);
+		height: 2px;
+		background: var(--ink);
+		transform-origin: left;
+		animation: var(--draw) var(--round) calc(var(--order) * var(--beat)) linear infinite backwards;
+	}
+
+	.leftward .arrow {
+		transform-origin: right;
+	}
+
+	.answer .arrow {
+		background: repeating-linear-gradient(90deg, var(--ink) 0 5px, transparent 5px 9px);
+	}
+
+	/* The head of the arrow, at the end it points to. */
+	.arrow::after {
+		content: '';
+		position: absolute;
+		top: -4px;
+		right: -1px;
+		border: 5px solid transparent;
+		border-left: 8px solid var(--ink);
+		border-right: 0;
+	}
+
+	.leftward .arrow::after {
+		right: auto;
+		left: -1px;
+		border-left: 0;
+		border-right: 8px solid var(--ink);
+	}
+
+	/* The frame itself, which runs the arrow as it is drawn. */
+	.arrow i {
+		position: absolute;
+		top: -4px;
+		left: 0;
+		width: 10px;
+		height: 10px;
+		margin-left: -5px;
+		border-radius: 50%;
+		background: var(--seal);
+		opacity: 0;
+		animation: var(--dot) var(--round) calc(var(--order) * var(--beat)) cubic-bezier(0.45, 0, 0.25, 1) infinite backwards;
+	}
+
+	.leftward .arrow i {
+		animation-name: var(--dot-back);
+	}
+
+	.steps code {
+		position: relative;
+		display: block;
+		width: fit-content;
+		max-width: 100%;
+		margin: 0.25rem auto 0.3rem;
+		padding: 0.1rem 0.45rem;
+		background: var(--paper);
+		font: 0.78rem/1.5 var(--mono);
+		text-align: center;
+		overflow-wrap: anywhere;
+		animation: var(--lit) var(--round) calc(var(--order) * var(--beat)) linear infinite;
+	}
+
+	/* Who speaks to whom is in the arrow; it is said in words for those who
+	   do not see it. */
+	.who {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.sequence * {
+			animation: none !important;
+		}
+	}
+</style>

@@ -100,12 +100,13 @@ dove si trova, invece di tirare a indovinare.
 
 ## Variabili d'ambiente
 
-| Variabile                          | Cosa cambia                                                                  |
-| ---------------------------------- | ---------------------------------------------------------------------------- |
-| `RUMBO_CONFIG`                     | Il file di configurazione da usare al posto di `config.yaml`                 |
-| `RUMBO_DATA`                       | La directory dei dati di rumbo, che contiene le sessioni                     |
-| `XDG_CONFIG_HOME`, `XDG_DATA_HOME` | Dove si trovano per impostazione predefinita, su Linux                       |
-| `NO_COLOR`                         | L'interfaccia da terminale non mostra colori, con il suo `theme` predefinito |
+| Variabile         | Cosa cambia                                                                  |
+| ----------------- | ---------------------------------------------------------------------------- |
+| `RUMBO_CONFIG`    | Il file di configurazione da usare al posto di `config.yaml`                 |
+| `RUMBO_DATA`      | La directory dei dati di rumbo, che contiene le sessioni                     |
+| `XDG_CONFIG_HOME` | Directory di base di `rumbo/config.yaml` su Linux                            |
+| `XDG_DATA_HOME`   | Directory di base dei dati `rumbo/` su Linux e macOS                         |
+| `NO_COLOR`        | L'interfaccia da terminale non mostra colori, con il suo `theme` predefinito |
 
 I provider leggono le proprie, come `ANTHROPIC_API_KEY` e `OPENAI_API_KEY`. Vedi
 [modelli e provider](/it/guides/providers/).

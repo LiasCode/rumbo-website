@@ -33,10 +33,10 @@ les appeler. Chaque appel d'outil s'affiche pendant qu'il s'exécute, et l'exéc
 ligne qui indique comment elle s'est terminée, combien de temps elle a pris et les tours et tokens
 utilisés.
 
-:::caution
-Le modèle lit, écrit et exécute des commandes en votre nom, sans demander. Lisez d'abord
-[avant de le lancer](/fr/start/safety/).
-:::
+> **Précaution**
+>
+> Le modèle lit, écrit et exécute des commandes en votre nom, sans demander. Lisez d'abord
+> [avant de le lancer](/fr/start/safety/).
 
 ## 3. Continuer
 

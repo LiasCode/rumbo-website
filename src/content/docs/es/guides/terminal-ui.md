@@ -61,6 +61,8 @@ proveedor, como `/login`, aparecen sin que la interfaz las conozca. Los propios 
 `/help`, `/copy` (la última respuesta del modelo, o `/copy code` para su último bloque de código) y
 `/export` (la sesión como Markdown).
 
+Los comandos de una extensión llevan su nombre registrado, como `/notes-forget`. Su salida se marca con `[extension]` o `[extension <name>]`. Consulta [Extensiones y MCP](/es/guides/extensions/).
+
 ## Modelo y opciones
 
 Un clic en el modelo bajo el editor, o Model and options en la paleta, abre el selector. Cambia el

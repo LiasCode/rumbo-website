@@ -11,10 +11,10 @@ and keyboard. It is off until you turn it on.
 rumbo system set computer=on
 ```
 
-:::danger
-With the tool on, the model acts on whatever has the focus, with your pointer and your keyboard.
-Read [before you run it](/start/safety/), and give it a desktop of its own when you can.
-:::
+> **Warning**
+>
+> With the tool on, the model acts on whatever has the focus, with your pointer and your keyboard.
+> Read [before you run it](/start/safety/), and give it a desktop of its own when you can.
 
 ## What it needs
 

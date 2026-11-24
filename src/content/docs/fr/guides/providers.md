@@ -40,10 +40,7 @@ rumbo -p anthropic
 Il liste les modèles que votre compte peut utiliser, propose une option `effort` et garde le
 raisonnement du modèle pour pouvoir le poursuivre.
 
-:::note
-Les conditions d'Anthropic ne permettent pas à d'autres applications d'utiliser un abonnement Claude,
-donc aucun fournisseur intégré ne s'y connecte ; `anthropic` utilise une clé d'API.
-:::
+> Le fournisseur intégré `anthropic` utilise des identifiants API. Il ne propose pas de connexion via un abonnement Claude.
 
 ## OpenAI
 

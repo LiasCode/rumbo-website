@@ -22,7 +22,7 @@ rumbo serve [flags]            be the host for a front end on stdin/stdout
 | `-p <provider>`     | Provider della sessione (predefinito: l'impostazione `default_provider`)                                                            |
 | `-m <model>`        | Modello della sessione (predefinito: il modello impostato per il suo provider)                                                      |
 | `-o <name>=<value>` | Un'opzione del provider per la sessione, come `-o effort=high`; si può ripetere, e un valore vuoto la riporta a quella del provider |
-| `-f <name>`         | Interfaccia per questo avvio (predefinita: `tui` in un terminale, altrimenti `plain`)                                               |
+| `-f <name>`         | Interfaccia per questo avvio (predefinita: l'impostazione `frontend`; altrimenti `tui` in un terminale, o `plain`)                  |
 | `-single`           | Lavorare in una sola sessione alla volta; per impostazione predefinita l'host lavora in più sessioni del progetto insieme           |
 
 La sessione conserva ciò che scelgono `-p`, `-m` e `-o`, sopra le impostazioni di sistema.
@@ -94,8 +94,33 @@ Un'interfaccia è qualsiasi programma che parla l'Agent Frontend Protocol sui de
 ```text
 rumbo provide <name>           run a built-in provider on stdin/stdout
 rumbo attach <name>            run a built-in front end on descriptors 3/4
+rumbo extend mcp [command...]  run the built-in MCP extension on stdin/stdout
 rumbo version                  print the version
 ```
 
 `provide` e `attach` sono il modo in cui rumbo avvia i propri provider e le proprie interfacce, tramite
 gli stessi protocolli di qualsiasi altro.
+
+## Estensioni e MCP
+
+```text
+rumbo extension list
+rumbo extension show <name>
+rumbo extension add [-config <json>] [-replaces <tools>] <name> <command>...
+rumbo extension set <name> <field>=<value>...
+rumbo extension rm <name>
+```
+
+[Estensioni e MCP](/it/guides/extensions/)
+
+## Plugin
+
+```text
+rumbo plugin list
+rumbo plugin show <name>
+rumbo plugin add [-replaces <tools>] <source>
+rumbo plugin update <name>
+rumbo plugin rm <name>
+```
+
+[Plugin](/it/guides/plugins/) · [v2 →](/it/reference/next/)

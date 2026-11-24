@@ -6,8 +6,9 @@ description: rumbo-gui est une fenêtre de bureau pour rumbo. Tous les projets e
 [rumbo-gui](https://github.com/LiasCode/rumbo-gui) est une fenêtre de bureau pour rumbo : tous les
 projets et sessions au même endroit, chaque session comme une conversation, et les réglages de rumbo,
 sans terminal. C'est une interface comme une autre, écrite en Rust avec
-[GPUI](https://github.com/zed-industries/zed), qui parle le même
-[Agent Frontend Protocol](/fr/reference/frontend-protocol/) que l'interface en terminal.
+[GPUI](https://github.com/zed-industries/zed), qui parle la
+[version 2 de l'Agent Frontend Protocol](/fr/reference/next/), que seule la branche de développement
+de rumbo possède.
 
 ## Ce que vous pouvez faire
 
@@ -28,46 +29,27 @@ sans terminal. C'est une interface comme une autre, écrite en Rust avec
 - **Laisser des exécutions tourner.** Les exécutions continuent dans d'autres sessions et projets, et
   la fenêtre, ou le bureau si vous l'activez, vous prévient quand l'une se termine.
 
+> **rumbo-gui ne fonctionne pas avec rumbo 0.9.0.** Il lui faut un rumbo qui parle la version 2 du protocole d'interface et possède `rumbo sessions -json`, c'est-à-dire aujourd'hui un rumbo compilé depuis la branche de développement : `go install github.com/LiasCode/rumbo/cmd/rumbo@main`. [Ce qui change après 0.9.0](/fr/reference/next/).
+
 ## Comment il fonctionne avec rumbo
 
-- **Chaque projet ouvert a son propre `rumbo serve`**, donc ses exécutions continuent pendant que vous
-  regardez un autre projet ou une autre session.
-- **Tout appartient à rumbo.** Les sessions, les réglages et les fournisseurs vivent dans rumbo ; la
-  fenêtre ne garde que ses propres préférences, comme son thème et les projets épinglés.
-- **Rien n'est codé en dur.** Les commandes, formulaires et sélecteurs viennent de ce que décrivent
-  rumbo et le fournisseur, donc une nouvelle fonction apparaît d'elle-même.
-- **Les fichiers sont à vous.** Il ne fait que les lire, pour montrer ce que Git voit changé, et Open in
-  Editor passe le projet à votre éditeur.
+Chaque session ouverte a son hôte. Les exécutions continuent en arrière-plan ; fermer la fenêtre annule celles des hôtes qu’elle a lancés.
 
 ## Installation
 
-rumbo-gui se compile depuis les sources, avec Rust, et a besoin de rumbo installé à part : une version
-postérieure à 0.5.
+C'est un plugin, que rumbo compile là où vous l'ajoutez : il lui faut donc `cargo`, de Rust, sur cette machine. Choisissez ensuite `gui` pour un lancement :
 
 ```sh
-git clone https://github.com/LiasCode/rumbo-gui
-cd rumbo-gui
-cargo build --release      # the binary is target/release/rumbo-gui
-install -Dm644 rumbo-gui.desktop ~/.local/share/applications/rumbo-gui.desktop
+rumbo plugin add https://github.com/LiasCode/rumbo-gui
+rumbo -f gui
 ```
-
-Mettez dans `Exec`, dans le fichier `.desktop`, le chemin du binaire s'il n'est pas dans votre `PATH`.
 
 ## Utilisation
 
-```sh
-rumbo-gui [--rumbo PATH] [DIR] [-- FLAGS]
-```
-
-`DIR` est le premier projet à ouvrir, et `FLAGS` sont passés à `rumbo serve`, comme `-c` ou `-p`.
-`--rumbo` indique l'exécutable de rumbo quand il n'est pas dans votre `PATH`.
-
-rumbo peut aussi lancer la fenêtre lui-même, comme il lance son interface en terminal. La fenêtre ne
-travaille alors que dans le projet de ce rumbo, et se ferme avec lui :
+La fenêtre fonctionne aussi seule, et lance les rumbos dont elle a besoin :
 
 ```sh
-rumbo frontend add gui /path/to/rumbo-gui --attached
-rumbo -f gui "a task"      # or: rumbo system set frontend=gui
+rumbo-gui [--rumbo PATH] [DIR] [-- FLAGS]   # --rumbo : l'exécutable de rumbo, quand il n'est pas dans le PATH
 ```
 
-Son [README](https://github.com/LiasCode/rumbo-gui#readme) liste toutes les touches.
+[rumbo-gui README](https://github.com/LiasCode/rumbo-gui#readme)

@@ -40,10 +40,7 @@ rumbo -p anthropic
 Lista los modelos que puede usar tu cuenta, ofrece una opción `effort` y conserva el razonamiento del
 modelo para poder continuarlo.
 
-:::note
-Los términos de Anthropic no permiten que otras aplicaciones usen una suscripción de Claude, así que
-ningún proveedor integrado inicia sesión en una; `anthropic` usa una clave de API.
-:::
+> El proveedor integrado `anthropic` usa credenciales de API. No implementa el inicio de sesión con una suscripción de Claude.
 
 ## OpenAI
 

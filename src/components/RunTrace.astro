@@ -1,0 +1,1047 @@
+---
+import { href, type Locale } from '../navigation';
+import { arc, brush, pressed } from './ink';
+import Rule from './Rule.astro';
+import Icon from './Icon.astro';
+
+// One run of rumbo 0.9.0, frame by frame, in the two ways a front end and
+// a host come to speak: the host starts the front end ("attached"), or the
+// front end starts the host. The frames are those a host was seen to send
+// and take with a provider and an extension made for the purpose; nothing
+// here calls a model.
+const { locale } = Astro.props as { locale: Locale };
+
+const copy = {
+	en: {
+		title: 'Follow one run',
+		summary: 'A front end, the host, a provider, and an extension, speaking JSON-RPC line by line. The task is made up; the frames are the ones rumbo 0.9.0 sends.',
+		reference: 'Front end protocol',
+		mode: 'Who starts whom',
+		modes: ['Attached · rumbo starts the front end', 'Standalone · the front end starts rumbo'],
+		speed: 'Speed',
+		previous: 'Previous',
+		next: 'Next',
+		play: 'Play',
+		pause: 'Pause',
+		frames: 'Frames',
+		conversation: 'What the person sees',
+		parts: ['Front end', 'Host', 'Provider', 'Extension'],
+		starts: 'starts',
+		person: 'You',
+		model: 'Model',
+		question: 'How much black ink is in stock?',
+		stock: 'Black ink: 3 bottles',
+		answer: 'There are three bottles of black ink.',
+		start: [
+			'You run rumbo. It starts the registered front end and speaks with it on the front end’s descriptors 3 and 4, so the terminal stays the front end’s.',
+			'Your program starts the host and speaks with it on the host’s stdin and stdout, as an editor would.',
+		],
+		details: [
+			'The host always speaks first: where it works, with which provider and model, and what it can be asked.',
+			'The front end answers with the protocol version it speaks and its name.',
+			'Nothing runs until the front end asks. It sends the task, and keeps the request’s id.',
+			'The run needs a model and tools, so the host starts the provider and the extension and learns what each offers.',
+			'The host says what context the model is given, and sends the provider the whole conversation and the tools.',
+			'The model wants a tool. The host records the answer and reports the turn and its tokens.',
+			'The tool is the extension’s, so the host passes it the call, and tells the front end it began.',
+			'The extension answers. The result goes into the session, and to the front end.',
+			'The host asks again. The request is the one before plus the tool’s result, so the provider’s cache still holds its start.',
+			'The provider streams text as it comes, and the host passes each piece on.',
+			'The model calls no more tools, which is how it says it is done.',
+			'The host records how the run ended and answers the request that started it.',
+		],
+	},
+	es: {
+		title: 'Sigue una ejecución',
+		summary: 'Una interfaz, el host, un proveedor y una extensión hablando JSON-RPC línea a línea. La tarea es inventada; los mensajes son los que envía rumbo 0.9.0.',
+		reference: 'Protocolo de interfaz',
+		mode: 'Quién arranca a quién',
+		modes: ['Attached · rumbo abre la interfaz', 'Independiente · la interfaz abre rumbo'],
+		speed: 'Velocidad',
+		previous: 'Anterior',
+		next: 'Siguiente',
+		play: 'Reproducir',
+		pause: 'Pausar',
+		frames: 'Mensajes',
+		conversation: 'Lo que ve la persona',
+		parts: ['Interfaz', 'Host', 'Proveedor', 'Extensión'],
+		starts: 'arranca',
+		person: 'Tú',
+		model: 'Modelo',
+		question: '¿Cuánta tinta negra queda?',
+		stock: 'Tinta negra: 3 botellas',
+		answer: 'Quedan tres botellas de tinta negra.',
+		start: [
+			'Ejecutas rumbo. Arranca la interfaz registrada y habla con ella por los descriptores 3 y 4 de la interfaz, así que la terminal sigue siendo suya.',
+			'Tu programa arranca el host y habla con él por el stdin y el stdout del host, como haría un editor.',
+		],
+		details: [
+			'El host siempre habla primero: dónde trabaja, con qué proveedor y modelo, y qué se le puede pedir.',
+			'La interfaz responde con la versión del protocolo que habla y su nombre.',
+			'Nada se ejecuta hasta que la interfaz lo pide. Envía la tarea y guarda el id de la petición.',
+			'La ejecución necesita un modelo y herramientas, así que el host arranca el proveedor y la extensión y averigua qué ofrece cada uno.',
+			'El host dice qué contexto recibe el modelo y envía al proveedor toda la conversación y las herramientas.',
+			'El modelo quiere una herramienta. El host registra la respuesta e informa del turno y sus tokens.',
+			'La herramienta es de la extensión, así que el host le pasa la llamada y avisa a la interfaz de que empezó.',
+			'La extensión responde. El resultado va a la sesión y a la interfaz.',
+			'El host vuelve a preguntar. La petición es la anterior más el resultado, así que la caché del proveedor conserva su comienzo.',
+			'El proveedor transmite el texto según llega, y el host reenvía cada fragmento.',
+			'El modelo no pide más herramientas: así dice que ha terminado.',
+			'El host registra cómo terminó la ejecución y responde a la petición que la inició.',
+		],
+	},
+	fr: {
+		title: 'Suivre une exécution',
+		summary: 'Une interface, l’hôte, un fournisseur et une extension qui se parlent en JSON-RPC, ligne par ligne. La tâche est inventée ; les messages sont ceux qu’envoie rumbo 0.9.0.',
+		reference: 'Protocole d’interface',
+		mode: 'Qui lance qui',
+		modes: ['Attaché · rumbo lance l’interface', 'Indépendant · l’interface lance rumbo'],
+		speed: 'Vitesse',
+		previous: 'Précédent',
+		next: 'Suivant',
+		play: 'Lire',
+		pause: 'Pause',
+		frames: 'Messages',
+		conversation: 'Ce que voit la personne',
+		parts: ['Interface', 'Hôte', 'Fournisseur', 'Extension'],
+		starts: 'lance',
+		person: 'Vous',
+		model: 'Modèle',
+		question: 'Combien reste-t-il d’encre noire ?',
+		stock: 'Encre noire : 3 bouteilles',
+		answer: 'Il reste trois bouteilles d’encre noire.',
+		start: [
+			'Vous lancez rumbo. Il lance l’interface enregistrée et lui parle sur les descripteurs 3 et 4 de l’interface : le terminal reste à elle.',
+			'Votre programme lance l’hôte et lui parle sur le stdin et le stdout de l’hôte, comme le ferait un éditeur.',
+		],
+		details: [
+			'L’hôte parle toujours en premier : où il travaille, avec quel fournisseur et quel modèle, et ce qu’on peut lui demander.',
+			'L’interface répond avec la version du protocole qu’elle parle et son nom.',
+			'Rien ne s’exécute tant que l’interface ne le demande pas. Elle envoie la tâche et garde l’id de la requête.',
+			'L’exécution a besoin d’un modèle et d’outils : l’hôte lance le fournisseur et l’extension et apprend ce que chacun offre.',
+			'L’hôte dit quel contexte reçoit le modèle et envoie au fournisseur toute la conversation et les outils.',
+			'Le modèle veut un outil. L’hôte consigne la réponse et signale le tour et ses tokens.',
+			'L’outil est celui de l’extension : l’hôte lui passe l’appel et prévient l’interface qu’il a commencé.',
+			'L’extension répond. Le résultat va dans la session et à l’interface.',
+			'L’hôte redemande. La requête est la précédente plus le résultat : le cache du fournisseur en garde le début.',
+			'Le fournisseur transmet le texte au fil de l’eau, et l’hôte relaie chaque morceau.',
+			'Le modèle n’appelle plus d’outil : c’est sa façon de dire qu’il a fini.',
+			'L’hôte consigne la fin de l’exécution et répond à la requête qui l’a lancée.',
+		],
+	},
+	it: {
+		title: 'Segui un’esecuzione',
+		summary: 'Un’interfaccia, l’host, un provider e un’estensione che parlano JSON-RPC riga per riga. Il compito è inventato; i messaggi sono quelli che invia rumbo 0.9.0.',
+		reference: 'Protocollo dell’interfaccia',
+		mode: 'Chi avvia chi',
+		modes: ['Collegata · rumbo avvia l’interfaccia', 'Indipendente · l’interfaccia avvia rumbo'],
+		speed: 'Velocità',
+		previous: 'Indietro',
+		next: 'Avanti',
+		play: 'Riproduci',
+		pause: 'Pausa',
+		frames: 'Messaggi',
+		conversation: 'Ciò che vede la persona',
+		parts: ['Interfaccia', 'Host', 'Provider', 'Estensione'],
+		starts: 'avvia',
+		person: 'Tu',
+		model: 'Modello',
+		question: 'Quanto inchiostro nero rimane?',
+		stock: 'Inchiostro nero: 3 bottiglie',
+		answer: 'Rimangono tre bottiglie di inchiostro nero.',
+		start: [
+			'Esegui rumbo. Avvia l’interfaccia registrata e le parla sui descrittori 3 e 4 dell’interfaccia, così il terminale resta suo.',
+			'Il tuo programma avvia l’host e gli parla sullo stdin e sullo stdout dell’host, come farebbe un editor.',
+		],
+		details: [
+			'L’host parla sempre per primo: dove lavora, con quale provider e modello, e cosa gli si può chiedere.',
+			'L’interfaccia risponde con la versione del protocollo che parla e il suo nome.',
+			'Nulla parte finché l’interfaccia non lo chiede. Invia il compito e conserva l’id della richiesta.',
+			'L’esecuzione ha bisogno di un modello e di strumenti: l’host avvia il provider e l’estensione e scopre cosa offre ciascuno.',
+			'L’host dice quale contesto riceve il modello e invia al provider tutta la conversazione e gli strumenti.',
+			'Il modello vuole uno strumento. L’host registra la risposta e segnala il turno e i suoi token.',
+			'Lo strumento è dell’estensione: l’host le passa la chiamata e avvisa l’interfaccia che è iniziata.',
+			'L’estensione risponde. Il risultato va nella sessione e all’interfaccia.',
+			'L’host chiede di nuovo. La richiesta è la precedente più il risultato, così la cache del provider ne conserva l’inizio.',
+			'Il provider trasmette il testo man mano che arriva, e l’host inoltra ogni pezzo.',
+			'Il modello non chiama altri strumenti: è così che dice di aver finito.',
+			'L’host registra com’è finita l’esecuzione e risponde alla richiesta che l’ha avviata.',
+		],
+	},
+}[locale];
+
+const modes = [
+	{ id: 'attached', label: copy.modes[0], command: 'rumbo -f ink-ui', pipes: ['fd 3', 'fd 4'], detail: copy.start[0] },
+	{ id: 'standalone', label: copy.modes[1], command: 'rumbo serve', pipes: ['stdout', 'stdin'], detail: copy.start[1] },
+] as const;
+
+// Each step after the start: the frames that cross, as "from>to:label",
+// and the line of JSON-RPC that matters in it.
+const frames = [
+	{ hops: ['host>fe:initialize'], code: 'initialize { protocol: 1, dir, provider, model, functions }' },
+	{ hops: ['fe>host:result'], code: 'result { protocol: 1, name: "ink-ui" }' },
+	{ hops: ['fe>host:run'], code: 'run #20 { objective: "…" }' },
+	{ hops: ['host>provider:initialize', 'host>extension:initialize'], code: 'initialize → { tools: [ink_catalog] }' },
+	{ hops: ['host>fe:event context', 'host>provider:complete'], code: 'complete { model, system, messages, tools }' },
+	{ hops: ['provider>host:result', 'host>fe:event turn'], code: 'result { stop: "tool_calls", usage }' },
+	{ hops: ['host>fe:event tool_started', 'host>extension:call'], code: 'call { name: "ink_catalog", args: { color: "black" } }' },
+	{ hops: ['extension>host:result', 'host>fe:event tool_finished'], code: 'result { text: "Black ink: 3 bottles" }' },
+	{ hops: ['host>provider:complete'], code: 'complete { messages: […, tool_result] }' },
+	{ hops: ['provider>host:delta', 'host>fe:event text'], code: 'delta { text } → event { type: "text" }' },
+	{ hops: ['provider>host:result', 'host>fe:event turn'], code: 'result { stop: "end", usage }' },
+	{ hops: ['host>fe:result'], code: 'result #20 { status: "done", session }' },
+].map((frame, index) => ({ ...frame, detail: copy.details[index] }));
+
+const names: Record<string, string> = { fe: copy.parts[0], host: copy.parts[1], provider: copy.parts[2], extension: copy.parts[3] };
+const kinds: Record<string, string> = { fe: 'ink-ui', host: 'rumbo 0.9.0', provider: 'stdin · stdout', extension: 'stdin · stdout' };
+const route = (hops: string[]) => hops.map((hop) => hop.split(':')[0].split('>').map((part) => names[part]).join(' → ')).join(' · ');
+const segment = ([x1, y1, x2, y2]: readonly number[]) => `M${x1} ${y1}L${x2} ${y2}`;
+
+// The stage is drawn twice, wide and tall, and the narrow screens get the
+// tall one. Each says where its parts stand and the line every frame flies.
+const stages = [
+	{
+		shape: 'wide',
+		width: 800,
+		height: 400,
+		box: [176, 66],
+		nodes: { fe: [110, 206], host: [400, 206], provider: [690, 92], extension: [690, 320] },
+		links: { 'host>fe': [312, 193, 198, 193], 'fe>host': [198, 219, 312, 219], 'host>provider': [488, 190, 602, 104], 'provider>host': [602, 104, 488, 190], 'host>extension': [488, 222, 602, 308], 'extension>host': [602, 308, 488, 222] },
+		arcs: { attached: 'M372 173C340 92 170 92 138 166', standalone: 'M138 173C170 92 340 92 372 166' },
+		command: [255, 96, 0],
+		pipes: [
+			[255, 184, 'middle'],
+			[255, 239, 'middle'],
+		],
+	},
+	{
+		shape: 'tall',
+		width: 340,
+		height: 470,
+		box: [150, 56],
+		nodes: { fe: [186, 44], host: [186, 226], provider: [84, 420], extension: [256, 420] },
+		links: { 'host>fe': [172, 198, 172, 72], 'fe>host': [200, 72, 200, 198], 'host>provider': [150, 254, 100, 392], 'provider>host': [100, 392, 150, 254], 'host>extension': [222, 254, 256, 392], 'extension>host': [256, 392, 222, 254] },
+		arcs: { attached: 'M111 214C34 190 34 80 106 54', standalone: 'M111 56C34 80 34 190 106 216' },
+		command: [30, 135, -90],
+		pipes: [
+			[164, 139, 'end'],
+			[208, 139, 'start'],
+		],
+	},
+] as const;
+---
+
+<section id="run-trace" class="chapter" aria-labelledby="trace-title">
+	<Rule seed={2} />
+	<div class="section-label" data-seen><span>02 /</span><h2 id="trace-title">{copy.title}</h2></div>
+	<p class="run-summary" data-seen>{copy.summary} <a class="with-icon" href={href(locale, 'reference/frontend-protocol')}>{copy.reference} <Icon name="arrow-up-right" /></a></p>
+
+	<run-trace class="night" data-play={copy.play} data-pause={copy.pause} data-mode="attached">
+		<div class="trace-controls" hidden>
+			<label class="control">
+				<span>{copy.mode}</span>
+				<select class="select" data-mode-select>{modes.map(({ id, label }) => <option value={id}>{label}</option>)}</select>
+			</label>
+			<label class="control">
+				<span>{copy.speed}</span>
+				<select class="select" data-speed>
+					<option value="0.5">0.5×</option>
+					<option value="1" selected>1×</option>
+					<option value="2">2×</option>
+				</select>
+			</label>
+			<div class="trace-actions">
+				<span class="trace-count" data-count></span>
+				<button type="button" class="button square" data-prev aria-label={copy.previous} title={copy.previous}><Icon name="arrow-left" /></button>
+				<button type="button" class="button solid" data-playback><Icon name="play" class="when-off" /><Icon name="pause" class="when-on" /><span data-label>{copy.play}</span></button>
+				<button type="button" class="button square" data-next aria-label={copy.next} title={copy.next}><Icon name="arrow-right" /></button>
+			</div>
+		</div>
+
+		<div class="trace-body">
+			<div class="trace-scene">
+				{stages.map(({ shape, width, height, box, nodes, links, arcs, command, pipes }) => (
+					<svg class:list={['stage', shape]} viewBox={`0 0 ${width} ${height}`} data-links={JSON.stringify(links)} aria-hidden="true">
+						<defs>
+							<marker id={`tip-${shape}`} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+								<path d="M0 0L10 5L0 10z" />
+							</marker>
+						</defs>
+						<path class="stage-enso" d={brush(arc([nodes.host[0], nodes.host[1]], box[0] * 0.78, -70, 330, 6), pressed(30), 17, 0.25)} />
+
+						<path class="pipe" d={segment(links['host>fe'])} marker-end={`url(#tip-${shape})`} />
+						<path class="pipe" d={segment(links['fe>host'])} marker-end={`url(#tip-${shape})`} />
+						{(['provider', 'extension'] as const).map((part) => (
+							<g class="chain">
+								<path class="link" d={segment(links[`host>${part}`])} />
+								<path class="hole" d={segment(links[`host>${part}`])} />
+							</g>
+						))}
+
+						{modes.map(({ id, command: text, pipes: labels }) => (
+							<g class="topology" data-topology={id}>
+								<path class="spawn" d={arcs[id]} pathLength="1" marker-end={`url(#tip-${shape})`} />
+								<text class="spawn-command" x={command[0]} y={command[1]} text-anchor="middle" transform={command[2] ? `rotate(${command[2]} ${command[0]} ${command[1]})` : undefined}>
+									<tspan class="spawn-verb">{copy.starts} · </tspan>{text}
+								</text>
+								{labels.map((label, index) => <text class="pipe-name" x={pipes[index][0]} y={pipes[index][1]} text-anchor={pipes[index][2]}>{label}</text>)}
+							</g>
+						))}
+
+						<path class="trail" pathLength="1" />
+
+						{Object.entries(nodes).map(([part, [x, y]]) => (
+							<g class="node" data-part={part}>
+								<rect x={x - box[0] / 2} y={y - box[1] / 2} width={box[0]} height={box[1]} rx="3" />
+								<text class="node-name" {x} y={y - 3} text-anchor="middle">{names[part]}</text>
+								<text class="node-kind" {x} y={y + 16} text-anchor="middle">{kinds[part]}</text>
+							</g>
+						))}
+
+						<g class="packet">
+							<rect height="26" y="-13" rx="13" />
+							<text y="4.5" text-anchor="middle"></text>
+						</g>
+					</svg>
+				))}
+
+				<p class="trace-now" data-now></p>
+
+				<aside class="trace-chat">
+					<h3>{copy.conversation}</h3>
+					<p class="bubble person" data-at="3"><b>{copy.person}</b><span>{copy.question}</span></p>
+					<p class="bubble tool" data-at="8"><b>ink_catalog</b><span>{copy.stock}</span></p>
+					<p class="bubble model" data-at="10"><b>{copy.model}</b><span data-typed>{copy.answer}</span></p>
+				</aside>
+			</div>
+
+			<div class="trace-log">
+				<h3>{copy.frames}</h3>
+				<ol>
+					{modes.map(({ id, label, command, detail }) => (
+						<li data-step="0" data-topology={id} data-hops="">
+							<button type="button">
+								<span class="row-index">00</span>
+								<span class="row-route">{label}</span>
+								<code>{command}</code>
+								<span class="row-detail">{detail}</span>
+							</button>
+						</li>
+					))}
+					{frames.map(({ hops, code, detail }, index) => (
+						<li data-step={index + 1} data-hops={hops.join('|')}>
+							<button type="button">
+								<span class="row-index">{String(index + 1).padStart(2, '0')}</span>
+								<span class="row-route">{route(hops)}</span>
+								<code>{code}</code>
+								<span class="row-detail">{detail}</span>
+							</button>
+						</li>
+					))}
+				</ol>
+			</div>
+		</div>
+	</run-trace>
+</section>
+
+<script>
+	import { reducedMotion, whenSeen } from './timeline';
+
+	// The step before which the provider and the extension are not running,
+	// and the step whose answer is typed as it streams.
+	const started = 4;
+	const streamed = 10;
+
+	const pause = (time: number) => new Promise((resolve) => setTimeout(resolve, time));
+
+	class RunTrace extends HTMLElement {
+		connectedCallback() {
+			const modeSelect = this.querySelector<HTMLSelectElement>('[data-mode-select]')!;
+			const speedSelect = this.querySelector<HTMLSelectElement>('[data-speed]')!;
+			const playback = this.querySelector<HTMLButtonElement>('[data-playback]')!;
+			const label = playback.querySelector('[data-label]')!;
+			const previous = this.querySelector<HTMLButtonElement>('[data-prev]')!;
+			const next = this.querySelector<HTMLButtonElement>('[data-next]')!;
+			const count = this.querySelector<HTMLElement>('[data-count]')!;
+			const now = this.querySelector<HTMLElement>('[data-now]')!;
+			const log = this.querySelector<HTMLElement>('.trace-log ol')!;
+			const rows = [...this.querySelectorAll<HTMLElement>('[data-step]')];
+			const bubbles = [...this.querySelectorAll<HTMLElement>('[data-at]')];
+			const typed = this.querySelector<HTMLElement>('[data-typed]')!;
+			const answer = typed.textContent!;
+			const last = Math.max(...rows.map((row) => Number(row.dataset.step)));
+			let step = 0;
+			// Every start and stop takes a new turn, so whatever was moving
+			// for the turn before knows it is over.
+			let turn = 0;
+			let playing = false;
+
+			const speed = () => Number(speedSelect.value);
+			const stage = () => [...this.querySelectorAll<SVGSVGElement>('.stage')].find((each) => getComputedStyle(each).display !== 'none')!;
+			const row = () => rows.find((each) => Number(each.dataset.step) === step && (!each.dataset.topology || each.dataset.topology === modeSelect.value))!;
+
+			const render = () => {
+				this.dataset.mode = modeSelect.value;
+				this.classList.toggle('cold', step < started);
+
+				for (const each of rows) {
+					const at = Number(each.dataset.step);
+
+					each.hidden = Boolean(each.dataset.topology) && each.dataset.topology !== modeSelect.value;
+					each.classList.toggle('now', at === step);
+					each.classList.toggle('done', at < step);
+				}
+
+				for (const bubble of bubbles) {
+					bubble.hidden = step < Number(bubble.dataset.at);
+				}
+
+				const current = row();
+
+				typed.textContent = answer;
+				now.replaceChildren(...[...current.querySelectorAll('code, .row-detail')].map((part) => part.cloneNode(true)));
+				count.textContent = `${String(step).padStart(2, '0')} / ${String(last).padStart(2, '0')}`;
+				previous.disabled = step === 0;
+				next.disabled = step === last;
+				// Only the list moves, never the page.
+				log.scrollTo({ top: current.offsetTop - log.clientHeight / 3, behavior: reducedMotion.matches ? 'auto' : 'smooth' });
+			};
+
+			// One frame crossing the stage: a labelled packet along its line,
+			// leaving a trail that fades behind it.
+			const fly = async (hop: string, mine: number) => {
+				const [path, label] = hop.split(':');
+				const [from, to] = path.split('>');
+				const scene = stage();
+				const [x1, y1, x2, y2] = JSON.parse(scene.dataset.links!)[path] as number[];
+				const packet = scene.querySelector<SVGGElement>('.packet')!;
+				const trail = scene.querySelector<SVGPathElement>('.trail')!;
+				const plate = packet.querySelector('rect')!;
+				const sender = scene.querySelector(`.node[data-part="${from}"]`)!;
+				const wide = label.length * 8 + 24;
+				const time = 780 / speed();
+				const along = (share: number) => `translate(${x1 + (x2 - x1) * share}px, ${y1 + (y2 - y1) * share}px)`;
+
+				packet.querySelector('text')!.textContent = label;
+				plate.setAttribute('width', String(wide));
+				plate.setAttribute('x', String(-wide / 2));
+				trail.setAttribute('d', `M${x1} ${y1}L${x2} ${y2}`);
+				sender.classList.add('speaking');
+
+				trail.animate(
+					[
+						{ strokeDashoffset: 1, opacity: 1 },
+						{ strokeDashoffset: 0, opacity: 1, offset: 0.7 },
+						{ strokeDashoffset: 0, opacity: 0 },
+					],
+					{ duration: time * 1.5 },
+				);
+
+				await packet
+					.animate(
+						[
+							{ transform: `${along(0)} scale(0.6)`, opacity: 0 },
+							{ transform: `${along(0.12)} scale(1)`, opacity: 1, offset: 0.12 },
+							{ transform: `${along(0.9)} scale(1)`, opacity: 1, offset: 0.88 },
+							{ transform: `${along(1)} scale(0.6)`, opacity: 0 },
+						],
+						{ duration: time, easing: 'cubic-bezier(0.45, 0, 0.25, 1)' },
+					)
+					.finished.catch(() => {});
+
+				sender.classList.remove('speaking');
+
+				if (mine === turn) {
+					const receiver = scene.querySelector(`.node[data-part="${to}"]`)!;
+
+					receiver.classList.remove('struck');
+					receiver.getBoundingClientRect();
+					receiver.classList.add('struck');
+				}
+			};
+
+			// What a step shows while it happens: its frames, one after the
+			// other, and for the streamed answer, its letters.
+			const act = async (mine: number) => {
+				if (reducedMotion.matches) {
+					return;
+				}
+
+				const current = row();
+
+				// The answer is not there until it streams.
+				if (step === streamed) {
+					typed.textContent = '';
+				}
+
+				if (step === 0) {
+					const spawn = stage().querySelector<SVGPathElement>(`[data-topology="${modeSelect.value}"] .spawn`)!;
+
+					await spawn.animate([{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { duration: 900 / speed(), easing: 'ease-out' }).finished.catch(() => {});
+				}
+
+				for (const hop of current.dataset.hops!.split('|').filter(Boolean)) {
+					if (mine !== turn) {
+						return;
+					}
+
+					if (step === streamed && hop.endsWith('text')) {
+						void fly(hop, mine);
+
+						for (let shown = 0; shown <= answer.length && mine === turn; shown += 2) {
+							typed.textContent = answer.slice(0, shown);
+							await pause(26 / speed());
+						}
+
+						if (mine === turn) {
+							typed.textContent = answer;
+						}
+					} else {
+						await fly(hop, mine);
+					}
+				}
+			};
+
+			const stop = () => {
+				turn += 1;
+				playing = false;
+				delete playback.dataset.on;
+				label.textContent = this.dataset.play!;
+
+				// Only what this script set moving: the styles' own loops go on.
+				for (const animation of this.getAnimations({ subtree: true })) {
+					if (animation.constructor === Animation) {
+						animation.cancel();
+					}
+				}
+			};
+
+			const go = (target: number) => {
+				stop();
+				step = Math.min(last, Math.max(0, target));
+				render();
+				void act(turn);
+			};
+
+			// Playing goes through one way of starting, rests on its last
+			// frame, and then goes through the other.
+			const play = async () => {
+				stop();
+				playing = true;
+				playback.dataset.on = '';
+				label.textContent = this.dataset.pause!;
+
+				const mine = turn;
+
+				if (step === last) {
+					step = 0;
+					render();
+				}
+
+				while (mine === turn) {
+					await act(mine);
+					await pause((step === last ? 2600 : 850) / speed());
+
+					if (mine !== turn) {
+						return;
+					}
+
+					if (step === last) {
+						modeSelect.selectedIndex = (modeSelect.selectedIndex + 1) % modeSelect.options.length;
+						step = 0;
+					} else {
+						step += 1;
+					}
+
+					render();
+				}
+			};
+
+			playback.addEventListener('click', () => (playing ? stop() : void play()));
+			previous.addEventListener('click', () => go(step - 1));
+			next.addEventListener('click', () => go(step + 1));
+			modeSelect.addEventListener('change', () => go(0));
+
+			for (const each of rows) {
+				each.querySelector('button')!.addEventListener('click', () => go(Number(each.dataset.step)));
+			}
+
+			this.classList.add('interactive');
+			this.querySelector<HTMLElement>('.trace-controls')!.hidden = false;
+			render();
+
+			if (!reducedMotion.matches) {
+				whenSeen(this, () => void play(), 0.3);
+			}
+		}
+	}
+
+	customElements.define('run-trace', RunTrace);
+</script>
+
+<style>
+	.run-summary {
+		max-width: 62ch;
+		margin: 0 0 1.4rem;
+		color: var(--muted);
+	}
+
+	.run-summary a {
+		color: var(--accent);
+		white-space: nowrap;
+	}
+
+	run-trace {
+		display: block;
+		border-top: 4px solid var(--seal);
+		background: var(--night);
+		color: var(--bone);
+		box-shadow: 0.55rem 0.55rem 0 var(--wash);
+	}
+
+	/* Every control is one row high and sits on the same line: the two
+	   selects under their labels, the buttons level with the selects. */
+	.trace-controls {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: end;
+		gap: 0.8rem 1rem;
+		padding: 0.9rem clamp(0.8rem, 2vw, 1.3rem);
+		border-bottom: 1px solid var(--night-line);
+	}
+
+	.control {
+		display: grid;
+		gap: 0.3rem;
+		min-width: 0;
+	}
+
+	.control span {
+		color: #b9afa2;
+		font: 0.68rem var(--mono);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.trace-actions {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+		margin-left: auto;
+	}
+
+	.trace-count {
+		margin-right: 0.4rem;
+		color: var(--ember);
+		font: 0.78rem var(--mono);
+	}
+
+	.trace-actions [data-playback] {
+		min-width: 7.2rem;
+	}
+
+	.trace-body {
+		display: grid;
+		grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+	}
+
+	.trace-scene {
+		min-width: 0;
+		padding: clamp(0.8rem, 2vw, 1.3rem);
+	}
+
+	.stage {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+
+	.stage.tall {
+		display: none;
+		max-width: 24rem;
+		margin-inline: auto;
+	}
+
+	.stage-enso {
+		fill: #232023;
+	}
+
+	marker path {
+		fill: #8d837c;
+	}
+
+	.pipe {
+		fill: none;
+		stroke: #8d837c;
+		stroke-width: 1.6;
+		stroke-dasharray: 5 6;
+		animation: flow 0.9s linear infinite;
+	}
+
+	.chain path {
+		fill: none;
+		stroke-linecap: round;
+		stroke-dasharray: 8 9;
+		animation: flow-chain 1.6s linear infinite;
+	}
+
+	.chain {
+		transition: opacity 0.5s;
+	}
+
+	.link {
+		stroke: #8d837c;
+		stroke-width: 5.5;
+	}
+
+	.hole {
+		stroke: var(--night);
+		stroke-width: 2.2;
+	}
+
+	.topology {
+		opacity: 0;
+		transition: opacity 0.45s;
+	}
+
+	run-trace[data-mode='attached'] [data-topology='attached'],
+	run-trace[data-mode='standalone'] [data-topology='standalone'] {
+		opacity: 1;
+	}
+
+	.spawn {
+		fill: none;
+		stroke: var(--ember);
+		stroke-width: 2;
+		stroke-dasharray: 1;
+	}
+
+	.spawn-command {
+		fill: var(--ember);
+		font: 600 14px var(--mono);
+	}
+
+	.spawn-verb {
+		fill: #b9afa2;
+		font-weight: 400;
+	}
+
+	.pipe-name {
+		fill: #d8cebf;
+		font: 12.5px var(--mono);
+	}
+
+	.node {
+		transition: opacity 0.5s;
+	}
+
+	.node rect {
+		fill: var(--night-raised);
+		stroke: #7d7470;
+		stroke-width: 1.2;
+		transition: stroke 0.3s;
+	}
+
+	.node[data-part='host'] rect {
+		fill: var(--seal);
+		stroke: var(--seal);
+	}
+
+	.node-name {
+		fill: var(--bone);
+		font: 700 19px var(--sans);
+	}
+
+	.node-kind {
+		fill: #cfc4b6;
+		font: 12.5px var(--mono);
+	}
+
+	.node[data-part='host'] .node-kind {
+		fill: #ffe3d6;
+	}
+
+	/* Until the run needs them, the provider and the extension are not
+	   running: their boxes are only outlines. */
+	.cold .node[data-part='provider'],
+	.cold .node[data-part='extension'],
+	.cold .chain {
+		opacity: 0.32;
+	}
+
+	.cold .node[data-part='provider'] rect,
+	.cold .node[data-part='extension'] rect {
+		stroke-dasharray: 5 5;
+	}
+
+	.speaking rect {
+		stroke: var(--ember);
+	}
+
+	.node[data-part='host'].speaking rect {
+		stroke: var(--bone);
+	}
+
+	.struck {
+		animation: struck 0.5s ease-out;
+		transform-box: fill-box;
+		transform-origin: center;
+	}
+
+	.trail {
+		fill: none;
+		stroke: var(--ember);
+		stroke-width: 2.5;
+		stroke-dasharray: 1;
+		opacity: 0;
+	}
+
+	.packet {
+		opacity: 0;
+	}
+
+	.packet rect {
+		fill: var(--bone);
+	}
+
+	.packet text {
+		fill: var(--night);
+		font: 600 13px var(--mono);
+	}
+
+	.trace-now {
+		display: grid;
+		align-content: start;
+		gap: 0.3rem;
+		min-height: 5.8rem;
+		margin: 0.9rem 0 0;
+		padding: 0.7rem 0.85rem;
+		border-left: 3px solid var(--seal);
+		background: var(--night-raised);
+		font-size: 0.92rem;
+		line-height: 1.45;
+	}
+
+	.trace-now code {
+		color: var(--ember);
+		font: 0.82rem var(--mono);
+		overflow-wrap: anywhere;
+	}
+
+	.trace-chat {
+		min-height: 11.2rem;
+		margin-top: 0.9rem;
+		padding: 0.75rem 0.85rem 0.9rem;
+		border: 1px solid var(--night-line);
+	}
+
+	h3 {
+		margin: 0 0 0.6rem;
+		color: #b9afa2;
+		font: 0.68rem var(--mono);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.bubble {
+		display: grid;
+		gap: 0.1rem;
+		width: fit-content;
+		max-width: 88%;
+		margin: 0.45rem 0 0;
+		padding: 0.4rem 0.7rem;
+		border-radius: 0.2rem;
+		background: var(--night-raised);
+		font-size: 0.9rem;
+		animation: arrive 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+	}
+
+	.bubble b {
+		color: #b9afa2;
+		font: 0.66rem var(--mono);
+	}
+
+	.bubble.person {
+		margin-left: auto;
+		background: var(--bone);
+		color: var(--night);
+	}
+
+	.bubble.person b {
+		color: #5c5450;
+	}
+
+	.bubble.tool {
+		border-left: 2px solid var(--ember);
+		font-family: var(--mono);
+		font-size: 0.8rem;
+	}
+
+	.bubble.model span {
+		min-height: 1.4em;
+	}
+
+	.trace-log {
+		min-width: 0;
+		padding: clamp(0.8rem, 2vw, 1.3rem);
+		border-left: 1px solid var(--night-line);
+	}
+
+	.trace-log ol {
+		position: relative;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.interactive .trace-log ol {
+		max-height: 41rem;
+		overflow-y: auto;
+		scrollbar-width: thin;
+		scrollbar-color: var(--night-line) transparent;
+	}
+
+	.trace-log li + li {
+		margin-top: 0.35rem;
+	}
+
+	.trace-log button {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr);
+		gap: 0.15rem 0.6rem;
+		width: 100%;
+		padding: 0.55rem 0.65rem;
+		border: 1px solid transparent;
+		border-left: 3px solid var(--night-line);
+		border-radius: 0;
+		background: none;
+		color: inherit;
+		text-align: left;
+		transition:
+			background 0.3s,
+			border-color 0.3s,
+			opacity 0.3s;
+	}
+
+	.row-index {
+		grid-row: span 3;
+		color: #8d837c;
+		font: 0.72rem/1.7 var(--mono);
+	}
+
+	.row-route {
+		color: #cfc4b6;
+		font: 0.7rem/1.5 var(--mono);
+	}
+
+	.trace-log code {
+		color: var(--bone);
+		font: 0.8rem/1.45 var(--mono);
+		overflow-wrap: anywhere;
+	}
+
+	.row-detail {
+		color: #cfc4b6;
+		font-size: 0.84rem;
+		line-height: 1.45;
+	}
+
+	/* What has not happened yet is there to read, but waits in the dark. */
+	.interactive li:not(.now):not(.done) button {
+		opacity: 0.42;
+	}
+
+	.interactive li button:hover,
+	.interactive li button:focus-visible {
+		opacity: 1;
+		background: var(--night-raised);
+	}
+
+	li.done button {
+		border-left-color: #8d837c;
+	}
+
+	li.now button {
+		border-left-color: var(--seal);
+		background: var(--night-raised);
+	}
+
+	li.now .row-index,
+	li.now code {
+		color: var(--ember);
+	}
+
+	@keyframes flow {
+		to {
+			stroke-dashoffset: -11;
+		}
+	}
+
+	@keyframes flow-chain {
+		to {
+			stroke-dashoffset: -17;
+		}
+	}
+
+	@keyframes struck {
+		35% {
+			transform: scale(1.06);
+		}
+	}
+
+	@keyframes arrive {
+		from {
+			opacity: 0;
+			transform: translateY(0.6rem);
+		}
+	}
+
+	@media (max-width: 62rem) {
+		.trace-body {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.trace-log {
+			border-left: 0;
+			border-top: 1px solid var(--night-line);
+		}
+
+		.interactive .trace-log ol {
+			max-height: 24rem;
+		}
+	}
+
+	@media (max-width: 40rem) {
+		.stage.wide {
+			display: none;
+		}
+
+		.stage.tall {
+			display: block;
+		}
+
+		.control,
+		.trace-actions {
+			flex: 1 1 100%;
+		}
+
+		.trace-actions [data-playback] {
+			flex: 1;
+		}
+
+		.trace-actions {
+			margin-left: 0;
+		}
+
+		.trace-count {
+			margin-right: auto;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		run-trace * {
+			animation: none !important;
+			transition: none !important;
+		}
+	}
+</style>

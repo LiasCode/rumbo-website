@@ -1,0 +1,272 @@
+---
+import { href, type Locale } from '../navigation';
+import Rule from './Rule.astro';
+import Icon from './Icon.astro';
+
+// What the parts make when they are put together: each card is a chain of
+// three programs, with the command that sets it up. The commands are
+// rumbo 0.9.0's own.
+const { locale } = Astro.props as { locale: Locale };
+
+const copy = {
+	en: {
+		title: 'Chain the parts',
+		recipes: [
+			['An assistant in your editor', 'Your extension starts a host and draws its events where you write.'],
+			['A job in a pipeline', 'No screen: the answer on stdout, the progress on stderr, and an exit code.'],
+			['A model on your machine', 'Any server that speaks Chat Completions, through the provider rumbo already has.'],
+			['Tools from an MCP server', 'One extension per server; the model gets its tools from the next run.'],
+			['A shell that asks first', 'An extension takes the place of bash, and passes on only what it lets through.'],
+			['A kit for the whole team', 'Providers, extensions, and skills in one repository, added with one command.'],
+		],
+	},
+	es: {
+		title: 'Encadena las piezas',
+		recipes: [
+			['Un asistente en tu editor', 'Tu extensión arranca un host y dibuja sus eventos donde escribes.'],
+			['Una tarea en un pipeline', 'Sin pantalla: la respuesta en stdout, el progreso en stderr y un código de salida.'],
+			['Un modelo en tu máquina', 'Cualquier servidor que hable Chat Completions, con el proveedor que rumbo ya trae.'],
+			['Herramientas de un servidor MCP', 'Una extensión por servidor; el modelo recibe sus herramientas desde la siguiente ejecución.'],
+			['Una shell que pregunta antes', 'Una extensión ocupa el lugar de bash y solo deja pasar lo que acepta.'],
+			['Un kit para todo el equipo', 'Proveedores, extensiones y skills en un repositorio, añadidos con un comando.'],
+		],
+	},
+	fr: {
+		title: 'Enchaînez les pièces',
+		recipes: [
+			['Un assistant dans votre éditeur', 'Votre extension lance un hôte et dessine ses événements là où vous écrivez.'],
+			['Une tâche dans un pipeline', 'Sans écran : la réponse sur stdout, la progression sur stderr et un code de sortie.'],
+			['Un modèle sur votre machine', 'Tout serveur qui parle Chat Completions, avec le fournisseur que rumbo a déjà.'],
+			['Les outils d’un serveur MCP', 'Une extension par serveur ; le modèle reçoit ses outils dès l’exécution suivante.'],
+			['Un shell qui demande d’abord', 'Une extension prend la place de bash et ne laisse passer que ce qu’elle accepte.'],
+			['Un kit pour toute l’équipe', 'Fournisseurs, extensions et skills dans un dépôt, ajoutés en une commande.'],
+		],
+	},
+	it: {
+		title: 'Incatena i pezzi',
+		recipes: [
+			['Un assistente nel tuo editor', 'La tua estensione avvia un host e disegna i suoi eventi dove scrivi.'],
+			['Un’attività in una pipeline', 'Senza schermo: la risposta su stdout, l’avanzamento su stderr e un codice di uscita.'],
+			['Un modello sulla tua macchina', 'Qualsiasi server che parli Chat Completions, con il provider che rumbo ha già.'],
+			['Gli strumenti di un server MCP', 'Un’estensione per server; il modello riceve i suoi strumenti dall’esecuzione successiva.'],
+			['Una shell che chiede prima', 'Un’estensione prende il posto di bash e lascia passare solo ciò che accetta.'],
+			['Un kit per tutto il team', 'Provider, estensioni e skill in un repository, aggiunti con un comando.'],
+		],
+	},
+}[locale];
+
+const chains = [
+	{ links: ['editor', 'rumbo serve', 'provider'], both: true, command: 'rumbo serve -p anthropic', path: 'extend/front-end' },
+	{ links: ['CI', 'rumbo -f plain', 'exit 0 · 1 · 130'], both: false, command: 'rumbo "review the diff" > report.md', path: 'guides/scripting' },
+	{ links: ['rumbo', 'provide openai', 'localhost:11434'], both: true, command: `rumbo provider add -config '{"base_url":"http://localhost:11434/v1"}' local '{self}' provide openai`, path: 'guides/providers' },
+	{ links: ['model', 'extend mcp', 'MCP server'], both: true, command: 'rumbo extension add files {self} extend mcp npx -y @modelcontextprotocol/server-filesystem ~/notes', path: 'guides/extensions' },
+	{ links: ['bash call', 'guard.py', 'rumbo’s bash'], both: false, command: 'rumbo extension add -replaces bash guard python3 examples/guard.py', path: 'extend/extension' },
+	{ links: ['plugin.yaml', 'git', 'rumbo plugin add'], both: false, command: 'rumbo plugin add <repository>', path: 'guides/plugins' },
+];
+---
+
+<section class="chapter" aria-labelledby="chains-title">
+	<Rule seed={3} />
+	<div class="section-label" data-seen><span>03 /</span><h2 id="chains-title">{copy.title}</h2></div>
+	<div class="chain-grid">
+		{chains.map(({ links, both, command, path }, index) => (
+			<a class="recipe" data-seen style={`--order:${index}`} href={href(locale, path)}>
+				<span class="recipe-index">0{index + 1}<Icon name="arrow-up-right" /></span>
+				<h3>{copy.recipes[index][0]}</h3>
+				<ol class="links" aria-hidden="true">
+					{links.map((link, position) => (
+						<li>
+							{position > 0 && (
+								<svg class="wire" viewBox="0 0 56 16">
+									<path class="link" d="M3 8H53" />
+									<path class="hole" d="M3 8H53" />
+									<circle class="dot" cy="8" r="3.6" style={`--after:${index * 0.3 + position * 0.55}s`} />
+									{both && <circle class="dot back" cy="8" r="2.8" style={`--after:${index * 0.3 + position * 0.55 + 0.8}s`} />}
+								</svg>
+							)}
+							<span class="chip">{link}</span>
+						</li>
+					))}
+				</ol>
+				<p>{copy.recipes[index][1]}</p>
+				<code>{command}</code>
+			</a>
+		))}
+	</div>
+</section>
+
+<style>
+	.chain-grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 0.9rem;
+	}
+
+	.recipe {
+		display: grid;
+		grid-template-rows: auto auto auto 1fr auto;
+		gap: 0.75rem;
+		padding: 1.1rem 1.1rem 1rem;
+		border: 1px solid var(--line);
+		border-top: 3px solid var(--ink);
+		background: var(--surface);
+		text-decoration: none;
+		transition:
+			border-color 0.25s,
+			box-shadow 0.25s,
+			translate 0.25s;
+	}
+
+	/* The cards of a row arrive one after the other. */
+	:global(.moving) .recipe {
+		transition-delay: calc(var(--order) * 70ms);
+	}
+
+	.recipe:hover,
+	.recipe:focus-visible {
+		border-top-color: var(--seal);
+		box-shadow: 0.35rem 0.35rem 0 var(--wash);
+		translate: -0.15rem -0.15rem;
+		transition-delay: 0s;
+	}
+
+	.recipe-index {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		color: var(--accent);
+		font: 0.72rem var(--mono);
+	}
+
+	.recipe-index :global(.icon) {
+		font-size: 0.95rem;
+	}
+
+	h3 {
+		margin: 0;
+		font: 400 1.42rem/1.2 var(--serif);
+		letter-spacing: -0.02em;
+	}
+
+	.links {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		row-gap: 0.35rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	/* A link and the chain that leads to it stay together when the row
+	   has to break. */
+	.links li {
+		display: flex;
+		align-items: center;
+		white-space: nowrap;
+	}
+
+	.chip {
+		padding: 0.34rem 0.5rem;
+		background: var(--ink);
+		color: var(--surface);
+		font: 0.68rem/1.35 var(--mono);
+	}
+
+	.wire {
+		display: block;
+		flex: none;
+		width: 2.6rem;
+		height: 1rem;
+		overflow: visible;
+	}
+
+	.wire path {
+		fill: none;
+		stroke-linecap: round;
+		stroke-dasharray: 8 9;
+		animation: run 1.4s linear infinite;
+	}
+
+	.link {
+		stroke: var(--ink);
+		stroke-width: 6;
+	}
+
+	.hole {
+		stroke: var(--surface);
+		stroke-width: 2.4;
+	}
+
+	.dot {
+		fill: var(--seal);
+		animation: cross 2.2s var(--after) cubic-bezier(0.45, 0, 0.25, 1) infinite both;
+	}
+
+	.dot.back {
+		fill: var(--surface);
+		stroke: var(--ink);
+		stroke-width: 1.6;
+		animation-direction: reverse;
+	}
+
+	p {
+		margin: 0;
+		color: var(--muted);
+		font-size: 0.92rem;
+		line-height: 1.5;
+	}
+
+	code {
+		display: block;
+		padding: 0.5rem 0.6rem;
+		border-left: 2px solid var(--seal);
+		background: var(--wash);
+		font: 0.72rem/1.5 var(--mono);
+		overflow-wrap: anywhere;
+	}
+
+	@keyframes run {
+		to {
+			stroke-dashoffset: -17;
+		}
+	}
+
+	@keyframes cross {
+		0% {
+			transform: translateX(2px);
+			opacity: 0;
+		}
+		15%,
+		55% {
+			opacity: 1;
+		}
+		70%,
+		100% {
+			transform: translateX(54px);
+			opacity: 0;
+		}
+	}
+
+	@media (max-width: 64rem) {
+		.chain-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 40rem) {
+		.chain-grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.wire * {
+			animation: none !important;
+		}
+
+		.dot {
+			display: none;
+		}
+	}
+</style>

@@ -3,46 +3,42 @@ title: Instalación
 description: Instala rumbo en Linux o macOS desde un archivo de versión o con go install, y descubre dónde guarda su configuración, sus credenciales y sus sesiones.
 ---
 
-import { Code, Tabs, TabItem } from '@astrojs/starlight/components';
-import { release } from '../../../../site.mjs';
-
-export const archive = (platform) => `rumbo-${release.version}-${platform}`;
-
-export const download = (
-	platform,
-) => `curl -LO https://github.com/LiasCode/rumbo/releases/download/v${release.version}/${archive(platform)}.tar.gz
-tar -xzf ${archive(platform)}.tar.gz
-install -m 755 ${archive(platform)}/rumbo ~/.local/bin/rumbo   # or anywhere on your PATH`;
-
 rumbo es un único binario para Linux y macOS, en amd64 y arm64. Windows no está soportado.
 
 ## Desde una versión publicada
 
 Cada [versión](https://github.com/LiasCode/rumbo/releases) tiene un archivo por plataforma, con el
 binario, el README, el changelog y la licencia, y un archivo `SHA256SUMS` para comprobarlos. La última
-es rumbo {release.version}, del {release.date}.
+es rumbo 0.9.0, del 2026-11-24.
 
-<Tabs syncKey="platform">
-	<TabItem label="Linux (amd64)">
-		<Code code={download('linux-amd64')} lang="sh" />
-	</TabItem>
-	<TabItem label="Linux (arm64)">
-		<Code code={download('linux-arm64')} lang="sh" />
-	</TabItem>
-	<TabItem label="macOS (Apple silicon)">
-		<Code code={download('darwin-arm64')} lang="sh" />
-	</TabItem>
-	<TabItem label="macOS (Intel)">
-		<Code code={download('darwin-amd64')} lang="sh" />
-	</TabItem>
-</Tabs>
+| OS    | CPU           | `platform`     |
+| ----- | ------------- | -------------- |
+| Linux | x86-64        | `linux-amd64`  |
+| Linux | ARM64         | `linux-arm64`  |
+| macOS | Apple silicon | `darwin-arm64` |
+| macOS | Intel         | `darwin-amd64` |
+
+```sh
+version=0.9.0
+platform=linux-amd64
+archive=rumbo-$version-$platform
+base=https://github.com/LiasCode/rumbo/releases/download/v$version
+curl -fLO "$base/$archive.tar.gz" &&
+  curl -fLO "$base/SHA256SUMS" &&
+  grep -F "./$archive.tar.gz" SHA256SUMS | shasum -a 256 -c - &&
+  tar -xzf "$archive.tar.gz" &&
+  mkdir -p "$HOME/.local/bin" &&
+  install -m 755 "$archive/rumbo" "$HOME/.local/bin/rumbo"
+```
+
+Elige `platform` en la tabla. Si tu shell no encuentra `rumbo`, añade `~/.local/bin` a `PATH`. En Linux sin `shasum`, usa `sha256sum -c -`.
 
 ## Con Go
 
 Con Go 1.27.3 o posterior:
 
 ```sh
-go install github.com/LiasCode/rumbo/cmd/rumbo@latest
+go install github.com/LiasCode/rumbo/cmd/rumbo@v0.9.0
 ```
 
 ## Compruébalo
@@ -51,7 +47,7 @@ go install github.com/LiasCode/rumbo/cmd/rumbo@latest
 rumbo version
 ```
 
-Imprime la versión y la versión de los protocolos que habla.
+Imprime la versión y la versión del protocolo de proveedores que habla: `rumbo 0.9.0 (protocol 1)`.
 
 ## Dónde guarda rumbo las cosas
 

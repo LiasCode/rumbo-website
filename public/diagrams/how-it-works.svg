@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 520" width="1000" height="520" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 640" width="1000" height="640" role="img" aria-labelledby="title desc">
   <title id="title">How rumbo works</title>
-  <desc id="desc">Front ends such as the terminal UI, a plain printer, an editor, or one you write speak the Agent Frontend Protocol with the rumbo host: tasks and steers go in, events come out. The host runs the agent loop: it builds each request from the session, asks a provider for a message, and runs its tool calls, until the model calls no tool. It has four tools, read, write, edit, and bash, keeps each session as an append-only log in a file you can read, sends the environment, the AGENTS.md files, and what each skill is for as context, and applies settings from the system down to the session. Providers such as anthropic, openai, or one you write speak the Agent Provider Protocol with the host: the conversation goes in, the next message comes out. Every one of them is a separate program, the built-in ones included.</desc>
+  <desc id="desc">Front ends such as the terminal UI, a plain printer, an editor, or one you write speak the Agent Frontend Protocol with the rumbo host: tasks and steers go in, events come out. The host runs the agent loop: it builds each request from the session, asks a provider for a message, and runs its tool calls, until the model calls no tool. It has four tools, read, write, edit, and bash, and a fifth, computer, for the screen when the user turns it on; keeps each session as an append-only log in a file you can read; sends the environment, the AGENTS.md files, and what each skill is for as context; and keeps settings at three levels, the system's, each provider's, and each session's, which wins in it. Providers such as anthropic, openai, chatgpt, or one you write speak the Agent Provider Protocol with the host: the conversation goes in, the next message comes out. Extensions speak the Agent Extension Protocol with the host: tool calls and events go in; results, sections of context, and commands for the person come out. They are the mcp that comes with rumbo, which gives the model the tools of an MCP server, those a plugin brings with its skills, or one you write. Every one of them is a separate program, those that come with rumbo included.</desc>
   <style>
     text { font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2328; }
     .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
@@ -13,6 +13,8 @@
     .front-ink { fill: #0969da; }
     .prov { fill: #fff1e5; stroke: #bc4c00; }
     .prov-ink { fill: #bc4c00; }
+    .ext { fill: #dafbe1; stroke: #1a7f37; }
+    .ext-ink { fill: #1a7f37; }
     .yours { stroke-dasharray: 5 4; }
     .host { fill: #f6f8fa; stroke: #8c959f; }
     .loop { fill: #ffffff; stroke: #d0d7de; }
@@ -27,6 +29,8 @@
       .front-ink { fill: #4493f8; }
       .prov { fill: #3d1d00; stroke: #f0883e; }
       .prov-ink { fill: #f0883e; }
+      .ext { fill: #0f2d1a; stroke: #3fb950; }
+      .ext-ink { fill: #3fb950; }
       .host { fill: #161b22; stroke: #6e7681; }
       .loop { fill: #0d1117; stroke: #30363d; }
       .chip { fill: #262c36; }
@@ -41,7 +45,7 @@
     </marker>
   </defs>
 
-  <rect class="card" x="0.5" y="0.5" width="999" height="519" rx="16"/>
+  <rect class="card" x="0.5" y="0.5" width="999" height="639" rx="16"/>
 
   <!-- Front ends -->
   <text class="head front-ink" x="124" y="52" text-anchor="middle">Front ends</text>
@@ -91,13 +95,15 @@
   <text class="step mono" x="535" y="286" text-anchor="middle">edit</text>
   <rect class="chip" x="574" y="268" width="62" height="26" rx="6"/>
   <text class="step mono" x="605" y="286" text-anchor="middle">bash</text>
+  <text class="small" x="364" y="314">and <tspan class="mono">computer</tspan>, for the screen, when you turn it on</text>
 
-  <text class="label" x="364" y="330">session</text>
-  <text class="step" x="440" y="330">an append-only log, in a file</text>
-  <text class="label" x="364" y="362">context</text>
-  <text class="step" x="440" y="362">environment, AGENTS.md, skills</text>
-  <text class="label" x="364" y="394">settings</text>
-  <text class="step" x="440" y="394">system, then the session's own</text>
+  <text class="label" x="364" y="346">session</text>
+  <text class="step" x="440" y="346">an append-only log, in a file</text>
+  <text class="label" x="364" y="378">context</text>
+  <text class="step" x="440" y="378">environment, AGENTS.md, skills,</text>
+  <text class="small" x="440" y="394">and your extensions' sections</text>
+  <text class="label" x="364" y="418">settings</text>
+  <text class="step" x="440" y="418">system, provider, then session</text>
 
   <!-- Agent Provider Protocol -->
   <text class="label" x="716" y="144" text-anchor="middle">Agent Provider</text>
@@ -110,19 +116,46 @@
   <!-- Providers -->
   <text class="head prov-ink" x="876" y="52" text-anchor="middle">Providers</text>
 
-  <rect class="prov" x="776" y="104" width="200" height="52" rx="10"/>
-  <text class="name mono" x="792" y="127">anthropic</text>
-  <text class="sub" x="792" y="145">the Claude API</text>
+  <rect class="prov" x="776" y="72" width="200" height="52" rx="10"/>
+  <text class="name mono" x="792" y="95">anthropic</text>
+  <text class="sub" x="792" y="113">the Claude API</text>
 
-  <rect class="prov" x="776" y="168" width="200" height="52" rx="10"/>
-  <text class="name mono" x="792" y="191">openai</text>
-  <text class="sub" x="792" y="209">OpenAI, Ollama, vLLM, …</text>
+  <rect class="prov" x="776" y="136" width="200" height="52" rx="10"/>
+  <text class="name mono" x="792" y="159">openai</text>
+  <text class="sub" x="792" y="177">OpenAI, Ollama, vLLM, …</text>
 
-  <rect class="prov yours" x="776" y="232" width="200" height="52" rx="10"/>
-  <text class="name" x="792" y="255">yours</text>
-  <text class="sub" x="792" y="273">any model, any language</text>
+  <rect class="prov" x="776" y="200" width="200" height="52" rx="10"/>
+  <text class="name mono" x="792" y="223">chatgpt</text>
+  <text class="sub" x="792" y="241">your ChatGPT plan</text>
+
+  <rect class="prov yours" x="776" y="264" width="200" height="52" rx="10"/>
+  <text class="name" x="792" y="287">yours</text>
+  <text class="sub" x="792" y="305">any model, any language</text>
+
+  <!-- Agent Extension Protocol -->
+  <line class="wire" x1="480" y1="440" x2="480" y2="496" marker-end="url(#arrow)"/>
+  <line class="wire" x1="520" y1="496" x2="520" y2="440" marker-end="url(#arrow)"/>
+  <text class="label" x="470" y="462" text-anchor="end">Agent Extension Protocol</text>
+  <text class="small" x="470" y="478" text-anchor="end">tool calls, events</text>
+  <text class="small" x="530" y="462">results, sections of context,</text>
+  <text class="small" x="530" y="478">commands for you</text>
+
+  <!-- Extensions -->
+  <text class="head ext-ink" x="124" y="532" text-anchor="middle">Extensions</text>
+
+  <rect class="ext" x="184" y="504" width="200" height="52" rx="10"/>
+  <text class="name mono" x="200" y="527">mcp</text>
+  <text class="sub" x="200" y="545">the tools of any MCP server</text>
+
+  <rect class="ext" x="400" y="504" width="200" height="52" rx="10"/>
+  <text class="name" x="416" y="527">from a plugin</text>
+  <text class="sub" x="416" y="545">with its skills, in one add</text>
+
+  <rect class="ext yours" x="616" y="504" width="200" height="52" rx="10"/>
+  <text class="name" x="632" y="527">yours</text>
+  <text class="sub" x="632" y="545">more tools, any language</text>
 
   <!-- Caption -->
-  <text class="small" x="500" y="472" text-anchor="middle">Front ends, the host, and providers are programs of their own, speaking JSON-RPC over stdio.</text>
-  <text class="small" x="500" y="492" text-anchor="middle">The built-in front ends and providers cross the same protocols as the ones you write.</text>
+  <text class="small" x="500" y="592" text-anchor="middle">Front ends, the host, providers, and extensions are programs of their own, speaking JSON-RPC over stdio.</text>
+  <text class="small" x="500" y="612" text-anchor="middle">Those that come with rumbo cross the same protocols as the ones you write.</text>
 </svg>

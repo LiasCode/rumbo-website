@@ -59,6 +59,8 @@ The commands come from what the host and the provider describe, so a provider's 
 `/login`, show up without the UI knowing them. The UI's own are `/help`, `/copy` (the model's last
 answer, or `/copy code` for its last code block), and `/export` (the session as Markdown).
 
+An extension’s commands appear with its registered name, such as `/notes-forget`. Its output is marked `[extension]` or `[extension <name>]`. See [Extensions and MCP](/guides/extensions/).
+
 ## Model and options
 
 A click on the model under the composer, or Model and options in the palette, opens the picker. It

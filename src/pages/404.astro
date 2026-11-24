@@ -1,0 +1,17 @@
+---
+import Site from '../layouts/Site.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<Site locale="en" title="Page not found" description="This page could not be found.">
+	<main id="main" class="landing not-found">
+		<p class="eyebrow"><span></span>404</p>
+		<h1>Page not found</h1>
+		<a class="button solid" href="/start/introduction/">Back to the documentation <Icon name="arrow-right" /></a>
+	</main>
+</Site>
+
+<style>
+	.not-found { min-height: 70vh; padding-block: 5rem; }
+	h1 { font: 400 clamp(2.5rem, 7vw, 5rem) var(--serif); margin: 0 0 1.3rem; }
+</style>

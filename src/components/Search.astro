@@ -1,0 +1,97 @@
+---
+import { interfaceCopy, type Locale } from '../navigation';
+import Icon from './Icon.astro';
+
+const { locale } = Astro.props as { locale: Locale };
+const copy = interfaceCopy[locale];
+---
+
+<doc-search data-locale={locale} data-empty={copy.empty}>
+	<button type="button" class="button small square" data-open aria-label={copy.search} aria-haspopup="dialog" title={copy.search}><Icon name="search" /></button>
+	<dialog aria-labelledby="doc-search-label">
+		<form method="dialog"><button type="submit" class="button small">{copy.close} <Icon name="close" /></button></form>
+		<label for="doc-search-input" id="doc-search-label">{copy.search}</label>
+		<input class="field" type="search" id="doc-search-input" autocomplete="off" />
+		<p data-status role="status"></p>
+		<ul data-results></ul>
+	</dialog>
+</doc-search>
+
+<script>
+	type Entry = { locale: string; href: string; title: string; description: string; headings: string[]; commands: string[]; lang: string };
+
+	class DocSearch extends HTMLElement {
+		connectedCallback() {
+			const dialog = this.querySelector('dialog')!;
+			const input = this.querySelector('input')!;
+			const results = this.querySelector('[data-results]')!;
+			const status = this.querySelector('[data-status]')!;
+			const normalize = (value: string) => value.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
+			let pages: Promise<Entry[]> | undefined;
+
+			const search = async () => {
+				const query = normalize(input.value).trim();
+				results.replaceChildren();
+				status.textContent = '';
+				if (!query) {
+					return;
+				}
+
+				pages ??= fetch('/search.json').then(async (response) => {
+					if (!response.ok) {
+						throw new Error(String(response.status));
+					}
+
+					return (await response.json() as Entry[]).filter((page) => page.locale === this.dataset.locale);
+				});
+
+				try {
+					const entries = await pages;
+					if (query !== normalize(input.value).trim()) {
+						return;
+					}
+
+					const words = query.split(/\s+/);
+					const matches = entries.map((entry) => {
+						const title = normalize(entry.title);
+						const text = normalize([entry.title, entry.href, entry.description, ...entry.headings, ...entry.commands].join(' '));
+						return { entry, score: words.every((word) => text.includes(word)) ? 1 + words.filter((word) => title.includes(word)).length : 0 };
+					}).filter(({ score }) => score > 0).sort((a, b) => b.score - a.score);
+
+					status.textContent = matches.length ? '' : this.dataset.empty!;
+					results.replaceChildren(...matches.slice(0, 12).map(({ entry }) => {
+						const item = document.createElement('li');
+						const link = document.createElement('a');
+						const summary = document.createElement('small');
+						link.href = entry.href;
+						link.lang = entry.lang;
+						link.textContent = entry.title;
+						summary.textContent = entry.description;
+						link.append(summary);
+						item.append(link);
+						return item;
+					}));
+				} catch {
+					pages = undefined;
+					if (query === normalize(input.value).trim()) {
+						status.textContent = this.dataset.empty!;
+					}
+				}
+			};
+
+			this.querySelector('[data-open]')!.addEventListener('click', () => {
+				dialog.showModal();
+				input.focus();
+			});
+			dialog.addEventListener('keydown', (event) => {
+				if (event.key === 'Escape') {
+					event.preventDefault();
+					dialog.close();
+				}
+			});
+			input.addEventListener('input', search);
+		}
+	}
+
+	customElements.define('doc-search', DocSearch);
+</script>
