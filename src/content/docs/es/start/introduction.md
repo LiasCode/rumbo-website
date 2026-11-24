@@ -32,7 +32,7 @@ Hay dos más que se publican aparte, como [plugins](/es/guides/plugins/) que añ
 | Plugin                                                   | Añade                                                                                                                              |
 | -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
 | [rumbo-claude](https://github.com/LiasCode/rumbo-claude) | Un proveedor, `claude`, que usa una suscripción Claude Pro o Max. No es una integración oficial de Anthropic: lee antes su README. |
-| [rumbo-gui](https://github.com/LiasCode/rumbo-gui)       | Una interfaz, `gui`: una [ventana de escritorio](/es/guides/desktop-app/) para rumbo. Necesita un rumbo posterior a 0.9.0.         |
+| [rumbo-gui](https://github.com/LiasCode/rumbo-gui)       | Una interfaz, `gui`: una [ventana de escritorio](/es/guides/desktop-app/) para rumbo. Necesita rumbo 0.10.0 o posterior.           |
 
 ```sh
 rumbo plugin add https://github.com/LiasCode/rumbo-claude
@@ -84,8 +84,8 @@ los que [escribes tú](/es/extend/provider/), así que todo lo que ellos pueden 
   mientras la primera queda como estaba.
 - **Pensado para la caché del proveedor.** Cada petición amplía la anterior hasta que un resumen
   vuelve a empezar la conversación, así que el proveedor puede leerla de su caché.
-- **Un host, muchas sesiones.** Las ejecuciones siguen en otras sesiones mientras trabajas en una
-  nueva, y puedes decirle algo a una ejecución sin detenerla.
+- **Un rumbo, una sesión.** Cada sesión es un proceso propio, con su proveedor y sus extensiones,
+  así que las ejecuciones avanzan a la par, y puedes decirle algo a una ejecución sin detenerla.
 - **Los proveedores se describen solos.** Sus modelos, opciones y funciones, hasta un inicio de sesión
   que te pide un código, aparecen en cualquier interfaz sin que la interfaz los conozca.
 - **Pequeño y general.** Un prompt de sistema corto y fijo, nada sobre ningún lenguaje o framework, y

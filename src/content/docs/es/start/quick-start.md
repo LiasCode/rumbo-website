@@ -41,19 +41,20 @@ una línea que dice cómo acabó, cuánto tardó y cuántos turnos y tokens usó
 
 ```sh
 rumbo                                            # the terminal UI; /help lists its commands
-rumbo -c "also document it"                      # continue the latest session
+rumbo -c "also document it"                      # continue the latest session started here
 rumbo -r                                         # resume a run that stopped
 rumbo "summarize notes.md" > summary.txt         # piped: plain text out, exit code
 ```
 
-`rumbo` sin más abre la interfaz de terminal a pantalla completa: las sesiones del proyecto en una
+`rumbo` sin más abre la interfaz de terminal a pantalla completa: las sesiones de la carpeta en una
 barra lateral, la conversación y, debajo, un editor con el modelo y lo lleno que está su contexto.
 Ctrl-P abre todos los comandos. Consulta la guía de la [interfaz de terminal](/es/guides/terminal-ui/).
 
 ## 4. Cuéntale cómo trabajas
 
-El modelo lee tus instrucciones: los archivos `AGENTS.md` o `CLAUDE.md` desde la raíz del proyecto
-hasta donde estás, y los tuyos en `~/.config/rumbo/`. Escribe ahí cómo debe hacerse el trabajo y qué
+El modelo lee tus instrucciones: el archivo `AGENTS.md` o `CLAUDE.md` del directorio en el que
+arranca rumbo, y los tuyos en `~/.config/rumbo/`. Arranca rumbo en la raíz de un repositorio para
+trabajar con su guía. Escribe ahí cómo debe hacerse el trabajo y qué
 comprobar antes de darlo por terminado. Consulta [instrucciones y skills](/es/guides/instructions-and-skills/).
 
 ## Siguiente

@@ -15,7 +15,7 @@ stdout porta solo messaggi del protocollo. La diagnostica va su stderr, che arri
 
 ## Un esempio completo
 
-[examples/extension.py](https://github.com/LiasCode/rumbo/blob/v0.9.0/examples/extension.py) è un'estensione intera in un solo file Python. Conserva delle note: uno strumento per ricordarne una, una sezione che le dice tutte al modello e un comando che le dimentica. Ecco come risponde a una chiamata:
+[examples/extension.py](https://github.com/LiasCode/rumbo/blob/v0.10.0/examples/extension.py) è un'estensione intera in un solo file Python. Conserva delle note: uno strumento per ricordarne una, una sezione che le dice tutte al modello e un comando che le dimentica. Ecco come risponde a una chiamata:
 
 ```python
 def call(params):
@@ -50,7 +50,7 @@ tools, declared to the model in every request (161 bytes):
   remember  Keep a note for later in this rumbo.
 ```
 
-In Go, il pacchetto [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.9.0/protocol) ha i tipi e `ServeExtension`, un server già pronto.
+In Go, il pacchetto [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.10.0/protocol) ha i tipi e `ServeExtension`, un server già pronto.
 
 ## Cosa deve fare un'estensione
 
@@ -65,7 +65,7 @@ In Go, il pacchetto [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.9.0/p
 - **Dire qualcosa al modello quando inizia un'esecuzione**, dichiarando `sections`. L'host chiede il testo di ciascuna; ha 10 secondi per rispondere, e ne vengono trasmessi al massimo 8.000 byte.
 - **Offrire comandi alla persona**, dichiarando `functions`. Un'interfaccia mostra `forget`, di un'estensione registrata come `notes`, come `/notes-forget`.
 - **Parlare con la persona** mentre uno strumento o un comando lavora: `delta` dice qualcosa, e `ask` fa una domanda, la cui risposta può essere segnata come segreta.
-- **Chiamare gli strumenti di rumbo** mentre risponde a una chiamata: è così che un'estensione che sostituisce `bash` inoltra ciò che lascia passare. [examples/guard.py](https://github.com/LiasCode/rumbo/blob/v0.9.0/examples/guard.py) lo fa.
+- **Chiamare gli strumenti di rumbo** mentre risponde a una chiamata: è così che un'estensione che sostituisce `bash` inoltra ciò che lascia passare. [examples/guard.py](https://github.com/LiasCode/rumbo/blob/v0.10.0/examples/guard.py) lo fa.
 - **Sapere cosa fanno le esecuzioni**, dichiarando gli `events` che vuole, come `ended`.
 - **Dire che ciò che dichiara è cambiato**, con `changed`, come quando un accesso le dà degli strumenti.
 

@@ -29,7 +29,7 @@ personne.
 
 ## Un exemple complet
 
-[examples/provider.py](https://github.com/LiasCode/rumbo/blob/v0.9.0/examples/provider.py) est un
+[examples/provider.py](https://github.com/LiasCode/rumbo/blob/v0.10.0/examples/provider.py) est un
 fournisseur complet dans un seul fichier Python, sans modèle derrière : il demande un appel d'outil,
 puis répète la sortie de l'outil. Voici sa boucle :
 
@@ -65,7 +65,7 @@ rumbo -p toy -m any "list the files"
 ```
 
 rumbo démarre un fournisseur quand vous l'ajoutez, ce qui prouve qu'il fonctionne. En Go, le paquet
-[`protocol`](https://github.com/LiasCode/rumbo/tree/v0.9.0/protocol) contient les types et `Serve`, un
+[`protocol`](https://github.com/LiasCode/rumbo/tree/v0.10.0/protocol) contient les types et `Serve`, un
 serveur prêt à l'emploi.
 
 ## Ce qu'un fournisseur doit faire

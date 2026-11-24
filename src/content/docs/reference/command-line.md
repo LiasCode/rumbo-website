@@ -15,21 +15,22 @@ rumbo serve [flags]            be the host for a front end on stdin/stdout
 
 | Flag                | Does                                                                                                                             |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `-c`                | Continue the latest session of the current project                                                                               |
+| `-c`                | Continue the latest session started in this directory                                                                            |
 | `-r`                | Resume the unfinished run of that session, without a new objective                                                               |
 | `-s <session>`      | Continue the given session                                                                                                       |
 | `-p <provider>`     | Provider of the session (default: the `default_provider` setting)                                                                |
 | `-m <model>`        | Model of the session (default: the model set for its provider)                                                                   |
 | `-o <name>=<value>` | A provider option of the session, such as `-o effort=high`; may be repeated, and an empty value gives one back to the provider's |
 | `-f <name>`         | Front end for this start (default: the `frontend` setting, else `tui` in a terminal, else `plain`)                               |
-| `-single`           | Work in one session at a time; by default the host works in several sessions of the project at once                              |
 
-The session keeps what `-p`, `-m`, and `-o` choose, over the system settings.
+The session keeps what `-p`, `-m`, and `-o` choose, over the system settings. Each `rumbo` works in
+one session; another session is another `rumbo`.
 
 ## Sessions
 
 ```text
-rumbo sessions [-all]                     list the sessions of this project, or of every one
+rumbo sessions [-all] [-json]             list the sessions of this directory, or of every one;
+                                          with -json, for a program to read
 rumbo sessions rename <session> <title>   give a session a title of your own
 rumbo sessions rm <session>...            delete sessions and their history
 rumbo sessions prune [-all] [-yes] <age>  delete the sessions not used in that long, such as
@@ -121,4 +122,4 @@ rumbo plugin update <name>
 rumbo plugin rm <name>
 ```
 
-[Plugins](/guides/plugins/) · [v2 →](/reference/next/)
+[Plugins](/guides/plugins/)

@@ -3,15 +3,15 @@ title: Interfaccia da terminale
 description: Usa l'interfaccia da terminale di rumbo. Le sessioni in una barra laterale, la conversazione, un campo di scrittura, una palette di comandi, pannelli con i dettagli della sessione e le modifiche di Git, e tutti i suoi tasti.
 ---
 
-`rumbo` in un terminale apre l'interfaccia da terminale a schermo intero: un'intestazione con il
-progetto e la sessione mostrata, le sessioni del progetto in una barra laterale, la conversazione in
+`rumbo` in un terminale apre l'interfaccia da terminale a schermo intero: un'intestazione con la
+cartella e la sessione mostrata, le sessioni avviate in quella cartella in una barra laterale, la conversazione in
 una colonna propria e, sotto, un campo di scrittura con il modello, quanto è pieno il contesto e quanto
 ha speso la sessione.
 
 ```sh
 rumbo                      # open it
 rumbo "a task"             # open it and start a task
-rumbo -c                   # open the latest session of this project
+rumbo -c                   # open the latest session started here
 rumbo -s <session>         # open a given one
 ```
 
@@ -35,34 +35,47 @@ Markdown.
 
 ## Sessioni
 
-Ogni sessione conserva ciò che ha mostrato, e un'esecuzione continua nella sua sessione mentre ne guardi
-un'altra. La barra laterale segna le sessioni che stanno lavorando e quelle la cui esecuzione è finita
-mentre non erano mostrate.
+La barra laterale elenca le sessioni avviate nella cartella in cui è stato avviato rumbo. Ognuna è un
+rumbo a sé, che l'interfaccia avvia quando mostri la sessione per la prima volta e chiude quando esci,
+quindi un'esecuzione continua nella sua sessione mentre ne guardi un'altra. La barra laterale segna le
+sessioni che stanno lavorando, quelle la cui esecuzione è finita mentre non erano mostrate e, con un
+anello, quelle per cui un rumbo è ancora aperto.
 
-| Tasto                            | Cosa fa                                                                 |
-| -------------------------------- | ----------------------------------------------------------------------- |
-| Tab (campo vuoto), frecce, Invio | Mostrare una sessione della barra laterale                              |
-| Canc                             | Eliminare la sessione scelta nella barra laterale, dopo il tuo consenso |
-| Ctrl-N                           | Iniziare una nuova sessione                                             |
-| Ctrl-B                           | Mostrare o nascondere la barra laterale                                 |
+| Tasto                            | Cosa fa                                       |
+| -------------------------------- | --------------------------------------------- |
+| Tab (campo vuoto), frecce, Invio | Mostrare una sessione della barra laterale    |
+| Ctrl-N                           | Iniziare una nuova sessione, in un rumbo a sé |
+| Ctrl-B                           | Mostrare o nascondere la barra laterale       |
+
+I rumbo delle sessioni che hai lasciato senza nulla da fare vengono chiusi oltre le ultime due
+mostrate, così non continuano a occupare memoria; mostrarne di nuovo una avvia il suo rumbo. `/rumbos`
+dice cosa usa il rumbo di ogni sessione aperta, e "Close the rumbos not in use", nella palette, li
+chiude tutti.
+
+`/delete`, o "Delete this session" nella palette, elimina la sessione mostrata dopo il tuo consenso.
+La sessione in cui è stato avviato rumbo resta trattenuta finché non esci: eliminala allora, con
+`rumbo sessions rm`.
 
 ## Comandi
 
-- **Ctrl-P** apre una palette con le azioni proprie dell'interfaccia, le altre sessioni del progetto e
+- **Ctrl-P** apre una palette con le azioni proprie dell'interfaccia, le altre sessioni della cartella e
   tutti i comandi, filtrati mentre scrivi. Un comando che ha bisogno di qualcosa lo chiede in un modulo,
   e uno che non si può annullare ti chiede il consenso in una finestra di dialogo.
 - **Una barra** nel campo di scrittura apre un menu dei comandi, con ciò che fa ciascuno, e poi dei
-  valori accettati dal parametro successivo: `/open` elenca le sessioni, `/use openai` i modelli di
-  `openai`.
+  valori accettati dal parametro successivo: `/use` elenca i provider, `/use openai` i modelli di
+  `openai`. Un parametro che si può omettere si scrive per nome, come `name=value`:
+  `/extension-add docs config={"url":"https://example.com/mcp"} {self} extend mcp`.
 - **`/help`** li elenca tutti: quelli dell'host, raggruppati in base a cosa agiscono (il sistema, la
-  sessione e i provider), quelli del provider e quelli propri dell'interfaccia.
+  sessione, i provider e le estensioni), quelli del provider e quelli propri dell'interfaccia.
 
 I comandi vengono da ciò che descrivono l'host e il provider, quindi le funzioni di un provider, come
 `/login`, compaiono senza che l'interfaccia le conosca. Quelli propri dell'interfaccia sono `/help`,
-`/copy` (l'ultima risposta del modello, o `/copy code` per il suo ultimo blocco di codice) e `/export`
-(la sessione come Markdown).
+`/copy` (l'ultima risposta del modello, o `/copy code` per il suo ultimo blocco di codice), `/export`
+(la sessione come Markdown), `/rumbos` e `/delete`. `/processes` mostra i processi che il rumbo in cui
+sei ha in esecuzione, ciascuno sotto quello che l'ha avviato, con la memoria e il tempo di processore
+che usa.
 
-I comandi di un’estensione riportano il suo nome registrato, per esempio `/notes-forget`. L’output è contrassegnato da `[extension]` o `[extension <name>]`. Vedi [Estensioni e MCP](/it/guides/extensions/).
+I comandi di un’estensione riportano il suo nome registrato, per esempio `/notes-forget`, appena viene aggiunta. L’output è contrassegnato da `[extension]` o `[extension <name>]`. Vedi [Estensioni e MCP](/it/guides/extensions/).
 
 ## Modello e opzioni
 
@@ -75,7 +88,7 @@ comando che è.
 - **Ctrl-Alt-B** mostra i dettagli della sessione accanto alla conversazione: il suo id e il suo stato,
   la sua cartella, il suo modello, quanto è pieno il suo contesto, quanto ha speso e le skill di cui il
   modello viene informato.
-- **Ctrl-G** mostra cosa è cambiato nella cartella del progetto secondo Git, rispetto all'ultimo commit,
+- **Ctrl-G** mostra cosa è cambiato nella cartella della sessione secondo Git, rispetto all'ultimo commit,
   file nuovi compresi. Si limita a leggere.
 
 ## Tornare indietro nella conversazione
@@ -100,7 +113,7 @@ che lo accettano (in tmux, con `set-clipboard on`). Con Maiusc, il terminale sel
 | Invio                               | Inviare il compito, o dire all'esecuzione in corso ciò che hai scritto                                    |
 | Alt-Invio, Maiusc-Invio, Ctrl-J     | Nuova riga                                                                                                |
 | Su, Giù                             | Muoversi tra le righe scritte e, oltre, tra ciò che hai inviato prima                                     |
-| Ctrl-R                              | Cercare ciò che hai inviato prima, in qualsiasi sessione del progetto                                     |
+| Ctrl-R                              | Cercare ciò che hai inviato prima, in qualsiasi sessione avviata in questa cartella                       |
 | Ctrl-V                              | Incollare l'immagine negli appunti, che parte con ciò che invii dopo                                      |
 | Backspace con il campo vuoto        | Togliere l'ultima immagine incollata                                                                      |
 | Esc                                 | Abbandonare una funzione del provider in corso, altrimenti annullare l'esecuzione della sessione mostrata |

@@ -48,6 +48,12 @@ rumbo extension set files tools= # un valore vuoto riporta il campo al suo valor
 rumbo extension rm files
 ```
 
+Da un'interfaccia, `/extensions`, `/extension-add`, `/extension-show`, `/extension-set` e `/extension-rm` fanno lo stesso. Una modifica vale per le esecuzioni che iniziano dopo, e l'interfaccia da terminale offre i comandi di un'estensione appena viene aggiunta:
+
+```text
+/extension-add docs config={"url":"https://example.com/mcp"} {self} extend mcp
+```
+
 Il nome, la descrizione e lo schema di ogni strumento sono inviati al modello con **ogni richiesta**, che il compito li usi o no. `show` dice quanti byte sono. Dai al modello gli strumenti che servono a un compito, con `tools`, invece di tutto ciò che ha un server.
 
 ## Sostituire uno strumento di rumbo
@@ -59,7 +65,7 @@ rumbo extension add -replaces bash guard python3 /path/to/examples/guard.py
 rumbo extension set guard replaces=       # restituisce bash a rumbo
 ```
 
-[`examples/guard.py`](https://github.com/LiasCode/rumbo/blob/v0.9.0/examples/guard.py) chiede prima di ogni `rm -rf`, in una finestra di dialogo, e passa tutto il resto al `bash` di rumbo.
+[`examples/guard.py`](https://github.com/LiasCode/rumbo/blob/v0.10.0/examples/guard.py) chiede prima di ogni `rm -rf`, in una finestra di dialogo, e passa tutto il resto al `bash` di rumbo.
 
 ## Cos'altro fa un'estensione
 

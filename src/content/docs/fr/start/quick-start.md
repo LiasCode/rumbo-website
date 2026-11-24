@@ -42,19 +42,20 @@ utilisés.
 
 ```sh
 rumbo                                            # the terminal UI; /help lists its commands
-rumbo -c "also document it"                      # continue the latest session
+rumbo -c "also document it"                      # continue the latest session started here
 rumbo -r                                         # resume a run that stopped
 rumbo "summarize notes.md" > summary.txt         # piped: plain text out, exit code
 ```
 
-`rumbo` seul ouvre l'interface en terminal en plein écran : les sessions du projet dans une barre
+`rumbo` seul ouvre l'interface en terminal en plein écran : les sessions du dossier dans une barre
 latérale, la conversation et, en dessous, une zone de saisie avec le modèle et le remplissage de son
 contexte. Ctrl-P ouvre toutes les commandes. Voir le guide de l'[interface en terminal](/fr/guides/terminal-ui/).
 
 ## 4. Lui dire comment vous travaillez
 
-Le modèle lit vos instructions : les fichiers `AGENTS.md` ou `CLAUDE.md` de la racine du projet jusqu'à
-l'endroit où vous êtes, et les vôtres dans `~/.config/rumbo/`. Écrivez-y comment le travail doit être
+Le modèle lit vos instructions : le fichier `AGENTS.md` ou `CLAUDE.md` du répertoire où rumbo
+démarre, et les vôtres dans `~/.config/rumbo/`. Démarrez rumbo à la racine d'un dépôt pour travailler
+avec son guide. Écrivez-y comment le travail doit être
 fait, et ce qu'il faut vérifier avant de le considérer comme terminé. Voir
 [instructions et skills](/fr/guides/instructions-and-skills/).
 

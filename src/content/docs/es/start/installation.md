@@ -9,7 +9,7 @@ rumbo es un único binario para Linux y macOS, en amd64 y arm64. Windows no est�
 
 Cada [versión](https://github.com/LiasCode/rumbo/releases) tiene un archivo por plataforma, con el
 binario, el README, el changelog y la licencia, y un archivo `SHA256SUMS` para comprobarlos. La última
-es rumbo 0.9.0, del 2026-11-24.
+es rumbo 0.10.0, del 2026-11-25.
 
 | OS    | CPU           | `platform`     |
 | ----- | ------------- | -------------- |
@@ -19,7 +19,7 @@ es rumbo 0.9.0, del 2026-11-24.
 | macOS | Intel         | `darwin-amd64` |
 
 ```sh
-version=0.9.0
+version=0.10.0
 platform=linux-amd64
 archive=rumbo-$version-$platform
 base=https://github.com/LiasCode/rumbo/releases/download/v$version
@@ -38,7 +38,7 @@ Elige `platform` en la tabla. Si tu shell no encuentra `rumbo`, añade `~/.local
 Con Go 1.27.3 o posterior:
 
 ```sh
-go install github.com/LiasCode/rumbo/cmd/rumbo@v0.9.0
+go install github.com/LiasCode/rumbo/cmd/rumbo@v0.10.0
 ```
 
 ## Compruébalo
@@ -47,7 +47,7 @@ go install github.com/LiasCode/rumbo/cmd/rumbo@v0.9.0
 rumbo version
 ```
 
-Imprime la versión y la versión del protocolo de proveedores que habla: `rumbo 0.9.0 (protocol 1)`.
+Imprime la versión y la versión del protocolo de proveedores que habla: `rumbo 0.10.0 (protocol 1)`.
 
 ## Dónde guarda rumbo las cosas
 

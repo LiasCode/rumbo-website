@@ -16,21 +16,22 @@ rumbo serve [flags]            be the host for a front end on stdin/stdout
 
 | Opción              | Hace                                                                                                                                  |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `-c`                | Continuar la última sesión del proyecto actual                                                                                        |
+| `-c`                | Continuar la última sesión empezada en este directorio                                                                                |
 | `-r`                | Reanudar la ejecución sin terminar de esa sesión, sin una tarea nueva                                                                 |
 | `-s <session>`      | Continuar la sesión indicada                                                                                                          |
 | `-p <provider>`     | Proveedor de la sesión (por defecto: el ajuste `default_provider`)                                                                    |
 | `-m <model>`        | Modelo de la sesión (por defecto: el modelo fijado para su proveedor)                                                                 |
 | `-o <name>=<value>` | Una opción del proveedor para la sesión, como `-o effort=high`; se puede repetir, y un valor vacío la devuelve al valor del proveedor |
 | `-f <name>`         | Interfaz para este arranque (por defecto: el ajuste `frontend`; si no, `tui` en una terminal o `plain`)                               |
-| `-single`           | Trabajar en una sola sesión a la vez; por defecto el host trabaja en varias sesiones del proyecto a la vez                            |
 
-La sesión conserva lo que eligen `-p`, `-m` y `-o`, por encima de los ajustes del sistema.
+La sesión conserva lo que eligen `-p`, `-m` y `-o`, por encima de los ajustes del sistema. Cada
+`rumbo` trabaja en una sesión; otra sesión es otro `rumbo`.
 
 ## Sesiones
 
 ```text
-rumbo sessions [-all]                     list the sessions of this project, or of every one
+rumbo sessions [-all] [-json]             list the sessions of this directory, or of every one;
+                                          with -json, for a program to read
 rumbo sessions rename <session> <title>   give a session a title of your own
 rumbo sessions rm <session>...            delete sessions and their history
 rumbo sessions prune [-all] [-yes] <age>  delete the sessions not used in that long, such as
@@ -124,4 +125,4 @@ rumbo plugin update <name>
 rumbo plugin rm <name>
 ```
 
-[Plugins](/es/guides/plugins/) · [v2 →](/es/reference/next/)
+[Plugins](/es/guides/plugins/)

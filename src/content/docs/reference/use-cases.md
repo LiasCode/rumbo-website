@@ -1,9 +1,9 @@
 ---
 title: What each part can do
-description: What the rumbo host, a provider, a front end, an extension, and a plugin must do, can do, and never do in rumbo 0.9.0, with where to read more.
+description: What the rumbo host, a provider, a front end, an extension, and a plugin must do, can do, and never do in rumbo 0.10.0, with where to read more.
 ---
 
-Find the part you are working on, and what it is allowed to do. Each line was checked against the source of rumbo 0.9.0; the protocol pages have the frames.
+Find the part you are working on, and what it is allowed to do. Each line was checked against the source of rumbo 0.10.0; the protocol pages have the frames.
 
 ## Host
 
@@ -11,14 +11,16 @@ Find the part you are working on, and what it is allowed to do. Each line was ch
 | ----------------------------------- | -------------------------------------------------------------------------------------------------------------- |
 | Start a task                        | `rumbo "a task"`, or `run` from a front end.                                                                   |
 | Choose the model and the interface  | `-p`, `-m`, `-o`, and `-f` for one start; [settings](/guides/configuration/) for all of them.                  |
-| Go on with earlier work             | `-c` for the latest session of the project, `-s` for any, `-r` to resume an unfinished run.                    |
+| Go on with earlier work             | `-c` for the latest session started here, `-s` for any, `-r` to resume an unfinished run.                      |
 | Say something to a run that works   | `steer`. It reaches the model before its next request, and the task stays as it was.                           |
 | Stop a run                          | `cancel`. The run is recorded as cancelled, and can be resumed.                                                |
-| Work in several sessions at once    | One host runs one run in each of a project's sessions; `-single` keeps it to one.                              |
+| Work in several sessions at once    | Start a rumbo for each. Each is one session, with its own provider and extensions.                             |
 | Try another direction               | [Branch](/guides/sessions/#branch): a new session from before any of your messages. Files are not rolled back. |
 | See exactly what the model was sent | `rumbo request <session> [turn]`, and `rumbo log <session>` for every entry.                                   |
 | Keep a long session going           | [Compaction](/guides/sessions/#compaction) summarizes it near the model's limit, or `/compact` when you ask.   |
 | Show the model a picture            | `images` on `run` or `steer`; the `read` tool looks at an image file.                                          |
+| Manage providers and extensions     | `rumbo provider` and `rumbo extension`, or their functions from any front end, such as `/extension-add`.       |
+| See what a rumbo costs the machine  | `processes`, or `/processes`: each process, its memory, and its processor time.                                |
 | Limit what the agent can touch      | Run rumbo in a container, a virtual machine, or another account. There are no permission prompts.              |
 
 ## Provider
@@ -51,7 +53,8 @@ A front end **must** answer `initialize`, send the `run` for a task or a resume 
 | Offer the provider's models and options  | `describe`.                                                         |
 | Show a session it did not follow         | `history`.                                                          |
 | Bring back what the person asked before  | `recall`.                                                           |
-| Run in several sessions at once          | `session` and `new` on `run`; the events carry the run's id.        |
+| Show several sessions                    | A `rumbo serve` for each, found with `rumbo sessions -json`.        |
+| Say what its hosts cost                  | `processes`, asked of each host.                                    |
 | Have a configuration of its own          | `config` in `initialize`, set with `rumbo frontend set`.            |
 
 It **never** shows or stores a secret answer, and never guesses that a run is over before its `run` is answered. [Write a front end](/extend/front-end/) · [Protocol](/reference/frontend-protocol/).

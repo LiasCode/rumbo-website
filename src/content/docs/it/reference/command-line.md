@@ -16,21 +16,22 @@ rumbo serve [flags]            be the host for a front end on stdin/stdout
 
 | Opzione             | Cosa fa                                                                                                                             |
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `-c`                | Continuare l'ultima sessione del progetto corrente                                                                                  |
+| `-c`                | Continuare l'ultima sessione avviata in questa directory                                                                            |
 | `-r`                | Riprendere l'esecuzione incompiuta di quella sessione, senza un nuovo compito                                                       |
 | `-s <session>`      | Continuare la sessione indicata                                                                                                     |
 | `-p <provider>`     | Provider della sessione (predefinito: l'impostazione `default_provider`)                                                            |
 | `-m <model>`        | Modello della sessione (predefinito: il modello impostato per il suo provider)                                                      |
 | `-o <name>=<value>` | Un'opzione del provider per la sessione, come `-o effort=high`; si può ripetere, e un valore vuoto la riporta a quella del provider |
 | `-f <name>`         | Interfaccia per questo avvio (predefinita: l'impostazione `frontend`; altrimenti `tui` in un terminale, o `plain`)                  |
-| `-single`           | Lavorare in una sola sessione alla volta; per impostazione predefinita l'host lavora in più sessioni del progetto insieme           |
 
-La sessione conserva ciò che scelgono `-p`, `-m` e `-o`, sopra le impostazioni di sistema.
+La sessione conserva ciò che scelgono `-p`, `-m` e `-o`, sopra le impostazioni di sistema. Ogni
+`rumbo` lavora in una sessione; un'altra sessione è un altro `rumbo`.
 
 ## Sessioni
 
 ```text
-rumbo sessions [-all]                     list the sessions of this project, or of every one
+rumbo sessions [-all] [-json]             list the sessions of this directory, or of every one;
+                                          with -json, for a program to read
 rumbo sessions rename <session> <title>   give a session a title of your own
 rumbo sessions rm <session>...            delete sessions and their history
 rumbo sessions prune [-all] [-yes] <age>  delete the sessions not used in that long, such as
@@ -123,4 +124,4 @@ rumbo plugin update <name>
 rumbo plugin rm <name>
 ```
 
-[Plugin](/it/guides/plugins/) · [v2 →](/it/reference/next/)
+[Plugin](/it/guides/plugins/)

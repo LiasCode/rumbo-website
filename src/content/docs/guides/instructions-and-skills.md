@@ -11,7 +11,7 @@ tools. Instructions and skills are where you tell it how work should be done.
 
 The model reads the `AGENTS.md` or `CLAUDE.md` files:
 
-- of the project, from its root down to the directory you are in;
+- of the directory rumbo was started in, the session's root, and none above it;
 - yours, in `~/.config/rumbo/` (`~/Library/Application Support/rumbo/` on macOS), which apply
   everywhere.
 
@@ -25,6 +25,9 @@ what must never happen.
 - Never commit; I review and commit myself.
 - Write to me in Spanish; code and comments in English.
 ```
+
+Started in a subdirectory of a repository, rumbo reads that subdirectory's guide alone, not the one
+at the top: start it at the top to work with the repository's guide.
 
 Your instructions win over rumbo's: what you say in the conversation first, then your `AGENTS.md`.
 A long file is cut, saying where the rest is, so the model can read it.
@@ -47,7 +50,7 @@ One heading per topic, decisions first, then who does what by when.
 Skills go in:
 
 - `~/.config/rumbo/skills/<name>/` (`~/Library/Application Support/rumbo/skills/` on macOS), yours;
-- `.agents/skills/<name>/` in a project, from its root down to where you are. A project's skill
+- `.agents/skills/<name>/` in the directory rumbo was started in, and none above it. Its skill
   replaces one of yours with the same name.
 - `skills/<name>/` in a [plugin](/guides/plugins/) you added. One of yours with the same name replaces
   it.

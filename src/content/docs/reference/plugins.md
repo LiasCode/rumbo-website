@@ -46,10 +46,10 @@ A key that is none of these is refused, saying which, rather than ignored. So is
 
 ## Placeholders
 
-| Placeholder | Stands for                     | Where                                                                                                               |
-| ----------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
-| `{plugin}`  | The directory the plugin is in | Anywhere in any word of `command` or `build`, so `{plugin}/bin/tool` works.                                         |
-| `{self}`    | The rumbo executable that runs | In 0.9.0, only as the **first word** of a command. The [development branch](/reference/next/) takes it as any word. |
+| Placeholder | Stands for                     | Where                                                                                                                                                                                   |
+| ----------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `{plugin}`  | The directory the plugin is in | Anywhere in any word of `command` or `build`, so `{plugin}/bin/tool` works.                                                                                                             |
+| `{self}`    | The rumbo executable that runs | Any word of `command`: the first for a program rumbo serves itself, or an argument, as `[my-frontend, --rumbo, "{self}"]` for a front end that starts the rumbos of its other sessions. |
 
 ## What adding one does
 
@@ -78,4 +78,4 @@ What you agree to must be all it asks for, and an update that asks for more is r
 
 > A plugin's build and its programs run as you, with your rights. Add one whose code you trust.
 
-**Source:** [`internal/cli/plugins.go`](https://github.com/LiasCode/rumbo/blob/v0.9.0/internal/cli/plugins.go), [`internal/cli/programs.go`](https://github.com/LiasCode/rumbo/blob/v0.9.0/internal/cli/programs.go), rumbo's [own manifest](https://github.com/LiasCode/rumbo/blob/v0.9.0/plugins/rumbo/plugin.yaml), and a [plugin to copy from](https://github.com/LiasCode/rumbo/tree/v0.9.0/examples/plugin). [Install a plugin](/guides/plugins/).
+**Source:** [`internal/cli/plugins.go`](https://github.com/LiasCode/rumbo/blob/v0.10.0/internal/cli/plugins.go), [`internal/cli/programs.go`](https://github.com/LiasCode/rumbo/blob/v0.10.0/internal/cli/programs.go), rumbo's [own manifest](https://github.com/LiasCode/rumbo/blob/v0.10.0/plugins/rumbo/plugin.yaml), and a [plugin to copy from](https://github.com/LiasCode/rumbo/tree/v0.10.0/examples/plugin). [Install a plugin](/guides/plugins/).

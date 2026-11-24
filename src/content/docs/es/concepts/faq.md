@@ -59,8 +59,8 @@ una entrada por línea. Consulta [sesiones](/es/guides/sessions/#qué-guarda-una
 rumbo sigue a [pi](https://pi.dev) en lo que un arnés deja fuera: cuatro herramientas, un prompt de
 sistema corto y ni modo de planificación, ni subagentes, ni avisos de permisos. Lo que añade está en
 cómo se conectan las piezas: los modelos y las interfaces son programas aparte con protocolos
-abiertos, cualquier sesión reproduce cada petición que envió y un mismo host ejecuta varias sesiones a
-la vez. Consulta [diseño](/es/concepts/design/).
+abiertos, cualquier sesión reproduce cada petición que envió y cada sesión es un rumbo propio, así que
+varias trabajan a la par. Consulta [diseño](/es/concepts/design/).
 
 ## ¿Puedo usarlo desde mi editor?
 

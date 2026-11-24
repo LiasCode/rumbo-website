@@ -32,7 +32,7 @@ Two more are published apart, as [plugins](/guides/plugins/) you add if you want
 | Plugin                                                   | Adds                                                                                                                                  |
 | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | [rumbo-claude](https://github.com/LiasCode/rumbo-claude) | A provider, `claude`, that uses a Claude Pro or Max subscription. It is not an official Anthropic integration: read its README first. |
-| [rumbo-gui](https://github.com/LiasCode/rumbo-gui)       | A front end, `gui`: a [desktop window](/guides/desktop-app/) for rumbo. It needs a rumbo newer than 0.9.0.                            |
+| [rumbo-gui](https://github.com/LiasCode/rumbo-gui)       | A front end, `gui`: a [desktop window](/guides/desktop-app/) for rumbo. It needs rumbo 0.10.0 or later.                               |
 
 ```sh
 rumbo plugin add https://github.com/LiasCode/rumbo-claude
@@ -83,8 +83,8 @@ too.
   from before any of your messages in a new session, while the first one stays as it was.
 - **Built for the provider's cache.** Each request extends the one before until a summary starts
   the conversation over, so the provider can read it from its cache.
-- **One host, many sessions.** Runs go on in other sessions while you work in a new one, and you
-  can tell a run something without stopping it.
+- **One rumbo, one session.** Each session is a process of its own, with its own provider and
+  extensions, so runs go on side by side, and you can tell a run something without stopping it.
 - **Providers describe themselves.** Their models, options, and functions, down to a sign-in that
   asks you for a code, show up in every front end without the front end knowing them.
 - **Small and general.** A short fixed system prompt, nothing about any language or framework, no

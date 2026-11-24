@@ -31,7 +31,7 @@ Altri due sono pubblicati a parte, come [plugin](/it/guides/plugins/) da aggiung
 | Plugin                                                   | Aggiunge                                                                                                                                 |
 | -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | [rumbo-claude](https://github.com/LiasCode/rumbo-claude) | Un provider, `claude`, che usa un abbonamento Claude Pro o Max. Non è un'integrazione ufficiale di Anthropic: leggi prima il suo README. |
-| [rumbo-gui](https://github.com/LiasCode/rumbo-gui)       | Un'interfaccia, `gui`: una [finestra desktop](/it/guides/desktop-app/) per rumbo. Richiede un rumbo successivo alla 0.9.0.               |
+| [rumbo-gui](https://github.com/LiasCode/rumbo-gui)       | Un'interfaccia, `gui`: una [finestra desktop](/it/guides/desktop-app/) per rumbo. Richiede rumbo 0.10.0 o successivo.                    |
 
 ```sh
 rumbo plugin add https://github.com/LiasCode/rumbo-claude
@@ -84,8 +84,9 @@ anche i tuoi.
   mentre la prima resta com'era.
 - **Pensato per la cache del provider.** Ogni richiesta estende la precedente finché un riassunto non
   ricomincia la conversazione, così il provider può leggerla dalla sua cache.
-- **Un host, molte sessioni.** Le esecuzioni continuano in altre sessioni mentre lavori in una nuova, e
-  puoi dire qualcosa a un'esecuzione senza fermarla.
+- **Un rumbo, una sessione.** Ogni sessione è un processo a sé, con il suo provider e le sue
+  estensioni, così le esecuzioni procedono fianco a fianco, e puoi dire qualcosa a un'esecuzione senza
+  fermarla.
 - **I provider si descrivono da soli.** I loro modelli, opzioni e funzioni, fino a un accesso che ti
   chiede un codice, compaiono in ogni interfaccia senza che l'interfaccia li conosca.
 - **Piccolo e generale.** Un prompt di sistema breve e fisso, niente su alcun linguaggio o framework, e

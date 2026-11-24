@@ -20,8 +20,12 @@ Los mensajes son objetos JSON-RPC 2.0, uno por línea, iguales en los dos casos:
 | La interfaz arranca `rumbo serve`, como haría un editor   | el stdout del host         | el stdin del host          |
 
 Una interfaz iniciada por rumbo conserva la terminal en stdin y stdout, así que puede dibujar y leer
-teclas libremente. Cerrar la conexión termina el host: cancela las ejecuciones en curso, las registra
+teclas libremente. Cerrar la conexión termina el host: cancela la ejecución en curso, la registra
 y detiene sus proveedores.
+
+Un host es una sesión. Para mostrar varias, como hace la interfaz de terminal, arranca un
+`rumbo serve` para cada una, con `-s <session>` para continuar una, y encuéntralas con
+`rumbo sessions -json`.
 
 [Compara ambos sentidos de arranque en la traza interactiva.](/es/#run-trace)
 
@@ -37,11 +41,11 @@ y detiene sus proveedores.
 
 Una interfaz también puede preguntar al host qué ofrecen él y el proveedor (`describe`), llamar a sus
 funciones (`invoke`), mostrar lo que tenía una sesión antes de abrirla (`history`) y recuperar lo que
-la persona preguntó antes (`recall`).
+la persona preguntó antes (`recall`) y decir lo que usan los procesos del host (`processes`).
 
 ## Un ejemplo completo
 
-[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.9.0/examples/frontend.py) es una
+[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.10.0/examples/frontend.py) es una
 interfaz entera en un archivo de Python: pide tareas con `input()` e imprime los eventos según llegan.
 
 ```python
@@ -71,12 +75,12 @@ rumbo frontend add simple python3 /path/to/examples/frontend.py
 rumbo -f simple
 ```
 
-En Go, el paquete [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.9.0/protocol) tiene los tipos
+En Go, el paquete [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.10.0/protocol) tiene los tipos
 y `DialFrontend`, una conexión ya hecha.
 
 ## Comandos sin conocerlos
 
-Todo lo que una persona puede hacer aparte de dar una tarea, como cambiar de sesión, de modelo o de
+Todo lo que una persona puede hacer aparte de dar una tarea, como cambiar de modelo o de
 ajustes, el host lo ofrece como funciones descritas, y lo mismo cada proveedor. Una interfaz construye
 sus comandos, formularios y selectores a partir de esas descripciones, así que funciona con un
 proveedor que nunca ha visto y gana una función nueva sin ningún cambio. Una función que no se puede

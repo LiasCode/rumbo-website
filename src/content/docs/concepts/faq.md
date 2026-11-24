@@ -57,7 +57,7 @@ entry to a line. See [sessions](/guides/sessions/#what-a-session-holds).
 rumbo follows [pi](https://pi.dev) in what a harness leaves out: four tools, a short system prompt,
 and no plan mode, subagents, or permission prompts. What it adds is in how the parts meet: models
 and interfaces are separate programs on open protocols, any session replays every request it sent,
-and one host runs several sessions at once. See [design](/concepts/design/).
+and each session is a rumbo of its own, so several work side by side. See [design](/concepts/design/).
 
 ## Can I use it from my editor?
 

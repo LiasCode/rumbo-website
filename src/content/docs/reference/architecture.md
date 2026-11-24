@@ -1,25 +1,25 @@
 ---
 title: Architecture
-description: How rumbo 0.9.0 is put together. The host and what it owns, the three protocols around it, the loop that turns a task into an answer, and the rules the design depends on, from the source.
+description: How rumbo 0.10.0 is put together. The host and what it owns, the three protocols around it, the loop that turns a task into an answer, and the rules the design depends on, from the source.
 ---
 
-rumbo is one process, **the host**, and the programs it starts. The host owns the loop, the tools, and the sessions. It draws nothing, calls no model API, and knows nothing of MCP: each of those is another program, reached through a protocol.
+rumbo is one process, **the host**, and the programs it starts. The host owns the loop, the tools, and one session; another session is another host. It draws nothing, calls no model API, and knows nothing of MCP: each of those is another program, reached through a protocol.
 
 ## Who owns what
 
-| Part          | Owns                                                                                | Never                                                            |
-| ------------- | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| **Host**      | The agent loop, the model's tools, the context, the sessions on disk, the settings. | Draws, or speaks to a model's API.                               |
-| **Front end** | What the person sees and types.                                                     | Reads a session's files, or calls the model or a tool.           |
-| **Provider**  | The connection to one model API and its credentials.                                | Runs a tool, or keeps a conversation between requests.           |
-| **Extension** | Tools of its own, sections of context, commands, and what it does with events.      | Changes a message, another extension's tool, or when a run ends. |
-| **Plugin**    | Nothing at run time: it is a package of the three kinds of program, and of skills.  | Adds a kind of thing, or a protocol.                             |
+| Part          | Owns                                                                               | Never                                                            |
+| ------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| **Host**      | The agent loop, the model's tools, the context, its session on disk, the settings. | Draws, or speaks to a model's API.                               |
+| **Front end** | What the person sees and types.                                                    | Reads a session's files, or calls the model or a tool.           |
+| **Provider**  | The connection to one model API and its credentials.                               | Runs a tool, or keeps a conversation between requests.           |
+| **Extension** | Tools of its own, sections of context, commands, and what it does with events.     | Changes a message, another extension's tool, or when a run ends. |
+| **Plugin**    | Nothing at run time: it is a package of the three kinds of program, and of skills. | Adds a kind of thing, or a protocol.                             |
 
 Every line between two programs is **JSON-RPC 2.0, one object per line**, over pipes. No part listens on a port. A provider, or the MCP extension, may use HTTP beyond its own side.
 
 ## The loop
 
-1. **Accept.** The front end sends `run`. The host picks the session, and starts the provider and the extensions the run needs.
+1. **Accept.** The front end sends `run`, which goes to the host's session. The host starts the provider and the extensions the run needs.
 2. **Prepare.** The host records the system prompt if it changed, and the sections of context that changed: the environment, your instructions, your skills, and what extensions say. Then the task.
 3. **Ask.** The host rebuilds the whole request from the session's entries and sends the provider `complete`. Text streams to the front end as it comes; what is recorded is the finished message.
 4. **Act.** Each tool the model called runs in order, rumbo's own in the host and an extension's through `call`, and each result is recorded with the id of its call.
@@ -58,6 +58,14 @@ Each session is a directory with two files: `session.json`, what it is and what 
 
 One function, `transcript.Build`, replays the entries into the system prompt, the tools, the messages, and the sections the model was told. Nothing else decides what the model sees. That single rule is what makes a session replayable (`rumbo request`), resumable, and branchable, and what keeps the start of every request identical to the one before, so the provider reads it from its cache.
 
+## One host, one session
+
+A rumbo process starts in a new session or continues one, works in it one run at a time, and ends with it. So each session has its own settings as they were read, its own provider and extension processes, and its own tools, and what goes wrong in one stays there. The host holds a lock on its session while it works in it, so two processes never interleave entries into one history.
+
+A session's **root** is the directory rumbo was started in: where it works, what lists and continues it, and the one place besides your own whose instructions and skills the model is told. Nothing above it is looked at, the top of a Git repository included.
+
+A front end that shows several sessions, as the [terminal UI](/guides/terminal-ui/) and the [desktop app](/guides/desktop-app/) do, starts a host for each, lists them with `rumbo sessions -json`, and closes those it does not need. The `processes` request says what each costs.
+
 ## Rules the design depends on
 
 | Rule                                                              | So that                                                                                           |
@@ -70,4 +78,4 @@ One function, `transcript.Build`, replays the entries into the system prompt, th
 | The host never touches the terminal once a front end is attached. | The front end owns what the person sees. What they must see is an event.                          |
 | The agent acts with your rights.                                  | Limits come from a sandbox you choose, not from prompts. See [before you run it](/start/safety/). |
 
-**Source:** [`internal/cli`](https://github.com/LiasCode/rumbo/tree/v0.9.0/internal/cli) wires the host; [`internal/agent/agent.go`](https://github.com/LiasCode/rumbo/blob/v0.9.0/internal/agent/agent.go) is the loop; [`internal/transcript`](https://github.com/LiasCode/rumbo/tree/v0.9.0/internal/transcript) rebuilds requests; [`internal/store/files.go`](https://github.com/LiasCode/rumbo/blob/v0.9.0/internal/store/files.go) keeps sessions; [`internal/tool`](https://github.com/LiasCode/rumbo/tree/v0.9.0/internal/tool) has the tools. The development branch changes one thing here: [one host per session](/reference/next/).
+**Source:** [`internal/cli`](https://github.com/LiasCode/rumbo/tree/v0.10.0/internal/cli) wires the host; [`internal/agent/agent.go`](https://github.com/LiasCode/rumbo/blob/v0.10.0/internal/agent/agent.go) is the loop; [`internal/transcript`](https://github.com/LiasCode/rumbo/tree/v0.10.0/internal/transcript) rebuilds requests; [`internal/store/files.go`](https://github.com/LiasCode/rumbo/blob/v0.10.0/internal/store/files.go) keeps sessions; [`internal/tool`](https://github.com/LiasCode/rumbo/tree/v0.10.0/internal/tool) has the tools.

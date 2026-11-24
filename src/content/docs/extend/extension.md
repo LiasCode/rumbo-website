@@ -15,7 +15,7 @@ stdout carries only protocol messages. Diagnostics go to stderr, which reaches t
 
 ## A complete example
 
-[examples/extension.py](https://github.com/LiasCode/rumbo/blob/v0.9.0/examples/extension.py) is a whole extension in one Python file. It keeps notes: a tool to remember one, a section that tells the model all of them, and a command that forgets them. This is how it answers a call:
+[examples/extension.py](https://github.com/LiasCode/rumbo/blob/v0.10.0/examples/extension.py) is a whole extension in one Python file. It keeps notes: a tool to remember one, a section that tells the model all of them, and a command that forgets them. This is how it answers a call:
 
 ```python
 def call(params):
@@ -50,7 +50,7 @@ tools, declared to the model in every request (161 bytes):
   remember  Keep a note for later in this rumbo.
 ```
 
-In Go, the [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.9.0/protocol) package has the types and `ServeExtension`, a ready-made server.
+In Go, the [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.10.0/protocol) package has the types and `ServeExtension`, a ready-made server.
 
 ## What an extension must do
 
@@ -65,7 +65,7 @@ In Go, the [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.9.0/protocol) 
 - **Tell the model something when a run starts**, by declaring `sections`. The host asks for each one's text; it has 10 seconds to answer, and at most 8,000 bytes are told.
 - **Offer the person commands**, by declaring `functions`. A front end shows `forget`, of an extension registered as `notes`, as `/notes-forget`.
 - **Talk with the person** while a tool or a command works: `delta` says something, and `ask` asks a question, whose answer can be marked secret.
-- **Call rumbo's own tools** while it answers a call, which is how one that replaces `bash` passes on what it lets through. [examples/guard.py](https://github.com/LiasCode/rumbo/blob/v0.9.0/examples/guard.py) does.
+- **Call rumbo's own tools** while it answers a call, which is how one that replaces `bash` passes on what it lets through. [examples/guard.py](https://github.com/LiasCode/rumbo/blob/v0.10.0/examples/guard.py) does.
 - **Be told what the runs do**, by declaring the `events` it wants, such as `ended`.
 - **Say that what it declares changed**, with `changed`, as when a sign-in gives it tools.
 

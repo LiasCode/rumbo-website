@@ -7,8 +7,8 @@ description: rumbo-gui è una finestra desktop per rumbo. Tutti i progetti e le 
 le sessioni in un posto, ogni sessione come una conversazione, e le impostazioni di rumbo, senza
 terminale. È un'interfaccia come le altre, scritta in Rust con
 [GPUI](https://github.com/zed-industries/zed), e parla la
-[versione 2 dell'Agent Frontend Protocol](/it/reference/next/), che solo il ramo di sviluppo di rumbo
-possiede.
+[versione 2 dell'Agent Frontend Protocol](/it/reference/frontend-protocol/), quindi richiede rumbo
+0.10.0 o successivo.
 
 ## Cosa puoi fare
 
@@ -27,11 +27,11 @@ possiede.
 - **Lasciare esecuzioni al lavoro.** Le esecuzioni continuano in altre sessioni e progetti, e la
   finestra, o il desktop se lo attivi, ti avvisa quando una finisce.
 
-> **rumbo-gui non funziona con rumbo 0.9.0.** Richiede un rumbo che parli la versione 2 del protocollo dell'interfaccia e abbia `rumbo sessions -json`, cioè oggi uno compilato dal ramo di sviluppo: `go install github.com/LiasCode/rumbo/cmd/rumbo@main`. [Cosa cambia dopo 0.9.0](/it/reference/next/).
+> **rumbo-gui richiede rumbo 0.10.0 o successivo**, che parla la versione 2 del protocollo dell'interfaccia e ha `rumbo sessions -json`. Un rumbo precedente viene rifiutato quando la finestra lo avvia, e lei lo dice.
 
 ## Come funziona con rumbo
 
-Ogni sessione aperta ha un host. Le esecuzioni proseguono in background; chiudere la finestra annulla quelle degli host che ha avviato.
+Ogni sessione aperta ha un host, un `rumbo serve` che la finestra avvia, e la finestra trova le sessioni con `rumbo sessions -json`. Le esecuzioni proseguono in background; chiudere la finestra annulla quelle degli host che ha avviato.
 
 ## Installazione
 

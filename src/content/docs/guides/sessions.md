@@ -3,20 +3,21 @@ title: Sessions
 description: How rumbo keeps your work in sessions. Continue, resume, branch, rename, export, and delete them, and replay the exact request any turn sent the model.
 ---
 
-A session is a conversation bound to a project: every task you give in it, what the model answered,
+A session is a conversation bound to the directory it was started in: every task you give in it, what the model answered,
 and each tool call with its result. rumbo keeps it as an append-only list of entries, which is what
 lets you continue it, resume it after a failure, branch it, and replay any request it sent.
 
-## Projects
+## Where a session belongs
 
-A project is the top of a Git repository, or the directory itself outside one. Sessions belong to
-the project, and are found from any directory inside it; a session still works in the directory
-it was started in.
+A session belongs to the directory rumbo was started in, its root, and works there wherever you
+continue it from. rumbo does not look for a Git repository around it: started in a subdirectory, the
+session is that subdirectory's, and reads only its [instructions](/guides/instructions-and-skills/).
+Start rumbo at the top of a repository to work with its guide.
 
 ## Continue and resume
 
 ```sh
-rumbo -c "also document it"     # continue the latest session of this project
+rumbo -c "also document it"     # continue the latest session started here
 rumbo -s <session> "and test it"  # continue a given one
 rumbo -r                        # resume the unfinished run of the latest session
 ```
@@ -28,14 +29,16 @@ with an error, and carries on without a new task.
 Every run ends with a note in the session that says how it ended: done, failed, or cancelled. A
 failure is never only on the screen.
 
-## Several sessions at once
+## One rumbo, one session
 
-One rumbo works in several sessions of a project at once, one run per session. In the
-[terminal UI](/guides/terminal-ui/), a run goes on in its session while you open another, and the
-sidebar tells you when it ends. While a run works, what you type reaches the model before its next
-request, without stopping it.
+Each `rumbo` you start works in one session, with its own provider and extensions, as a process of
+its own. Another session is another `rumbo`: start one for a new session, `rumbo -c` for the latest
+of the directory, or `rumbo -s <session>` for any. Several run side by side.
 
-`-single` makes rumbo work in one session at a time.
+The [terminal UI](/guides/terminal-ui/) shows several sessions by starting a rumbo for each one you
+open: a run goes on in its session while you look at another, and the sidebar tells you when it
+ends. While a run works, what you type reaches the model before its next request, without stopping
+it.
 
 ## Branch
 
@@ -45,22 +48,28 @@ working at the same time.
 
 - In the terminal UI, Shift-Tab goes up into the conversation; Enter on one of your messages
   changes it, or asks it again, in a branch that starts before it.
-- `/branch` branches the session as it is.
+- `/branch` branches the session as it is, and says which session the branch is.
+
+The rumbo that made a branch stays in its session, and another goes on in the branch: the terminal
+UI starts it and shows it, and elsewhere `rumbo -s <session>` does. A branch is titled "Branch",
+then the title of the session it came from, so a list tells them apart.
 
 A branch copies the conversation only. rumbo does not track files, so the files are as they are.
 
 ## List, rename, and delete
 
 ```sh
-rumbo sessions                          # this project's sessions, with how each stands
-rumbo sessions -all                     # every project's
+rumbo sessions                          # the sessions started here, with how each stands
+rumbo sessions -all                     # those of every directory
+rumbo sessions -json                    # the same, for a program to read
 rumbo sessions rename <session> <title> # a title of your own
 rumbo sessions rm <session>...          # delete sessions and their history
 rumbo sessions prune 30d                # list those not used in 30 days; -yes deletes them
 ```
 
-A session that a rumbo process is using is never deleted. In the terminal UI, `/rename`, `/delete`,
-and `/prune` do the same, and deleting asks you to agree first.
+A session that a rumbo process is using is never deleted. In the terminal UI, `/rename` gives the
+session shown a title, and `/delete` deletes it once you agree. The session rumbo was started in is
+held until you quit, so delete that one afterwards, with `rumbo sessions rm`.
 
 ## Compaction
 

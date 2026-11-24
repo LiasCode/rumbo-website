@@ -20,8 +20,12 @@ I messaggi sono oggetti JSON-RPC 2.0, uno per riga, uguali in entrambi i casi:
 | L'interfaccia avvia `rumbo serve`, come farebbe un editor | lo stdout dell'host      | lo stdin dell'host       |
 
 Un'interfaccia avviata da rumbo mantiene il terminale su stdin e stdout, quindi può disegnare e leggere
-i tasti liberamente. Chiudere la connessione termina l'host: annulla le esecuzioni in corso, le registra
+i tasti liberamente. Chiudere la connessione termina l'host: annulla l'esecuzione in corso, la registra
 e ferma i suoi provider.
+
+Un host è una sessione. Per mostrarne più d'una, come fa l'interfaccia da terminale, avvia un
+`rumbo serve` per ciascuna, con `-s <session>` per continuarne una, e trovale con
+`rumbo sessions -json`.
 
 [Confronta le due direzioni di avvio nella traccia interattiva.](/it/#run-trace)
 
@@ -37,11 +41,12 @@ e ferma i suoi provider.
 
 Un'interfaccia può anche chiedere all'host cosa offrono lui e il provider (`describe`), chiamare le loro
 funzioni (`invoke`), mostrare cosa conteneva una sessione prima che venisse aperta (`history`) e
-richiamare ciò che la persona ha chiesto prima (`recall`).
+richiamare ciò che la persona ha chiesto prima (`recall`) e dire cosa usano i processi dell'host
+(`processes`).
 
 ## Un esempio completo
 
-[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.9.0/examples/frontend.py) è
+[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.10.0/examples/frontend.py) è
 un'interfaccia completa in un solo file Python: chiede compiti con `input()` e stampa gli eventi man mano
 che arrivano.
 
@@ -72,12 +77,12 @@ rumbo frontend add simple python3 /path/to/examples/frontend.py
 rumbo -f simple
 ```
 
-In Go, il pacchetto [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.9.0/protocol) contiene i tipi
+In Go, il pacchetto [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.10.0/protocol) contiene i tipi
 e `DialFrontend`, una connessione pronta all'uso.
 
 ## Comandi senza conoscerli
 
-Tutto ciò che una persona può fare oltre a dare un compito, come cambiare sessione, modello o
+Tutto ciò che una persona può fare oltre a dare un compito, come cambiare modello o
 impostazioni, l'host lo offre come funzioni descritte, e così ogni provider. Un'interfaccia costruisce i
 suoi comandi, moduli e selettori a partire da quelle descrizioni, quindi funziona con un provider che
 non ha mai visto e guadagna una nuova funzione senza modifiche. Una funzione che non si può annullare lo

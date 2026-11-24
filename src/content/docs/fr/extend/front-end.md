@@ -22,8 +22,12 @@ Les messages sont des objets JSON-RPC 2.0, un par ligne, identiques dans les deu
 | L'interface démarre `rumbo serve`, comme le ferait un éditeur | le stdout de l'hôte         | le stdin de l'hôte          |
 
 Une interface démarrée par rumbo garde le terminal sur stdin et stdout, elle peut donc dessiner et
-lire les touches librement. Fermer la connexion termine l'hôte : il annule les exécutions en cours, les
-enregistre et arrête ses fournisseurs.
+lire les touches librement. Fermer la connexion termine l'hôte : il annule l'exécution en cours, l'enregistre
+et arrête ses fournisseurs.
+
+Un hôte est une session. Pour en afficher plusieurs, comme le fait l'interface en terminal, démarrez un
+`rumbo serve` pour chacune, avec `-s <session>` pour en continuer une, et trouvez-les avec
+`rumbo sessions -json`.
 
 [Comparez les deux sens de lancement dans la trace interactive.](/fr/#run-trace)
 
@@ -39,11 +43,12 @@ enregistre et arrête ses fournisseurs.
 
 Une interface peut aussi demander à l'hôte ce que lui et le fournisseur proposent (`describe`), appeler
 leurs fonctions (`invoke`), montrer ce que contenait une session avant son ouverture (`history`) et
-rappeler ce que la personne a demandé auparavant (`recall`).
+rappeler ce que la personne a demandé auparavant (`recall`) et dire ce qu'utilisent les processus de
+l'hôte (`processes`).
 
 ## Un exemple complet
 
-[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.9.0/examples/frontend.py) est une
+[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.10.0/examples/frontend.py) est une
 interface complète dans un seul fichier Python : elle demande des tâches avec `input()` et affiche les
 événements à mesure qu'ils arrivent.
 
@@ -74,12 +79,12 @@ rumbo frontend add simple python3 /path/to/examples/frontend.py
 rumbo -f simple
 ```
 
-En Go, le paquet [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.9.0/protocol) contient les types
+En Go, le paquet [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.10.0/protocol) contient les types
 et `DialFrontend`, une connexion prête à l'emploi.
 
 ## Des commandes sans les connaître
 
-Tout ce qu'une personne peut faire en dehors de donner une tâche, comme changer de session, de modèle
+Tout ce qu'une personne peut faire en dehors de donner une tâche, comme changer de modèle
 ou de réglages, l'hôte le propose sous forme de fonctions décrites, et chaque fournisseur aussi. Une
 interface construit ses commandes, formulaires et sélecteurs à partir de ces descriptions, si bien
 qu'elle fonctionne avec un fournisseur qu'elle n'a jamais vu et gagne une nouvelle fonction sans aucun

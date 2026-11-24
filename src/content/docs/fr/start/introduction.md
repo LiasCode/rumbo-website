@@ -32,7 +32,7 @@ Deux autres sont publiés à part, comme [plugins](/fr/guides/plugins/) à ajout
 | Plugin                                                   | Ajoute                                                                                                                                                 |
 | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | [rumbo-claude](https://github.com/LiasCode/rumbo-claude) | Un fournisseur, `claude`, qui utilise un abonnement Claude Pro ou Max. Ce n'est pas une intégration officielle d'Anthropic : lisez d'abord son README. |
-| [rumbo-gui](https://github.com/LiasCode/rumbo-gui)       | Une interface, `gui` : une [fenêtre de bureau](/fr/guides/desktop-app/) pour rumbo. Il lui faut un rumbo postérieur à 0.9.0.                           |
+| [rumbo-gui](https://github.com/LiasCode/rumbo-gui)       | Une interface, `gui` : une [fenêtre de bureau](/fr/guides/desktop-app/) pour rumbo. Il lui faut rumbo 0.10.0 ou ultérieur.                             |
 
 ```sh
 rumbo plugin add https://github.com/LiasCode/rumbo-claude
@@ -86,8 +86,9 @@ le peuvent aussi.
   nouvelle session, tandis que la première reste telle quelle.
 - **Conçu pour le cache du fournisseur.** Chaque requête prolonge la précédente jusqu'à ce qu'un
   résumé recommence la conversation, si bien que le fournisseur peut la lire depuis son cache.
-- **Un hôte, plusieurs sessions.** Les exécutions continuent dans d'autres sessions pendant que vous
-  travaillez dans une nouvelle, et vous pouvez dire quelque chose à une exécution sans l'arrêter.
+- **Un rumbo, une session.** Chaque session est un processus à part, avec son fournisseur et ses
+  extensions, si bien que les exécutions avancent côte à côte, et vous pouvez dire quelque chose à une
+  exécution sans l'arrêter.
 - **Les fournisseurs se décrivent eux-mêmes.** Leurs modèles, options et fonctions, jusqu'à une
   connexion qui vous demande un code, apparaissent dans chaque interface sans que l'interface les
   connaisse.

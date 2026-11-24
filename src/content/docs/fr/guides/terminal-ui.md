@@ -3,15 +3,15 @@ title: Interface en terminal
 description: Utilisez l'interface en terminal de rumbo. Les sessions dans une barre latérale, la conversation, une zone de saisie, une palette de commandes, des panneaux avec les détails de la session et les changements Git, et toutes ses touches.
 ---
 
-`rumbo` dans un terminal ouvre l'interface en terminal en plein écran : un en-tête avec le projet et la
-session affichée, les sessions du projet dans une barre latérale, la conversation dans sa propre
+`rumbo` dans un terminal ouvre l'interface en terminal en plein écran : un en-tête avec le dossier et la
+session affichée, les sessions démarrées dans ce dossier dans une barre latérale, la conversation dans sa propre
 colonne et, en dessous, une zone de saisie avec le modèle, le remplissage du contexte et ce que la
 session a dépensé.
 
 ```sh
 rumbo                      # open it
 rumbo "a task"             # open it and start a task
-rumbo -c                   # open the latest session of this project
+rumbo -c                   # open the latest session started here
 rumbo -s <session>         # open a given one
 ```
 
@@ -36,34 +36,47 @@ session, `rumbo -s <session>`. Pour garder une conversation, `/export` l'écrit 
 
 ## Sessions
 
-Chaque session garde ce qu'elle a affiché, et une exécution continue dans sa session pendant que vous
-en regardez une autre. La barre latérale marque les sessions qui travaillent, et celles dont
-l'exécution s'est terminée pendant qu'elles n'étaient pas affichées.
+La barre latérale liste les sessions démarrées dans le dossier où rumbo a démarré. Chacune est un
+rumbo à part, que l'interface démarre quand vous affichez la session pour la première fois et arrête
+quand vous quittez, si bien qu'une exécution continue dans sa session pendant que vous en regardez une
+autre. La barre latérale marque les sessions qui travaillent, celles dont l'exécution s'est terminée
+pendant qu'elles n'étaient pas affichées et, d'un anneau, celles pour lesquelles un rumbo reste ouvert.
 
-| Touche                                     | Action                                                                  |
-| ------------------------------------------ | ----------------------------------------------------------------------- |
-| Tab (zone de saisie vide), flèches, Entrée | Afficher une session de la barre latérale                               |
-| Suppr                                      | Supprimer la session choisie dans la barre latérale, après votre accord |
-| Ctrl-N                                     | Démarrer une nouvelle session                                           |
-| Ctrl-B                                     | Afficher ou masquer la barre latérale                                   |
+| Touche                                     | Action                                        |
+| ------------------------------------------ | --------------------------------------------- |
+| Tab (zone de saisie vide), flèches, Entrée | Afficher une session de la barre latérale     |
+| Ctrl-N                                     | Démarrer une nouvelle session, dans son rumbo |
+| Ctrl-B                                     | Afficher ou masquer la barre latérale         |
+
+Les rumbos des sessions que vous avez laissées sans rien à faire sont fermés au-delà des deux
+dernières affichées, pour qu'ils ne continuent pas à coûter de la mémoire ; en afficher une à nouveau
+démarre son rumbo. `/rumbos` dit ce qu'utilise le rumbo de chaque session ouverte, et « Close the
+rumbos not in use », dans la palette, les ferme tous.
+
+`/delete`, ou « Delete this session » dans la palette, supprime la session affichée après votre
+accord. La session dans laquelle rumbo a démarré est retenue jusqu'à ce que vous quittiez :
+supprimez-la ensuite, avec `rumbo sessions rm`.
 
 ## Commandes
 
-- **Ctrl-P** ouvre une palette avec les actions propres à l'interface, les autres sessions du projet et
+- **Ctrl-P** ouvre une palette avec les actions propres à l'interface, les autres sessions du dossier et
   toutes les commandes, que la saisie filtre. Une commande qui a besoin de quelque chose le demande dans
   un formulaire, et une commande irréversible vous demande votre accord dans une boîte de dialogue.
 - **Une barre oblique** dans la zone de saisie ouvre un menu des commandes, avec ce que fait chacune,
-  puis des valeurs acceptées par son paramètre suivant : `/open` liste les sessions, `/use openai` les
-  modèles d'`openai`.
+  puis des valeurs acceptées par son paramètre suivant : `/use` liste les fournisseurs, `/use openai` les
+  modèles d'`openai`. Un paramètre facultatif se tape par son nom, sous la forme `name=value` :
+  `/extension-add docs config={"url":"https://example.com/mcp"} {self} extend mcp`.
 - **`/help`** les liste toutes : celles de l'hôte, regroupées selon ce sur quoi elles agissent (le
-  système, la session et les fournisseurs), celles du fournisseur et celles de l'interface.
+  système, la session, les fournisseurs et les extensions), celles du fournisseur et celles de l'interface.
 
 Les commandes viennent de ce que décrivent l'hôte et le fournisseur, si bien que les fonctions d'un
 fournisseur, comme `/login`, apparaissent sans que l'interface les connaisse. Celles de l'interface
-sont `/help`, `/copy` (la dernière réponse du modèle, ou `/copy code` pour son dernier bloc de code) et
-`/export` (la session en Markdown).
+sont `/help`, `/copy` (la dernière réponse du modèle, ou `/copy code` pour son dernier bloc de code),
+`/export` (la session en Markdown), `/rumbos` et `/delete`. `/processes` montre les processus que le
+rumbo où vous êtes fait tourner, chacun sous celui qui l'a démarré, avec la mémoire et le temps
+processeur qu'il utilise.
 
-Les commandes d’une extension portent son nom enregistré, par exemple `/notes-forget`. Sa sortie est marquée `[extension]` ou `[extension <name>]`. Voir [Extensions et MCP](/fr/guides/extensions/).
+Les commandes d’une extension portent son nom enregistré, par exemple `/notes-forget`, dès qu’elle est ajoutée. Sa sortie est marquée `[extension]` ou `[extension <name>]`. Voir [Extensions et MCP](/fr/guides/extensions/).
 
 ## Modèle et options
 
@@ -76,7 +89,7 @@ affiche chaque changement sous la forme de la commande qu'il est.
 - **Ctrl-Alt-B** affiche les détails de la session à côté de la conversation : son id et son état, son
   dossier, son modèle, le remplissage de son contexte, ce qu'elle a dépensé et les skills dont le
   modèle est informé.
-- **Ctrl-G** affiche ce qui a changé dans le dossier du projet selon Git, par rapport au dernier
+- **Ctrl-G** affiche ce qui a changé dans le dossier de la session selon Git, par rapport au dernier
   commit, nouveaux fichiers compris. Il ne fait que lire.
 
 ## Revenir dans la conversation
@@ -101,7 +114,7 @@ terminal sélectionne comme ailleurs.
 | Entrée                              | Envoyer la tâche, ou transmettre ce que vous avez tapé à l'exécution en cours                     |
 | Alt-Entrée, Maj-Entrée, Ctrl-J      | Nouvelle ligne                                                                                    |
 | Haut, Bas                           | Parcourir les lignes tapées et, au-delà, ce que vous avez envoyé avant                            |
-| Ctrl-R                              | Rechercher ce que vous avez envoyé avant, dans n'importe quelle session du projet                 |
+| Ctrl-R                              | Rechercher ce que vous avez envoyé avant, dans n'importe quelle session démarrée dans ce dossier  |
 | Ctrl-V                              | Coller l'image du presse-papiers, qui part avec ce que vous envoyez ensuite                       |
 | Retour arrière, zone de saisie vide | Retirer la dernière image collée                                                                  |
 | Échap                               | Abandonner une fonction du fournisseur en cours, sinon annuler l'exécution de la session affichée |

@@ -41,19 +41,20 @@ and the turns and tokens it used.
 
 ```sh
 rumbo                                            # the terminal UI; /help lists its commands
-rumbo -c "also document it"                      # continue the latest session
+rumbo -c "also document it"                      # continue the latest session started here
 rumbo -r                                         # resume a run that stopped
 rumbo "summarize notes.md" > summary.txt         # piped: plain text out, exit code
 ```
 
-`rumbo` alone opens the terminal UI over the whole screen: the project's sessions in a sidebar,
+`rumbo` alone opens the terminal UI over the whole screen: the folder's sessions in a sidebar,
 the conversation, and under it a composer with the model and how full its context is. Ctrl-P opens
 every command. See the [terminal UI](/guides/terminal-ui/) guide.
 
 ## 4. Tell it how you work
 
-The model reads your instructions: the `AGENTS.md` or `CLAUDE.md` files from the project's root
-down to where you are, and yours in `~/.config/rumbo/`. Write there how work should be done, and
+The model reads your instructions: the `AGENTS.md` or `CLAUDE.md` file of the directory rumbo
+starts in, and yours in `~/.config/rumbo/`. Start rumbo at the top of a repository to work with its
+guide. Write there how work should be done, and
 what to check before it is finished. See [instructions and skills](/guides/instructions-and-skills/).
 
 ## Next

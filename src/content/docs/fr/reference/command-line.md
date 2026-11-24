@@ -16,21 +16,22 @@ rumbo serve [flags]            be the host for a front end on stdin/stdout
 
 | Option              | Effet                                                                                                                                      |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `-c`                | Continuer la dernière session du projet courant                                                                                            |
+| `-c`                | Continuer la dernière session démarrée dans ce répertoire                                                                                  |
 | `-r`                | Reprendre l'exécution inachevée de cette session, sans nouvelle tâche                                                                      |
 | `-s <session>`      | Continuer la session indiquée                                                                                                              |
 | `-p <provider>`     | Fournisseur de la session (par défaut : le réglage `default_provider`)                                                                     |
 | `-m <model>`        | Modèle de la session (par défaut : le modèle réglé pour son fournisseur)                                                                   |
 | `-o <name>=<value>` | Une option du fournisseur pour la session, comme `-o effort=high` ; peut être répétée, et une valeur vide la ramène à celle du fournisseur |
 | `-f <name>`         | Interface pour ce lancement (par défaut : le réglage `frontend` ; sinon `tui` dans un terminal, ou `plain`)                                |
-| `-single`           | Travailler dans une seule session à la fois ; par défaut l'hôte travaille dans plusieurs sessions du projet à la fois                      |
 
-La session garde ce que choisissent `-p`, `-m` et `-o`, par-dessus les réglages du système.
+La session garde ce que choisissent `-p`, `-m` et `-o`, par-dessus les réglages du système. Chaque
+`rumbo` travaille dans une session ; une autre session est un autre `rumbo`.
 
 ## Sessions
 
 ```text
-rumbo sessions [-all]                     list the sessions of this project, or of every one
+rumbo sessions [-all] [-json]             list the sessions of this directory, or of every one;
+                                          with -json, for a program to read
 rumbo sessions rename <session> <title>   give a session a title of your own
 rumbo sessions rm <session>...            delete sessions and their history
 rumbo sessions prune [-all] [-yes] <age>  delete the sessions not used in that long, such as
@@ -124,4 +125,4 @@ rumbo plugin update <name>
 rumbo plugin rm <name>
 ```
 
-[Plugins](/fr/guides/plugins/) · [v2 →](/fr/reference/next/)
+[Plugins](/fr/guides/plugins/)

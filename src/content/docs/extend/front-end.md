@@ -20,8 +20,11 @@ Messages are JSON-RPC 2.0 objects, one per line, the same either way:
 | The front end starts `rumbo serve`, as an editor would  | the host's stdout        | the host's stdin        |
 
 A front end rumbo starts keeps the terminal on stdin and stdout, so it can draw and read keys
-freely. Closing the connection ends the host: it cancels the runs in progress, records them, and
+freely. Closing the connection ends the host: it cancels the run in progress, records it, and
 stops its providers.
+
+A host is one session. To show several, as the terminal UI does, start a `rumbo serve` for each,
+with `-s <session>` to continue one, and find them with `rumbo sessions -json`.
 
 [Compare the two launch directions in the interactive trace.](/#run-trace)
 
@@ -37,11 +40,11 @@ stops its providers.
 
 A front end can also ask the host what it and the provider offer (`describe`), call their functions
 (`invoke`), show what a session held before it was opened (`history`), and bring back what the
-person asked before (`recall`).
+person asked before (`recall`), and say what the host's processes use (`processes`).
 
 ## A complete example
 
-[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.9.0/examples/frontend.py) is a whole
+[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.10.0/examples/frontend.py) is a whole
 front end in one Python file: it asks for tasks with `input()` and prints events as they arrive.
 
 ```python
@@ -71,12 +74,12 @@ rumbo frontend add simple python3 /path/to/examples/frontend.py
 rumbo -f simple
 ```
 
-In Go, the [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.9.0/protocol) package has the
+In Go, the [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.10.0/protocol) package has the
 types and `DialFrontend`, a ready-made connection.
 
 ## Commands without knowing them
 
-Everything a person can do beyond giving a task, such as changing session, model, or settings, the
+Everything a person can do beyond giving a task, such as changing model or settings, the
 host offers as described functions, and so does each provider. A front end builds its commands,
 forms, and pickers from those descriptions, so it works with a provider it has never seen, and
 gains a new function without a change. A function that cannot be undone says so, for the front end

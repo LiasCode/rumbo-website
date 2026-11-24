@@ -64,5 +64,5 @@ An update that asks to replace more than you agreed to is refused.
 ## Next
 
 - The [plugin manifest](/reference/plugins/) says everything a `plugin.yaml` can have.
-- [`examples/plugin`](https://github.com/LiasCode/rumbo/tree/v0.9.0/examples/plugin) is one to copy from.
+- [`examples/plugin`](https://github.com/LiasCode/rumbo/tree/v0.10.0/examples/plugin) is one to copy from.
 - The [desktop app](/guides/desktop-app/) is distributed as a plugin.

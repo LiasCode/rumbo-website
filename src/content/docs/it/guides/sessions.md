@@ -3,21 +3,22 @@ title: Sessioni
 description: Come rumbo conserva il tuo lavoro in sessioni. Continuale, riprendile, diramale, rinominale, esportale ed eliminale, e rigioca la richiesta esatta che qualsiasi turno ha inviato al modello.
 ---
 
-Una sessione è una conversazione legata a un progetto: ogni compito che vi dai, ciò che ha risposto il
+Una sessione è una conversazione legata alla directory in cui è iniziata: ogni compito che vi dai, ciò che ha risposto il
 modello e ogni chiamata a uno strumento con il suo risultato. rumbo la conserva come un elenco di voci
 in sola aggiunta, ed è questo che ti permette di continuarla, riprenderla dopo un errore, diramarla e
 rigiocare qualsiasi richiesta che ha inviato.
 
-## Progetti
+## A quale directory appartiene una sessione
 
-Un progetto è la radice di un repository Git, o la directory stessa fuori da uno. Le sessioni
-appartengono al progetto e si trovano da qualsiasi directory al suo interno; una sessione lavora
-sempre nella directory in cui è iniziata.
+Una sessione appartiene alla directory in cui è stato avviato rumbo, la sua radice, e lavora lì da
+dovunque tu la continui. rumbo non cerca un repository Git attorno: avviata in una sottodirectory, la
+sessione è di quella sottodirectory e legge solo le sue [istruzioni](/it/guides/instructions-and-skills/).
+Avvia rumbo nella radice di un repository per lavorare con la sua guida.
 
 ## Continuare e riprendere
 
 ```sh
-rumbo -c "also document it"       # continue the latest session of this project
+rumbo -c "also document it"       # continue the latest session started here
 rumbo -s <session> "and test it"  # continue a given one
 rumbo -r                          # resume the unfinished run of the latest session
 ```
@@ -29,14 +30,17 @@ strumenti mai terminate e continua senza un nuovo compito.
 Ogni esecuzione termina con una nota nella sessione che dice com'è finita: completata, fallita o
 annullata. Un errore non resta mai solo sullo schermo.
 
-## Più sessioni alla volta
+## Un rumbo, una sessione
 
-Un solo rumbo lavora in più sessioni di un progetto alla volta, un'esecuzione per sessione.
-Nell'[interfaccia da terminale](/it/guides/terminal-ui/), un'esecuzione continua nella sua sessione
-mentre ne apri un'altra, e la barra laterale ti avvisa quando finisce. Mentre un'esecuzione lavora, ciò
-che scrivi arriva al modello prima della sua richiesta successiva, senza fermarla.
+Ogni `rumbo` che avvii lavora in una sessione, con il proprio provider e le proprie estensioni, come un
+processo a sé. Un'altra sessione è un altro `rumbo`: avviane uno per una nuova sessione, `rumbo -c`
+per l'ultima della directory, o `rumbo -s <session>` per una qualsiasi. Più rumbo funzionano fianco a
+fianco.
 
-`-single` fa lavorare rumbo in una sola sessione alla volta.
+L'[interfaccia da terminale](/it/guides/terminal-ui/) mostra più sessioni avviando un rumbo per
+ognuna che apri: un'esecuzione continua nella sua sessione mentre ne guardi un'altra, e la barra
+laterale ti avvisa quando finisce. Mentre un'esecuzione lavora, ciò che scrivi arriva al modello prima
+della sua richiesta successiva, senza fermarla.
 
 ## Creare un ramo
 
@@ -46,22 +50,29 @@ nello stesso momento.
 
 - Nell'interfaccia da terminale, Maiusc-Tab sale nella conversazione; Invio su uno dei tuoi messaggi lo
   modifica, o lo ripropone, in un ramo che inizia prima di esso.
-- `/branch` dirama la sessione così com'è.
+- `/branch` dirama la sessione così com'è, e dice quale sessione è il ramo.
+
+Il rumbo che ha creato un ramo resta nella sua sessione, e un altro prosegue nel ramo: l'interfaccia
+da terminale lo avvia e lo mostra, e altrove lo fa `rumbo -s <session>`. Un ramo si intitola "Branch"
+seguito dal titolo della sessione da cui viene, così un elenco li distingue.
 
 Un ramo copia solo la conversazione. rumbo non traccia i file, quindi i file restano come sono.
 
 ## Elencare, rinominare ed eliminare
 
 ```sh
-rumbo sessions                          # this project's sessions, with how each stands
-rumbo sessions -all                     # every project's
+rumbo sessions                          # the sessions started here, with how each stands
+rumbo sessions -all                     # those of every directory
+rumbo sessions -json                    # the same, for a program to read
 rumbo sessions rename <session> <title> # a title of your own
 rumbo sessions rm <session>...          # delete sessions and their history
 rumbo sessions prune 30d                # list those not used in 30 days; -yes deletes them
 ```
 
 Una sessione che un processo rumbo sta usando non viene mai eliminata. Nell'interfaccia da terminale,
-`/rename`, `/delete` e `/prune` fanno lo stesso, e l'eliminazione chiede prima il tuo consenso.
+`/rename` dà un titolo alla sessione mostrata, e `/delete` la elimina dopo il tuo consenso. La
+sessione in cui è stato avviato rumbo resta trattenuta finché non esci: eliminala dopo, con
+`rumbo sessions rm`.
 
 ## Compattazione
 

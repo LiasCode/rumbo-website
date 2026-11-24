@@ -5,7 +5,7 @@ description: Version 1 of the protocol between the rumbo host and an extension, 
 
 An extension is a program the host starts as a child process. They exchange **JSON-RPC 2.0 objects, one per line**, on the extension's stdin and stdout; stderr reaches the person as a diagnostic, and a stdout line that is not JSON is skipped. The framing, `initialize`, `invoke`, `delta`, `ask`, `cancel`, and `shutdown` are the [provider protocol's](/reference/provider-protocol/).
 
-This page describes protocol **version 1**, which rumbo 0.9.0 and the development branch both speak.
+This page describes protocol **version 1**, which rumbo 0.10.0 speaks, as 0.9.0 did.
 
 ## Four things an extension can declare
 
@@ -88,12 +88,12 @@ From inside a `call` or an `invoke`, `delta` says something to the person and `a
 
 An extension that asked for events is sent them without the run waiting for it. Up to 1,024 wait for one that is slow to read; what comes after is dropped. Nothing an extension does with an event changes a run.
 
-## One process, every session
+## One process for the host
 
-The host starts an extension when a run first needs it and keeps that **one process** until the host exits, for every session it works in. What a call leaves in memory is there for the next, so an extension can hold a connection, and calls can be in progress at once, which is why each answer carries the `id` of its request. A process that died is started again by the next call.
+The host starts an extension when a run first needs it and keeps that **one process** until the host exits, for its runs and for what the person asks of the extension meanwhile. A host is one session, so each session has a process of the extension of its own. What a call leaves in memory is there for the next, so an extension can hold a connection, and calls can be in progress at once, which is why each answer carries the `id` of its request. A process that died is started again by the next call.
 
 ## In Go
 
-The [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.9.0/protocol) package has these types and `ServeExtension`, which turns an `ExtensionHandler` into an extension.
+The [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.10.0/protocol) package has these types and `ServeExtension`, which turns an `ExtensionHandler` into an extension.
 
-**Source:** [`protocol/extension.go`](https://github.com/LiasCode/rumbo/blob/v0.9.0/protocol/extension.go) for the wire, [`internal/extension/process.go`](https://github.com/LiasCode/rumbo/blob/v0.9.0/internal/extension/process.go) for one process, and [`set.go`](https://github.com/LiasCode/rumbo/blob/v0.9.0/internal/extension/set.go) for the rules on names, replacement, and sections. [Write an extension](/extend/extension/) · [Extensions and MCP](/guides/extensions/).
+**Source:** [`protocol/extension.go`](https://github.com/LiasCode/rumbo/blob/v0.10.0/protocol/extension.go) for the wire, [`internal/extension/process.go`](https://github.com/LiasCode/rumbo/blob/v0.10.0/internal/extension/process.go) for one process, and [`set.go`](https://github.com/LiasCode/rumbo/blob/v0.10.0/internal/extension/set.go) for the rules on names, replacement, and sections. [Write an extension](/extend/extension/) · [Extensions and MCP](/guides/extensions/).

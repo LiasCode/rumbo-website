@@ -3,14 +3,14 @@ title: Terminal UI
 description: Use rumbo's terminal UI. Sessions in a sidebar, the conversation, a composer, a command palette, panels with session details and Git changes, and every key it takes.
 ---
 
-`rumbo` in a terminal opens the terminal UI over the whole screen: a header with the project and
-the session shown, the project's sessions in a sidebar, the conversation in a column of its own,
+`rumbo` in a terminal opens the terminal UI over the whole screen: a header with the folder and
+the session shown, the sessions started in that folder in a sidebar, the conversation in a column of its own,
 and under it a composer with the model, how full the context is, and what the session spent.
 
 ```sh
 rumbo                      # open it
 rumbo "a task"             # open it and start a task
-rumbo -c                   # open the latest session of this project
+rumbo -c                   # open the latest session started here
 rumbo -s <session>         # open a given one
 ```
 
@@ -34,32 +34,44 @@ Markdown file.
 
 ## Sessions
 
-Each session keeps what it showed, and a run goes on in its session while you look at another. The
-sidebar marks the sessions that are working, and those whose run ended while they were not shown.
+The sidebar lists the sessions started in the folder rumbo was started in. Each is a rumbo of its
+own, which the terminal UI starts when you first show the session and ends when you quit, so a run
+goes on in its session while you look at another. The sidebar marks the sessions that are working,
+those whose run ended while they were not shown, and, with a ring, those a rumbo is still open for.
 
-| Key                                       | Does                                                     |
-| ----------------------------------------- | -------------------------------------------------------- |
-| Tab (on an empty composer), arrows, Enter | Show a session of the sidebar                            |
-| Delete                                    | Delete the session chosen in the sidebar, once you agree |
-| Ctrl-N                                    | Start a new session                                      |
-| Ctrl-B                                    | Show or put away the sidebar                             |
+| Key                                       | Does                                       |
+| ----------------------------------------- | ------------------------------------------ |
+| Tab (on an empty composer), arrows, Enter | Show a session of the sidebar              |
+| Ctrl-N                                    | Start a new session, in a rumbo of its own |
+| Ctrl-B                                    | Show or put away the sidebar               |
+
+The rumbos of the sessions you left with nothing to do are closed past the two shown last, so they
+do not go on costing memory; showing one again starts its rumbo. `/rumbos` says what the rumbo of
+each open session uses, and "Close the rumbos not in use", in the palette, closes them all.
+
+`/delete`, or "Delete this session" in the palette, deletes the session shown once you agree. The
+session rumbo was started in is held until you quit: delete it then, with `rumbo sessions rm`.
 
 ## Commands
 
-- **Ctrl-P** opens a palette of the UI's own actions, the project's other sessions, and every
+- **Ctrl-P** opens a palette of the UI's own actions, the folder's other sessions, and every
   command, which typing narrows. A command that takes something asks for it in a form, and one that
   cannot be undone asks you to agree in a dialog.
 - **A slash** in the composer opens a menu of the commands, with what each does, and then of the
-  values its next parameter takes: `/open` lists the sessions, `/use openai` the models of
-  `openai`.
-- **`/help`** lists them all: the host's, grouped by what they act on (the system, the session, and
-  the providers), the provider's, and the UI's own.
+  values its next parameter takes: `/use` lists the providers, `/use openai` the models of
+  `openai`. A parameter that can be left out is typed by name, as `name=value`:
+  `/extension-add docs config={"url":"https://example.com/mcp"} {self} extend mcp`.
+- **`/help`** lists them all: the host's, grouped by what they act on (the system, the session, the
+  providers, and the extensions), the provider's, and the UI's own.
 
 The commands come from what the host and the provider describe, so a provider's functions, such as
 `/login`, show up without the UI knowing them. The UI's own are `/help`, `/copy` (the model's last
-answer, or `/copy code` for its last code block), and `/export` (the session as Markdown).
+answer, or `/copy code` for its last code block), `/export` (the session as Markdown), `/rumbos`,
+and `/delete`. `/processes` shows the processes the rumbo you are in has running, each under the one
+that started it, with the memory and the processor time it uses.
 
-An extension’s commands appear with its registered name, such as `/notes-forget`. Its output is marked `[extension]` or `[extension <name>]`. See [Extensions and MCP](/guides/extensions/).
+An extension’s commands appear with its registered name, such as `/notes-forget`, as soon as it is
+added. Its output is marked `[extension]` or `[extension <name>]`. See [Extensions and MCP](/guides/extensions/).
 
 ## Model and options
 
@@ -71,7 +83,7 @@ change as the command it is.
 
 - **Ctrl-Alt-B** shows the session's details beside the conversation: its id and how it stands, its
   folder, its model, how full its context is, what it spent, and the skills the model is told of.
-- **Ctrl-G** shows what changed in the project's folder as Git sees it against the last commit, new
+- **Ctrl-G** shows what changed in the session's folder as Git sees it against the last commit, new
   files included. It only reads.
 
 ## Going back in the conversation
@@ -96,7 +108,7 @@ does elsewhere.
 | Enter                          | Send the task, or tell the run in progress what you typed                           |
 | Alt-Enter, Shift-Enter, Ctrl-J | New line                                                                            |
 | Up, Down                       | Move through the rows typed, and past them through what you entered before          |
-| Ctrl-R                         | Search what you entered before, in any of the project's sessions                    |
+| Ctrl-R                         | Search what you entered before, in any session started in this folder               |
 | Ctrl-V                         | Paste the image in the clipboard, which goes with what you send next                |
 | Backspace on an empty composer | Take the last pasted image away                                                     |
 | Escape                         | Give up a provider's function in progress, else cancel the run of the session shown |

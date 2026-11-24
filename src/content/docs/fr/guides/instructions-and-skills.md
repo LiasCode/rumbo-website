@@ -12,7 +12,7 @@ travail doit être fait.
 
 Le modèle lit les fichiers `AGENTS.md` ou `CLAUDE.md` :
 
-- du projet, de sa racine jusqu'au répertoire où vous êtes ;
+- du répertoire où rumbo a démarré, la racine de la session, et d'aucun au-dessus ;
 - les vôtres, dans `~/.config/rumbo/` (`~/Library/Application Support/rumbo/` sur macOS), qui
   s'appliquent partout.
 
@@ -26,6 +26,9 @@ fait, quelles commandes le vérifient et ce qui ne doit jamais arriver.
 - Never commit; I review and commit myself.
 - Write to me in Spanish; code and comments in English.
 ```
+
+Démarré dans un sous-répertoire d'un dépôt, rumbo ne lit que le guide de ce sous-répertoire, pas celui
+de la racine : démarrez-le à la racine pour travailler avec le guide du dépôt.
 
 Vos instructions l'emportent sur celles de rumbo : d'abord ce que vous dites dans la conversation,
 puis votre `AGENTS.md`. Un fichier long est coupé, en indiquant où se trouve la suite, pour que le
@@ -50,8 +53,8 @@ Les skills se placent dans :
 
 - `~/.config/rumbo/skills/<name>/` (`~/Library/Application Support/rumbo/skills/` sur macOS), les
   vôtres ;
-- `.agents/skills/<name>/` dans un projet, de sa racine jusqu'à l'endroit où vous êtes. Une skill du
-  projet remplace l'une des vôtres portant le même nom.
+- `.agents/skills/<name>/` dans le répertoire où rumbo a démarré, et dans aucun au-dessus. Sa skill
+  remplace l'une des vôtres portant le même nom.
 - `skills/<name>/` dans un [plugin](/fr/guides/plugins/) que vous avez ajouté. L'une des vôtres
   portant le même nom la remplace.
 

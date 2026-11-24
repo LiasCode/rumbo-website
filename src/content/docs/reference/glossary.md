@@ -1,13 +1,13 @@
 ---
 title: Glossary
-description: The words rumbo uses for its parts, its messages, and what it stores, each as the source of rumbo 0.9.0 means it.
+description: The words rumbo uses for its parts, its messages, and what it stores, each as the source of rumbo 0.10.0 means it.
 ---
 
 ## The parts
 
 | Term              | Meaning                                                                                                                   |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| **Host**          | rumbo itself: the process that runs the agent loop and the tools, and keeps the sessions.                                 |
+| **Host**          | rumbo itself: the process that runs the agent loop and the tools in one session. Another session is another host.         |
 | **Front end**     | The program a person uses. It sends tasks and shows events, and holds no credentials and no session files.                |
 | **Provider**      | The program that reaches one model API. It turns a conversation into a request and back.                                  |
 | **Extension**     | A program that gives the model tools, tells it context, offers the person commands, or listens to runs.                   |
@@ -36,18 +36,18 @@ description: The words rumbo uses for its parts, its messages, and what it store
 
 ## What is kept
 
-| Term                | Meaning                                                                                                               |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| **Session**         | A conversation and what it chose, in a directory of its own. Not a copy of your files.                                |
-| **Entry**           | One line of a session's `entries.jsonl`. Entries are only ever appended.                                              |
-| **Project**         | In 0.9.0, the top of a Git repository, or the directory itself outside one. Sessions belong to it.                    |
-| **Branch**          | A new session that starts with a copy of another's entries, up to a point. The first one stays as it was.             |
-| **Compaction**      | Replacing the conversation the model is sent with a summary of it. The entries before it stay stored.                 |
-| **Prefix**          | The start a request shares with the one before, which a provider reads from its cache.                                |
-| **Ambient context** | What the model is told without asking: the environment, your instructions, your skills, and extensions' sections.     |
-| **Section**         | One named part of the ambient context. It is sent once, and again only when it changed.                               |
-| **Instructions**    | Your `AGENTS.md` or `CLAUDE.md` files: yours for everywhere, and the project's.                                       |
-| **Skill**           | Instructions for one kind of task, in a `SKILL.md`. The model is told its name and purpose, and reads it when needed. |
-| **Opaque block**    | Data a provider needs back unchanged, such as signed reasoning. The host stores it without reading it.                |
+| Term                | Meaning                                                                                                                |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| **Session**         | A conversation and what it chose, in a directory of its own. Not a copy of your files. One host works in it.           |
+| **Entry**           | One line of a session's `entries.jsonl`. Entries are only ever appended.                                               |
+| **Root**            | The directory rumbo was started in, where its session works. Nothing above it is looked at, a Git repository included. |
+| **Branch**          | A new session that starts with a copy of another's entries, up to a point. The first one stays as it was.              |
+| **Compaction**      | Replacing the conversation the model is sent with a summary of it. The entries before it stay stored.                  |
+| **Prefix**          | The start a request shares with the one before, which a provider reads from its cache.                                 |
+| **Ambient context** | What the model is told without asking: the environment, your instructions, your skills, and extensions' sections.      |
+| **Section**         | One named part of the ambient context. It is sent once, and again only when it changed.                                |
+| **Instructions**    | Your `AGENTS.md` or `CLAUDE.md` files: yours for everywhere, and the one in the session's root.                        |
+| **Skill**           | Instructions for one kind of task, in a `SKILL.md`. The model is told its name and purpose, and reads it when needed.  |
+| **Opaque block**    | Data a provider needs back unchanged, such as signed reasoning. The host stores it without reading it.                 |
 
 [How the parts fit](/reference/architecture/) · [A run, frame by frame](/#run-trace)

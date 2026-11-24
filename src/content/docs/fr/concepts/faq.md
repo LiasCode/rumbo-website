@@ -59,8 +59,8 @@ Chacune est un répertoire dans `~/.local/share/rumbo/sessions/`, avec son histo
 rumbo suit [pi](https://pi.dev) dans ce qu'un harnais laisse de côté : quatre outils, un prompt système
 court, et ni mode plan, ni sous-agents, ni demandes de permission. Ce qu'il ajoute tient à la façon dont
 les pièces se rejoignent : les modèles et les interfaces sont des programmes distincts sur des
-protocoles ouverts, toute session rejoue chaque requête qu'elle a envoyée, et un même hôte fait tourner
-plusieurs sessions à la fois. Voir [conception](/fr/concepts/design/).
+protocoles ouverts, toute session rejoue chaque requête qu'elle a envoyée, et chaque session est un rumbo à part,
+si bien que plusieurs travaillent côte à côte. Voir [conception](/fr/concepts/design/).
 
 ## Puis-je l'utiliser depuis mon éditeur ?
 

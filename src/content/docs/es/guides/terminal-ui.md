@@ -3,15 +3,15 @@ title: Interfaz de terminal
 description: Usa la interfaz de terminal de rumbo. Sesiones en una barra lateral, la conversación, un editor, una paleta de comandos, paneles con los detalles de la sesión y los cambios de Git, y todas sus teclas.
 ---
 
-`rumbo` en una terminal abre la interfaz de terminal a pantalla completa: una cabecera con el
-proyecto y la sesión que se muestra, las sesiones del proyecto en una barra lateral, la conversación
+`rumbo` en una terminal abre la interfaz de terminal a pantalla completa: una cabecera con la
+carpeta y la sesión que se muestra, las sesiones empezadas en esa carpeta en una barra lateral, la conversación
 en una columna propia y, debajo, un editor con el modelo, lo lleno que está el contexto y lo que ha
 gastado la sesión.
 
 ```sh
 rumbo                      # open it
 rumbo "a task"             # open it and start a task
-rumbo -c                   # open the latest session of this project
+rumbo -c                   # open the latest session started here
 rumbo -s <session>         # open a given one
 ```
 
@@ -34,34 +34,47 @@ Al salir, devuelve la terminal como la encontró y deja en ella el comando que c
 
 ## Sesiones
 
-Cada sesión conserva lo que mostró, y una ejecución sigue en su sesión mientras miras otra. La barra
-lateral marca las sesiones que están trabajando y aquellas cuya ejecución terminó mientras no se
-mostraban.
+La barra lateral lista las sesiones empezadas en la carpeta en la que se arrancó rumbo. Cada una es
+un rumbo propio, que la interfaz arranca cuando muestras la sesión por primera vez y termina cuando
+sales, así que una ejecución sigue en su sesión mientras miras otra. La barra lateral marca las
+sesiones que están trabajando, aquellas cuya ejecución terminó mientras no se mostraban y, con un
+anillo, aquellas para las que sigue abierto un rumbo.
 
-| Tecla                                     | Hace                                                                 |
-| ----------------------------------------- | -------------------------------------------------------------------- |
-| Tab (con el editor vacío), flechas, Enter | Mostrar una sesión de la barra lateral                               |
-| Supr                                      | Borrar la sesión elegida en la barra lateral, una vez que lo aceptas |
-| Ctrl-N                                    | Empezar una sesión nueva                                             |
-| Ctrl-B                                    | Mostrar u ocultar la barra lateral                                   |
+| Tecla                                     | Hace                                         |
+| ----------------------------------------- | -------------------------------------------- |
+| Tab (con el editor vacío), flechas, Enter | Mostrar una sesión de la barra lateral       |
+| Ctrl-N                                    | Empezar una sesión nueva, en un rumbo propio |
+| Ctrl-B                                    | Mostrar u ocultar la barra lateral           |
+
+Los rumbos de las sesiones que dejaste sin nada que hacer se cierran pasadas las dos últimas que se
+mostraron, para que no sigan gastando memoria; volver a mostrar una arranca su rumbo. `/rumbos` dice
+lo que usa el rumbo de cada sesión abierta, y "Close the rumbos not in use", en la paleta, los cierra
+todos.
+
+`/delete`, o "Delete this session" en la paleta, borra la sesión que se muestra una vez que lo
+aceptas. La sesión en la que se arrancó rumbo queda retenida hasta que sales: bórrala entonces, con
+`rumbo sessions rm`.
 
 ## Comandos
 
-- **Ctrl-P** abre una paleta con las acciones propias de la interfaz, las demás sesiones del proyecto
+- **Ctrl-P** abre una paleta con las acciones propias de la interfaz, las demás sesiones de la carpeta
   y todos los comandos, que se filtran al escribir. Un comando que necesita algo lo pide en un
   formulario, y uno que no se puede deshacer te pide que lo aceptes en un diálogo.
 - **Una barra** en el editor abre un menú con los comandos y lo que hace cada uno, y luego con los
-  valores que acepta su siguiente parámetro: `/open` lista las sesiones, `/use openai` los modelos de
-  `openai`.
-- **`/help`** los lista todos: los del host, agrupados según sobre qué actúan (el sistema, la sesión
-  y los proveedores), los del proveedor y los propios de la interfaz.
+  valores que acepta su siguiente parámetro: `/use` lista los proveedores, `/use openai` los modelos de
+  `openai`. Un parámetro que se puede omitir se escribe por su nombre, como `name=value`:
+  `/extension-add docs config={"url":"https://example.com/mcp"} {self} extend mcp`.
+- **`/help`** los lista todos: los del host, agrupados según sobre qué actúan (el sistema, la sesión,
+  los proveedores y las extensiones), los del proveedor y los propios de la interfaz.
 
 Los comandos salen de lo que describen el host y el proveedor, así que las funciones de un
 proveedor, como `/login`, aparecen sin que la interfaz las conozca. Los propios de la interfaz son
-`/help`, `/copy` (la última respuesta del modelo, o `/copy code` para su último bloque de código) y
-`/export` (la sesión como Markdown).
+`/help`, `/copy` (la última respuesta del modelo, o `/copy code` para su último bloque de código),
+`/export` (la sesión como Markdown), `/rumbos` y `/delete`. `/processes` muestra los procesos que
+tiene en marcha el rumbo en el que estás, cada uno bajo el que lo arrancó, con la memoria y el tiempo
+de procesador que usa.
 
-Los comandos de una extensión llevan su nombre registrado, como `/notes-forget`. Su salida se marca con `[extension]` o `[extension <name>]`. Consulta [Extensiones y MCP](/es/guides/extensions/).
+Los comandos de una extensión llevan su nombre registrado, como `/notes-forget`, en cuanto se añade. Su salida se marca con `[extension]` o `[extension <name>]`. Consulta [Extensiones y MCP](/es/guides/extensions/).
 
 ## Modelo y opciones
 
@@ -74,7 +87,7 @@ comando que es.
 - **Ctrl-Alt-B** muestra los detalles de la sesión junto a la conversación: su id y su estado, su
   carpeta, su modelo, lo lleno que está su contexto, lo que gastó y las skills de las que se informa
   al modelo.
-- **Ctrl-G** muestra lo que cambió en la carpeta del proyecto según Git, frente al último commit,
+- **Ctrl-G** muestra lo que cambió en la carpeta de la sesión según Git, frente al último commit,
   incluidos los archivos nuevos. Solo lee.
 
 ## Volver atrás en la conversación
@@ -99,7 +112,7 @@ en cualquier otro sitio.
 | Enter                            | Enviar la tarea, o decirle a la ejecución en curso lo que escribiste                             |
 | Alt-Enter, Shift-Enter, Ctrl-J   | Nueva línea                                                                                      |
 | Arriba, Abajo                    | Moverse por las filas escritas y, más allá, por lo que enviaste antes                            |
-| Ctrl-R                           | Buscar lo que enviaste antes, en cualquier sesión del proyecto                                   |
+| Ctrl-R                           | Buscar lo que enviaste antes, en cualquier sesión empezada en esta carpeta                       |
 | Ctrl-V                           | Pegar la imagen del portapapeles, que va con lo siguiente que envíes                             |
 | Retroceso con el editor vacío    | Quitar la última imagen pegada                                                                   |
 | Escape                           | Abandonar una función del proveedor en curso; si no, cancelar la ejecución de la sesión mostrada |

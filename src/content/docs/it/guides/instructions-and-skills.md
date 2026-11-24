@@ -11,7 +11,7 @@ strumenti. Le istruzioni e le skill sono il posto dove gli dici come va fatto il
 
 Il modello legge i file `AGENTS.md` o `CLAUDE.md`:
 
-- del progetto, dalla sua radice fino alla directory in cui ti trovi;
+- della directory in cui è stato avviato rumbo, la radice della sessione, e di nessuna sopra di essa;
 - i tuoi, in `~/.config/rumbo/` (`~/Library/Application Support/rumbo/` su macOS), che valgono ovunque.
 
 Scrivi lì ciò che un compito non può mostrare da solo: come vuoi che sia fatto il lavoro, quali comandi
@@ -24,6 +24,9 @@ lo verificano e cosa non deve succedere mai.
 - Never commit; I review and commit myself.
 - Write to me in Spanish; code and comments in English.
 ```
+
+Avviato in una sottodirectory di un repository, rumbo legge solo la guida di quella sottodirectory, non
+quella della radice: avvialo nella radice per lavorare con la guida del repository.
 
 Le tue istruzioni prevalgono su quelle di rumbo: prima ciò che dici nella conversazione, poi il tuo
 `AGENTS.md`. Un file lungo viene tagliato, indicando dove si trova il resto, così che il modello possa
@@ -47,8 +50,8 @@ One heading per topic, decisions first, then who does what by when.
 Le skill vanno in:
 
 - `~/.config/rumbo/skills/<name>/` (`~/Library/Application Support/rumbo/skills/` su macOS), le tue;
-- `.agents/skills/<name>/` in un progetto, dalla sua radice fino a dove ti trovi. Una skill del progetto
-  sostituisce una tua con lo stesso nome.
+- `.agents/skills/<name>/` nella directory in cui è stato avviato rumbo, e in nessuna sopra. La sua
+  skill sostituisce una tua con lo stesso nome.
 - `skills/<name>/` in un [plugin](/it/guides/plugins/) che hai aggiunto. Una tua con lo stesso nome la
   sostituisce.
 

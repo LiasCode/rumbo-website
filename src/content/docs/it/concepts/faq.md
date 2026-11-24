@@ -58,8 +58,8 @@ una voce per riga. Vedi [sessioni](/it/guides/sessions/#cosa-contiene-una-sessio
 rumbo segue [pi](https://pi.dev) in ciò che un harness lascia fuori: quattro strumenti, un prompt di
 sistema breve e niente modalità di pianificazione, subagenti o richieste di permesso. Ciò che aggiunge
 sta nel modo in cui le parti si incontrano: modelli e interfacce sono programmi separati su protocolli
-aperti, ogni sessione rigioca ogni richiesta che ha inviato e un solo host esegue più sessioni alla
-volta. Vedi [progettazione](/it/concepts/design/).
+aperti, ogni sessione rigioca ogni richiesta che ha inviato e ogni sessione è un rumbo a sé, così più
+sessioni lavorano fianco a fianco. Vedi [progettazione](/it/concepts/design/).
 
 ## Posso usarlo dal mio editor?
 
