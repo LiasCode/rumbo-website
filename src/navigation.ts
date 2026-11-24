@@ -72,6 +72,7 @@ export const interfaceCopy = {
 		copy: 'Copy',
 		copied: 'Copied',
 		language: 'Language',
+		release: 'For rumbo',
 	},
 	es: {
 		docs: 'Documentación',
@@ -86,6 +87,7 @@ export const interfaceCopy = {
 		copy: 'Copiar',
 		copied: 'Copiado',
 		language: 'Idioma',
+		release: 'Para rumbo',
 	},
 	fr: {
 		docs: 'Documentation',
@@ -100,6 +102,7 @@ export const interfaceCopy = {
 		copy: 'Copier',
 		copied: 'Copié',
 		language: 'Langue',
+		release: 'Pour rumbo',
 	},
 	it: {
 		docs: 'Documentazione',
@@ -114,5 +117,6 @@ export const interfaceCopy = {
 		copy: 'Copia',
 		copied: 'Copiato',
 		language: 'Lingua',
+		release: 'Per rumbo',
 	},
 };

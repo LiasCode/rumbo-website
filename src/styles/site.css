@@ -656,12 +656,28 @@ doc-search li small {
 }
 .breadcrumb {
 	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
 	gap: 0.65rem;
 	color: var(--muted);
 	margin: 0 0 1.35rem;
 }
 .breadcrumb span {
 	color: var(--accent);
+}
+/* The release every page describes, stamped like a seal. */
+.release-tag {
+	margin-left: auto;
+	border: 1px solid var(--accent);
+	border-radius: 2px;
+	padding: 0 0.45rem;
+	color: var(--accent);
+	text-decoration: none;
+	white-space: nowrap;
+}
+.release-tag:hover {
+	background: var(--accent);
+	color: var(--surface);
 }
 .article-header {
 	border-bottom: 1px solid var(--line);

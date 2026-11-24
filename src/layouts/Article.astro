@@ -7,6 +7,7 @@ import Flow from '../components/Flow.astro';
 import Sequence from '../components/Sequence.astro';
 import { href, interfaceCopy, type Locale } from '../navigation';
 import type { directory, documents } from '../documents';
+import { release } from '../site.mjs';
 
 interface Props {
 	locale: Locale;
@@ -46,7 +47,7 @@ const sequences = ['reference/provider-protocol', 'reference/frontend-protocol',
 			</details>
 		</aside>
 		<main id="main" class="doc-main">
-			<p class="breadcrumb"><a href={href(locale, 'start/introduction')}>{copy.docs}</a><span>/</span>{group.label}</p>
+			<p class="breadcrumb"><a href={href(locale, 'start/introduction')}>{copy.docs}</a><span>/</span>{group.label}<a class="release-tag" href={href(locale, 'reference/changelog')}>{copy.release} {release.version}</a></p>
 			{fallback && <p class="translation-note" role="note">{copy.fallback} <a class="with-icon" href={href('en', slug)} lang="en">English <Icon name="arrow-up-right" /></a></p>}
 			<article lang={fallback ? 'en' : locale}>
 				<header class="article-header"><h1>{title}</h1><p>{description}</p></header>
