@@ -1,6 +1,6 @@
 ---
 title: Architecture
-description: How rumbo 0.10.0 is put together. The host and what it owns, the three protocols around it, the loop that turns a task into an answer, and the rules the design depends on, from the source.
+description: How rumbo 0.11.0 is put together. The host and what it owns, the three protocols around it, the loop that turns a task into an answer, and the rules the design depends on, from the source.
 ---
 
 rumbo is one process, **the host**, and the programs it starts. The host owns the loop, the tools, and one session; another session is another host. It draws nothing, calls no model API, and knows nothing of MCP: each of those is another program, reached through a protocol.
@@ -78,4 +78,4 @@ A front end that shows several sessions, as the [terminal UI](/guides/terminal-u
 | The host never touches the terminal once a front end is attached. | The front end owns what the person sees. What they must see is an event.                          |
 | The agent acts with your rights.                                  | Limits come from a sandbox you choose, not from prompts. See [before you run it](/start/safety/). |
 
-**Source:** [`internal/cli`](https://github.com/LiasCode/rumbo/tree/v0.10.0/internal/cli) wires the host; [`internal/agent/agent.go`](https://github.com/LiasCode/rumbo/blob/v0.10.0/internal/agent/agent.go) is the loop; [`internal/transcript`](https://github.com/LiasCode/rumbo/tree/v0.10.0/internal/transcript) rebuilds requests; [`internal/store/files.go`](https://github.com/LiasCode/rumbo/blob/v0.10.0/internal/store/files.go) keeps sessions; [`internal/tool`](https://github.com/LiasCode/rumbo/tree/v0.10.0/internal/tool) has the tools.
+**Source:** [`internal/cli`](https://github.com/LiasCode/rumbo/tree/v0.11.0/internal/cli) wires the host; [`internal/agent/agent.go`](https://github.com/LiasCode/rumbo/blob/v0.11.0/internal/agent/agent.go) is the loop; [`internal/transcript`](https://github.com/LiasCode/rumbo/tree/v0.11.0/internal/transcript) rebuilds requests; [`internal/store/files.go`](https://github.com/LiasCode/rumbo/blob/v0.11.0/internal/store/files.go) keeps sessions; [`internal/tool`](https://github.com/LiasCode/rumbo/tree/v0.11.0/internal/tool) has the tools.

@@ -1,21 +1,21 @@
 ---
-title: What changes after 0.10.0
-description: What the development branch of rumbo changes after 0.10.0, checked against its source. Today nothing, since main is the 0.10.0 release.
+title: What changes after 0.11.0
+description: What the development branch of rumbo changes after 0.11.0, checked against its source. Today nothing, since main is the 0.11.0 release.
 ---
 
-> **Nothing unreleased yet.** The `main` branch of rumbo is the [0.10.0](/reference/changelog/) release, commit `6c97f58`, and its changelog has nothing under _Unreleased_. Everything on this site describes 0.10.0, which is what the install instructions give you.
+> **Nothing unreleased yet.** The `main` branch of rumbo is the [0.11.0](/reference/changelog/) release, commit `3be63cd`, and its changelog has nothing under _Unreleased_. Everything on this site describes 0.11.0, which is what the install instructions give you.
 
-## What 0.10.0 changed
+## What 0.11.0 changed
 
-0.10.0 released what this page described of the development branch before it:
+0.11.0 changed the terminal UI most, and what it changed of the protocols is additive:
 
-| In 0.9.0                                                                                      | In 0.10.0                                                                                                                          |
-| --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| One host works in several sessions of a project at once. `-single` keeps it to one.           | Each `rumbo` is one session. [Sessions](/guides/sessions/#one-rumbo-one-session).                                                  |
-| A session belongs to the top of the Git repository it was started in.                         | It belongs to the directory it was started in, and only that directory's instructions and skills are read.                         |
-| `/sessions`, `/projects`, `/open`, `/new`, `/delete`, and `/prune` are functions of the host. | `rumbo sessions`, `rm`, `prune`, and `-json` from the command line; `/delete` is the terminal UI's own.                            |
-| Front end protocol version 1.                                                                 | [Version 2](/reference/frontend-protocol/): a `run` names no session, and `processes`, `title`, and the `extension` group are new. |
-| Extensions are managed from the command line.                                                 | Also from any front end, with `/extensions`, `/extension-add`, `/extension-show`, `/extension-set`, and `/extension-rm`.           |
-| `{self}` is only the first word of a command.                                                 | It is any word.                                                                                                                    |
+| In 0.10.0                                                                       | In 0.11.0                                                                                            |
+| ------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Ctrl-P opens a command palette.                                                 | Ctrl-P starts a command in the composer, as a slash does. [Commands](/guides/terminal-ui/#commands). |
+| A command for each function: `/use`, `/session-set`, `/provider-set`, and more. | A few in your words: `/model`, `/resume`, `/providers`, `/extensions`, `/settings`, and the rest.    |
+| An extension's functions are `/<name>-<function>`, such as `/docs-login`.       | `/extensions <name> <function>`, and `/login <name>` to sign in.                                     |
+| A header over the conversation, which is at most 100 columns wide.              | No header; the conversation takes the whole width, and the sidebar starts put away.                  |
+| The history's `ended` has `status` and `text`.                                  | It also has `took`, in milliseconds. [Front end protocol](/reference/frontend-protocol/#event).      |
+| The `mcp` extension declares its server's tools.                                | It also lists every tool the server has, with its `tools` function, for a front end to choose among. |
 
-**Source:** the [changes since 0.10.0](https://github.com/LiasCode/rumbo/compare/v0.10.0...main), and the [changelog](https://github.com/LiasCode/rumbo/blob/main/CHANGELOG.md).
+**Source:** the [changes since 0.11.0](https://github.com/LiasCode/rumbo/compare/v0.11.0...main), and the [changelog](https://github.com/LiasCode/rumbo/blob/main/CHANGELOG.md).

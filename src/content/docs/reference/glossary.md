@@ -1,6 +1,6 @@
 ---
 title: Glossary
-description: The words rumbo uses for its parts, its messages, and what it stores, each as the source of rumbo 0.10.0 means it.
+description: The words rumbo uses for its parts, its messages, and what it stores, each as the source of rumbo 0.11.0 means it.
 ---
 
 ## The parts
@@ -19,20 +19,20 @@ description: The words rumbo uses for its parts, its messages, and what it store
 
 ## A run
 
-| Term          | Meaning                                                                                                                   |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| **Objective** | The task a run is given. The protocols call it `objective`.                                                               |
-| **Run**       | The work on one objective, from the `run` request to its answer: done, failed, or cancelled.                              |
-| **Turn**      | One response of the model, with the tool calls it made.                                                                   |
-| **Steer**     | What the person says to a run while it works. The model reads it before its next request.                                 |
-| **Resume**    | Carrying on a run that failed, was cancelled, or was cut short, without a new objective.                                  |
-| **Tool call** | The model asking for a tool, with an id. Its **tool result** carries the same id back in the next request.                |
-| **Function**  | An operation for the person, not the model: the host's, a provider's, or an extension's. Front ends show it as a command. |
-| **Option**    | A value a provider accepts with a request, such as `effort`, described so any front end can offer it.                     |
-| **Event**     | Something the host tells a front end, or a listening extension, about a run.                                              |
-| **Delta**     | A piece of text streamed while a request is in progress. For display; the finished message is what counts.                |
-| **Transient** | A failure worth sending the request again for, such as a rate limit. Error code `1`.                                      |
-| **Overflow**  | A request that did not fit in the model's context. Error code `2`.                                                        |
+| Term          | Meaning                                                                                                                                                                      |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Objective** | The task a run is given. The protocols call it `objective`.                                                                                                                  |
+| **Run**       | The work on one objective, from the `run` request to its answer: done, failed, or cancelled.                                                                                 |
+| **Turn**      | One response of the model, with the tool calls it made.                                                                                                                      |
+| **Steer**     | What the person says to a run while it works. The model reads it before its next request.                                                                                    |
+| **Resume**    | Carrying on a run that failed, was cancelled, or was cut short, without a new objective.                                                                                     |
+| **Tool call** | The model asking for a tool, with an id. Its **tool result** carries the same id back in the next request.                                                                   |
+| **Function**  | An operation for the person, not the model: the host's, a provider's, or an extension's. A front end offers it as a command; the terminal UI makes its few commands of them. |
+| **Option**    | A value a provider accepts with a request, such as `effort`, described so any front end can offer it.                                                                        |
+| **Event**     | Something the host tells a front end, or a listening extension, about a run.                                                                                                 |
+| **Delta**     | A piece of text streamed while a request is in progress. For display; the finished message is what counts.                                                                   |
+| **Transient** | A failure worth sending the request again for, such as a rate limit. Error code `1`.                                                                                         |
+| **Overflow**  | A request that did not fit in the model's context. Error code `2`.                                                                                                           |
 
 ## What is kept
 

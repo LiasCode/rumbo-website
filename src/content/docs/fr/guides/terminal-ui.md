@@ -1,12 +1,13 @@
 ---
 title: Interface en terminal
-description: Utilisez l'interface en terminal de rumbo. Les sessions dans une barre latérale, la conversation, une zone de saisie, une palette de commandes, des panneaux avec les détails de la session et les changements Git, et toutes ses touches.
+description: Utilisez l'interface en terminal de rumbo. La conversation en plein écran, une zone de saisie, quelques commandes qu'on y tape, les sessions dans une barre latérale, des panneaux avec les détails de la session et les changements Git, et toutes ses touches.
 ---
 
-`rumbo` dans un terminal ouvre l'interface en terminal en plein écran : un en-tête avec le dossier et la
-session affichée, les sessions démarrées dans ce dossier dans une barre latérale, la conversation dans sa propre
-colonne et, en dessous, une zone de saisie avec le modèle, le remplissage du contexte et ce que la
-session a dépensé.
+`rumbo` dans un terminal ouvre l'interface en terminal en plein écran : la conversation sur toute la
+largeur et, en dessous, une zone de saisie avec le modèle, la branche Git en cours, le dossier (sous
+votre répertoire personnel, sous la forme `~/`), le remplissage du contexte et ce que la session a
+dépensé. Les sessions démarrées dans ce dossier sont dans une barre latérale, masquée jusqu'à ce que
+Ctrl-B l'affiche.
 
 ```sh
 rumbo                      # open it
@@ -26,86 +27,166 @@ session, `rumbo -s <session>`. Pour garder une conversation, `/export` l'écrit 
   qui dit comment il s'est passé : une modification avec les lignes qu'elle a changées, une commande
   avec le début de ce qu'elle a affiché ou, en cas d'échec, son statut et la fin de ce qu'elle a
   affiché.
-- Une exécution se termine par une ligne qui indique comment elle s'est terminée, sa durée, ses tours
-  et ses tokens.
+- L'état de l'exécution, son indicateur et sa durée, s'affiche au-dessus de la zone de saisie.
+- Une exécution se termine par une ligne qui indique comment elle s'est terminée, sa durée, ses
+  tokens en entrée et en sortie, ce qu'a fourni le cache avec sa part de l'entrée, et ses tours :
+  `12.3s · 1.1k in · 810 out · 26.5k cached (96%) · 1 turn`. Une session que vous continuez indique
+  aussi la durée de chacune de ses tâches précédentes.
 - Entrée pendant une exécution lui transmet ce que vous avez tapé. Cela atteint le modèle avant sa
   requête suivante, sans l'arrêter.
 - Quand une exécution se termine alors que le terminal n'est pas au premier plan, il fait sonner la
   cloche et envoie une notification de bureau, dans les terminaux qui signalent leur focus et
   acceptent OSC 9 (dans tmux, avec `focus-events` activé).
 
-## Sessions
-
-La barre latérale liste les sessions démarrées dans le dossier où rumbo a démarré. Chacune est un
-rumbo à part, que l'interface démarre quand vous affichez la session pour la première fois et arrête
-quand vous quittez, si bien qu'une exécution continue dans sa session pendant que vous en regardez une
-autre. La barre latérale marque les sessions qui travaillent, celles dont l'exécution s'est terminée
-pendant qu'elles n'étaient pas affichées et, d'un anneau, celles pour lesquelles un rumbo reste ouvert.
-
-| Touche                                     | Action                                        |
-| ------------------------------------------ | --------------------------------------------- |
-| Tab (zone de saisie vide), flèches, Entrée | Afficher une session de la barre latérale     |
-| Ctrl-N                                     | Démarrer une nouvelle session, dans son rumbo |
-| Ctrl-B                                     | Afficher ou masquer la barre latérale         |
-
-Les rumbos des sessions que vous avez laissées sans rien à faire sont fermés au-delà des deux
-dernières affichées, pour qu'ils ne continuent pas à coûter de la mémoire ; en afficher une à nouveau
-démarre son rumbo. `/rumbos` dit ce qu'utilise le rumbo de chaque session ouverte, et « Close the
-rumbos not in use », dans la palette, les ferme tous.
-
-`/delete`, ou « Delete this session » dans la palette, supprime la session affichée après votre
-accord. La session dans laquelle rumbo a démarré est retenue jusqu'à ce que vous quittiez :
-supprimez-la ensuite, avec `rumbo sessions rm`.
-
 ## Commandes
 
-- **Ctrl-P** ouvre une palette avec les actions propres à l'interface, les autres sessions du dossier et
-  toutes les commandes, que la saisie filtre. Une commande qui a besoin de quelque chose le demande dans
-  un formulaire, et une commande irréversible vous demande votre accord dans une boîte de dialogue.
-- **Une barre oblique** dans la zone de saisie ouvre un menu des commandes, avec ce que fait chacune,
-  puis des valeurs acceptées par son paramètre suivant : `/use` liste les fournisseurs, `/use openai` les
-  modèles d'`openai`. Un paramètre facultatif se tape par son nom, sous la forme `name=value` :
-  `/extension-add docs config={"url":"https://example.com/mcp"} {self} extend mcp`.
-- **`/help`** les liste toutes : celles de l'hôte, regroupées selon ce sur quoi elles agissent (le
-  système, la session, les fournisseurs et les extensions), celles du fournisseur et celles de l'interface.
+Tout est une commande tapée dans la zone de saisie. Une barre oblique sur une ligne vide en commence
+une, et Ctrl-P aussi. Une conversation vide montre les quelques commandes par lesquelles commencer.
 
-Les commandes viennent de ce que décrivent l'hôte et le fournisseur, si bien que les fonctions d'un
-fournisseur, comme `/login`, apparaissent sans que l'interface les connaisse. Celles de l'interface
-sont `/help`, `/copy` (la dernière réponse du modèle, ou `/copy code` pour son dernier bloc de code),
-`/export` (la session en Markdown), `/rumbos` et `/delete`. `/processes` montre les processus que le
-rumbo où vous êtes fait tourner, chacun sous celui qui l'a démarré, avec la mémoire et le temps
-processeur qu'il utilise.
+- **Le menu** liste les commandes, avec un exemple de celle choisie, puis les valeurs qu'accepte son
+  mot suivant : `/resume` liste les sessions, `/model ` les fournisseurs et les options, et
+  `/model openai/` les modèles d'`openai`. Haut et Bas choisissent, Tab ou Entrée prennent, Échap le
+  ferme.
+- **Ce qui manque encore à une commande** s'affiche après le curseur, atténué, comme
+  `/resume <session>`.
+- **Une commande mal tapée** reçoit pour réponse celle que vous vouliez dire.
+- **`/help`** liste les commandes selon leur sujet, et les touches ; `/help <command>` dit ce que fait
+  l'une d'elles, avec des exemples.
+- Une commande irréversible vous demande votre accord dans une boîte de dialogue, qui commence sur le
+  bouton qui laisse les choses en l'état.
 
-Les commandes d’une extension portent son nom enregistré, par exemple `/notes-forget`, dès qu’elle est ajoutée. Sa sortie est marquée `[extension]` ou `[extension <name>]`. Voir [Extensions et MCP](/fr/guides/extensions/).
+| Commande                        | Action                                                                                                                     |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `/new`                          | Commencer la tâche suivante dans une nouvelle session                                                                      |
+| `/sessions`                     | Lister les sessions de ce dossier, avec leur état et leur dernière utilisation                                             |
+| `/resume <session>`             | Aller à une autre session, par son id, son début ou le début de son titre                                                  |
+| `/rename <title>`               | Donner à cette session un titre à vous                                                                                     |
+| `/branch [message]`             | Continuer dans une [branche](/fr/guides/sessions/#créer-une-branche), avant l'un de vos messages ou à partir de maintenant |
+| `/compact`                      | Remplacer dès maintenant la conversation par un résumé                                                                     |
+| `/delete [session]`             | Supprimer une session et son historique, après votre accord ; sans session, celle-ci                                       |
+| `/copy [code\|id]`              | Copier la dernière réponse du modèle, son dernier bloc de code ou l'id de cette session                                    |
+| `/export [path]`                | Écrire cette session en Markdown dans un fichier, sans l'écraser                                                           |
+| `/model [provider/model]`       | Changer le modèle et ses options (`option=value`) ; sans eux, ouvrir le sélecteur                                          |
+| `/login [extension]`, `/logout` | Se connecter au fournisseur, ou à une extension, et se déconnecter                                                         |
+| `/providers`, `/extensions`     | Les lister, les afficher, les configurer, les ajouter et les retirer                                                       |
+| `/settings [name=value]`        | Afficher ce qui s'applique ici et d'où vient chaque valeur, ou changer un réglage                                          |
+| `/status`, `/changes`           | Afficher les détails de la session, ou ce qui a changé dans le dossier, à côté de la conversation                          |
+| `/rumbos [close]`               | Ce qu'utilise le rumbo de chaque session ouverte ; `close` arrête ceux qui ne servent pas                                  |
+| `/help [command]`, `/quit`      | Afficher les commandes et les touches, ou quitter rumbo                                                                    |
+
+Les réponses, les erreurs et les diagnostics sont marqués `[host]`, `[provider <name>]` ou
+`[extension <name>]`, selon leur provenance.
+
+## Fournisseurs et extensions
+
+`/providers` et `/extensions` fonctionnent de la même façon :
+
+```text
+/providers                                list them
+/providers openai                         show one: its settings and what it offers
+/providers openai base_url=http://localhost:11434/v1
+/providers add local {self} provide openai
+/providers remove local                   remove one, once you agree
+/extensions add docs config={"url":"https://example.com/mcp"} {self} extend mcp
+```
+
+Ce qu'offre un programme s'appelle après son nom : `/providers anthropic account` pour le fournisseur
+de la session, ou `/extensions notes forget` pour une extension. Chaque mot est complété : les
+programmes, les changements qu'accepte chacun sauf ceux déjà donnés, ce qu'offre chacun et ce
+qu'acceptent ses fonctions et, pour `add`, la façon dont les programmes présents sont démarrés, ainsi
+que le `config=` et le `replaces=` d'une extension. Un mot facultatif, placé avant un mot qui ne l'est
+pas, se tape par son nom, sous la forme `name=value`.
+
+`/extensions <name> tools=` choisit les outils d'un serveur MCP parmi tous ceux qu'il a, élément par
+élément : d'abord la liste telle qu'elle est choisie, puis chaque outil qui n'y est pas encore, avec
+ce qu'il fait ; une virgule continue avec un autre. Voir [Extensions et MCP](/fr/guides/extensions/).
 
 ## Modèle et options
 
-Un clic sur le modèle sous la zone de saisie, ou Model and options dans la palette, ouvre le
-sélecteur. Il change le fournisseur, le modèle et les options de la session, comme `effort`, et
-affiche chaque changement sous la forme de la commande qu'il est.
+`/model`, ou un clic sur le modèle sous la zone de saisie, ouvre le sélecteur. Il change le
+fournisseur, le modèle et les options de la session, comme `effort`, et affiche chaque changement
+sous la forme du `/model` qu'il est. Tapé en entier, il les change d'un coup :
+
+```text
+/model anthropic/claude-opus-5-5 effort=high
+/model effort=                     the option back to the provider's value
+```
+
+Ce qui précède la barre oblique n'est un fournisseur que s'il en existe un de ce nom, si bien que le
+nom d'un modèle peut contenir des barres obliques.
+
+## Sessions
+
+La barre latérale liste les sessions démarrées dans le dossier où rumbo a démarré, espacées d'une
+ligne, chacune avec le temps écoulé depuis sa dernière utilisation, comme `5m`, `3h` ou `2d`. Chaque
+session est un rumbo à part, que l'interface démarre quand vous affichez la session pour la première
+fois et arrête quand vous quittez, si bien qu'une exécution continue dans sa session pendant que vous
+en regardez une autre. La barre latérale marque les sessions qui travaillent, celles dont l'exécution
+s'est terminée pendant qu'elles n'étaient pas affichées et, d'un anneau, celles pour lesquelles un
+rumbo reste ouvert. Le nombre d'exécutions qui travaillent dans d'autres sessions s'affiche sous la
+zone de saisie, à droite.
+
+| Touche                   | Action                                             |
+| ------------------------ | -------------------------------------------------- |
+| Ctrl-B                   | Afficher ou masquer la barre latérale              |
+| Tab, zone de saisie vide | Aller à la barre latérale, quand elle est affichée |
+| Haut et Bas, k et j      | Choisir une session                                |
+| gg et G                  | Choisir la première ou la dernière                 |
+| Entrée                   | Afficher la session choisie                        |
+| d                        | Supprimer la session choisie, après votre accord   |
+| Ctrl-N                   | Démarrer une nouvelle session, dans son rumbo      |
+
+`/sessions` liste les mêmes sessions dans la conversation, et `/resume <session>` va à l'une d'elles.
+
+Les rumbos des sessions que vous avez laissées sans rien à faire sont fermés au-delà des deux
+dernières affichées, pour qu'ils ne continuent pas à coûter de la mémoire ; en afficher une à nouveau
+démarre son rumbo. `/rumbos` dit ce qu'utilise le rumbo de chaque session ouverte : ses processus,
+leur mémoire et leur temps processeur. `/rumbos close` ferme ceux qui ne sont ni affichés ni au
+travail.
+
+La session dans laquelle rumbo a démarré est retenue jusqu'à ce que vous quittiez, si bien qu'on ne
+peut pas la supprimer de l'intérieur : supprimez-la ensuite, avec `rumbo sessions rm`.
 
 ## Panneaux
 
-- **Ctrl-Alt-B** affiche les détails de la session à côté de la conversation : son id et son état, son
-  dossier, son modèle, le remplissage de son contexte, ce qu'elle a dépensé et les skills dont le
-  modèle est informé.
-- **Ctrl-G** affiche ce qui a changé dans le dossier de la session selon Git, par rapport au dernier
-  commit, nouveaux fichiers compris. Il ne fait que lire.
+- **`/status`** ou **Ctrl-Alt-B** affiche les détails de la session à côté de la conversation : son id
+  et son état, son dossier, son modèle, le remplissage de son contexte, ce qu'elle a dépensé et les
+  skills dont le modèle est informé.
+- **`/changes`** ou **Ctrl-G** affiche ce qui a changé dans le dossier de la session selon Git, par
+  rapport au dernier commit, nouveaux fichiers compris. Il ne fait que lire.
 
 ## Revenir dans la conversation
 
-Maj-Tab remonte dans la conversation, où Haut et Bas choisissent une entrée et Entrée agit dessus,
-comme un clic :
+Maj-Tab remonte dans la conversation, où Entrée agit sur l'entrée choisie, comme un clic :
 
 - sur un appel d'outil, il affiche tout ce qu'il a reçu et renvoyé, ou revient à son extrait ;
 - sur l'un de vos messages, il le modifie, ou le repose, dans une [branche](/fr/guides/sessions/#créer-une-branche)
   qui commence avant lui ;
 - sur tout le reste, il le copie.
 
+| Touche              | Action                                                                             |
+| ------------------- | ---------------------------------------------------------------------------------- |
+| Haut et Bas, k et j | Choisir une entrée                                                                 |
+| K et J              | Aller à vos messages, vers le haut et vers le bas                                  |
+| gg et G             | Aller au début et à la fin                                                         |
+| c                   | Copier l'entrée choisie                                                            |
+| b                   | Créer une branche depuis votre message qui a commencé la tâche, après votre accord |
+| Tab, Échap          | Revenir à la zone de saisie                                                        |
+
+`b` choisit d'abord ce message, et la boîte de dialogue dit ce que garde la branche : la conversation
+telle qu'elle était avant lui, avec le message dans la zone de saisie de la branche, pour le modifier
+ou l'envoyer à nouveau.
+
+## Copier
+
 Faire glisser la souris sur la conversation ou un panneau sélectionne son texte, et le relâcher le
-copie, dans le presse-papiers et dans la sélection primaire. Il utilise OSC 52, donc cela fonctionne
-aussi via ssh dans les terminaux qui l'acceptent (dans tmux, avec `set-clipboard on`). Avec Maj, le
-terminal sélectionne comme ailleurs.
+copie, dans le presse-papiers et dans la sélection primaire. Avec Maj, le terminal sélectionne comme
+ailleurs.
+
+Le texte est copié avec OSC 52, qui fonctionne aussi via ssh, et par le bureau sur lequel tourne
+rumbo, car un terminal ou un tmux qui n'accepte pas OSC 52 l'ignore sans rien dire : avec `wl-copy`,
+`xclip` ou `xsel`, ou `pbcopy`, sinon, dans tmux, par le tampon de tmux. Ce qui est copié dit où il
+est allé.
 
 ## La zone de saisie
 

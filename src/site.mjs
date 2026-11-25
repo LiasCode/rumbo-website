@@ -9,4 +9,4 @@ export const repository = 'https://github.com/LiasCode/rumbo';
 
 // rumbo's latest release, which the install instructions name: the first
 // dated section of the changelog, "## X.Y.Z (YYYY-MM-DD)".
-export const release = { version: '0.10.0', date: '2026-11-25' };
+export const release = { version: '0.11.0', date: '2026-11-25' };

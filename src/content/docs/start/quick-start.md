@@ -46,9 +46,10 @@ rumbo -r                                         # resume a run that stopped
 rumbo "summarize notes.md" > summary.txt         # piped: plain text out, exit code
 ```
 
-`rumbo` alone opens the terminal UI over the whole screen: the folder's sessions in a sidebar,
-the conversation, and under it a composer with the model and how full its context is. Ctrl-P opens
-every command. See the [terminal UI](/guides/terminal-ui/) guide.
+`rumbo` alone opens the terminal UI over the whole screen: the conversation, and under it a
+composer with the model, the Git branch, and how full the context is. A slash starts a command,
+such as `/model` or `/resume`, and `/help` lists them all; Ctrl-B shows the folder's sessions. See
+the [terminal UI](/guides/terminal-ui/) guide.
 
 ## 4. Tell it how you work
 

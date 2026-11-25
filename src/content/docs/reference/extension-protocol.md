@@ -5,7 +5,7 @@ description: Version 1 of the protocol between the rumbo host and an extension, 
 
 An extension is a program the host starts as a child process. They exchange **JSON-RPC 2.0 objects, one per line**, on the extension's stdin and stdout; stderr reaches the person as a diagnostic, and a stdout line that is not JSON is skipped. The framing, `initialize`, `invoke`, `delta`, `ask`, `cancel`, and `shutdown` are the [provider protocol's](/reference/provider-protocol/).
 
-This page describes protocol **version 1**, which rumbo 0.10.0 speaks, as 0.9.0 did.
+This page describes protocol **version 1**, which rumbo 0.11.0 speaks, as 0.10.0 and 0.9.0 did.
 
 ## Four things an extension can declare
 
@@ -82,7 +82,7 @@ Every run waits for its sections, so they are bounded: an extension has **10 sec
 
 ## Functions, questions, and events
 
-A front end offers an extension's function as a command named after the extension: `forget`, of an extension registered as `notes`, is `/notes-forget` in the terminal UI. The host sends `invoke` with its `name` and `params`.
+A front end offers an extension's functions as commands of that extension: `forget`, of an extension registered as `notes`, is `/extensions notes forget` in the terminal UI. The host sends `invoke` with its `name` and `params`. A function marked `lists` that has the name of a configuration field answers `{ "values" }`, the values that field takes, which the terminal UI completes the field with, item by item: the `mcp` extension's `tools` lists every tool its server has.
 
 From inside a `call` or an `invoke`, `delta` says something to the person and `ask` asks them something, both naming the `id` of the request they belong to. `ask` takes `text` and `secret`, and is answered `{ "text" }`, or with an error when the person declines or no one is there to ask. What is asked and answered is recorded nowhere.
 
@@ -94,6 +94,6 @@ The host starts an extension when a run first needs it and keeps that **one proc
 
 ## In Go
 
-The [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.10.0/protocol) package has these types and `ServeExtension`, which turns an `ExtensionHandler` into an extension.
+The [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.11.0/protocol) package has these types and `ServeExtension`, which turns an `ExtensionHandler` into an extension.
 
-**Source:** [`protocol/extension.go`](https://github.com/LiasCode/rumbo/blob/v0.10.0/protocol/extension.go) for the wire, [`internal/extension/process.go`](https://github.com/LiasCode/rumbo/blob/v0.10.0/internal/extension/process.go) for one process, and [`set.go`](https://github.com/LiasCode/rumbo/blob/v0.10.0/internal/extension/set.go) for the rules on names, replacement, and sections. [Write an extension](/extend/extension/) · [Extensions and MCP](/guides/extensions/).
+**Source:** [`protocol/extension.go`](https://github.com/LiasCode/rumbo/blob/v0.11.0/protocol/extension.go) for the wire, [`internal/extension/process.go`](https://github.com/LiasCode/rumbo/blob/v0.11.0/internal/extension/process.go) for one process, and [`set.go`](https://github.com/LiasCode/rumbo/blob/v0.11.0/internal/extension/set.go) for the rules on names, replacement, and sections. [Write an extension](/extend/extension/) · [Extensions and MCP](/guides/extensions/).

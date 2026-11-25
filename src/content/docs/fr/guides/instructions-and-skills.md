@@ -65,7 +65,7 @@ quand une tâche en a besoin, donc une skill coûte une ligne tant qu'elle n'est
 rumbo skills    # the skills the model is told of here, and those left out, with why
 ```
 
-`/skills` dans l'interface en terminal dit la même chose. Une skill est écartée quand une autre du même
+Dans l'interface en terminal, `/status` montre la même chose à côté de la conversation. Une skill est écartée quand une autre du même
 nom l'a remplacée, ou quand son frontmatter manque, n'est pas fermé, n'est pas du YAML valide ou n'a pas
 de description.
 

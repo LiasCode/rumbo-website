@@ -15,8 +15,8 @@ fallisce, riassumere una cartella di appunti o pilotare un programma desktop.
 
 rumbo si usa così com'è installato. Un solo binario porta:
 
-- **Un'interfaccia da terminale completa**: le sessioni in una barra laterale, la conversazione in
-  Markdown, una tavolozza dei comandi, pannelli e un editor. È ciò che `rumbo` apre. Vedi
+- **Un'interfaccia da terminale completa**: la conversazione in Markdown, un editor che accetta
+  pochi comandi, le sessioni in una barra laterale e pannelli. È ciò che `rumbo` apre. Vedi
   l'[interfaccia da terminale](/it/guides/terminal-ui/).
 - **Tre provider**: `anthropic` per Claude tramite l'API di Anthropic, `openai` per le API di OpenAI
   e qualsiasi server compatibile con Chat Completions, anche locale, e `chatgpt` per un piano

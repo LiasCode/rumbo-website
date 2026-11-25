@@ -29,12 +29,12 @@ rumbo extension add -config '{"url":"https://example.com/mcp"}' docs {self} exte
 
 ### Signing in
 
-A server at a URL that wants a sign-in offers one as a command named after the extension. Registered as `docs`:
+A server at a URL that wants a sign-in starts with no tools and a `login` function. Registered as `docs`, in the terminal UI:
 
 | Command        | Does                                                                                |
 | -------------- | ----------------------------------------------------------------------------------- |
-| `/docs-login`  | Opens the sign-in in your browser. Over ssh, paste the address the browser ends on. |
-| `/docs-logout` | Forgets the sign-in.                                                                |
+| `/login docs`  | Opens the sign-in in your browser. Over ssh, paste the address the browser ends on. |
+| `/logout docs` | Forgets the sign-in.                                                                |
 
 The sign-in is kept with rumbo's other credentials, readable only by you, and renewed as it expires. The server's tools are the model's from the next run.
 
@@ -48,11 +48,14 @@ rumbo extension set files tools= # an empty value gives a field back
 rumbo extension rm files
 ```
 
-From a front end, `/extensions`, `/extension-add`, `/extension-show`, `/extension-set`, and `/extension-rm` do the same. A change applies to the runs that start after it, and the terminal UI offers an extension's commands as soon as it is added:
+From any front end, the host's functions do the same; in the terminal UI, `/extensions` lists, shows, sets, adds, and removes them. A change applies to the runs that start after it, and the terminal UI offers what an extension offers as soon as it is added:
 
 ```text
-/extension-add docs config={"url":"https://example.com/mcp"} {self} extend mcp
+/extensions add docs config={"url":"https://example.com/mcp"} {self} extend mcp
+/extensions files tools=read_text_file,list_directory
 ```
+
+After `/extensions files tools=`, the menu offers every tool the server has, with what it does, one item at a time: the `mcp` extension lists them with a function of its own, `tools`.
 
 Every tool's name, description, and schema is sent to the model with **every request**, whether the task uses it or not. `show` says how many bytes that is. Give the model the tools a task needs, with `tools`, rather than everything a server has.
 
@@ -65,12 +68,12 @@ rumbo extension add -replaces bash guard python3 /path/to/examples/guard.py
 rumbo extension set guard replaces=       # give bash back to rumbo
 ```
 
-[`examples/guard.py`](https://github.com/LiasCode/rumbo/blob/v0.10.0/examples/guard.py) asks before any `rm -rf`, in a dialog, and passes everything else on to rumbo's own `bash`.
+[`examples/guard.py`](https://github.com/LiasCode/rumbo/blob/v0.11.0/examples/guard.py) asks before any `rm -rf`, in a dialog, and passes everything else on to rumbo's own `bash`.
 
 ## What else an extension does
 
 - **Tells the model something when a run starts**, in a section of its own, such as the notes it keeps. It is sent once, and again only when it changes.
-- **Offers you commands**, named after it, such as `/notes-forget`.
+- **Offers you commands**, called after its name, such as `/extensions notes forget` in the terminal UI.
 - **Asks you something** while one of its tools works.
 - **Listens** to what the runs do, to notify you or count what they cost.
 

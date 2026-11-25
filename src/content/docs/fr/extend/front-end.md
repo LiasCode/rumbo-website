@@ -48,7 +48,7 @@ l'hôte (`processes`).
 
 ## Un exemple complet
 
-[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.10.0/examples/frontend.py) est une
+[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.11.0/examples/frontend.py) est une
 interface complète dans un seul fichier Python : elle demande des tâches avec `input()` et affiche les
 événements à mesure qu'ils arrivent.
 
@@ -79,7 +79,7 @@ rumbo frontend add simple python3 /path/to/examples/frontend.py
 rumbo -f simple
 ```
 
-En Go, le paquet [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.10.0/protocol) contient les types
+En Go, le paquet [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.11.0/protocol) contient les types
 et `DialFrontend`, une connexion prête à l'emploi.
 
 ## Des commandes sans les connaître
@@ -91,6 +91,11 @@ qu'elle fonctionne avec un fournisseur qu'elle n'a jamais vu et gagne une nouvel
 changement. Une fonction irréversible le signale, pour que l'interface demande d'abord à la personne ;
 une fonction d'un fournisseur peut poser une question à la personne, dont la réponse peut être secrète
 et ne doit alors être ni affichée ni gardée.
+
+Une interface peut aussi faire ses propres commandes avec ces fonctions, dans les mots de la personne,
+comme le fait l'interface en terminal : `/model` appelle `use` et `session-set`, et `/providers` le
+groupe `provider`. Une fonction qu'aucune n'enveloppe, comme celle d'un hôte plus récent, reste
+proposée sous son nom.
 
 Les [cas d'usage](/fr/reference/use-cases/#front-end) listent ce qu'une interface doit et peut faire,
 et le [protocole](/fr/reference/frontend-protocol/) spécifie chaque message.

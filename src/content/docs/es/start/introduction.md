@@ -16,8 +16,8 @@ carpeta de notas o manejar un programa de escritorio.
 
 rumbo se puede usar tal como se instala. Un solo binario trae:
 
-- **Una interfaz de terminal completa**: las sesiones en una barra lateral, la conversación como
-  Markdown, una paleta de comandos, paneles y un editor. Es lo que abre `rumbo`. Consulta la
+- **Una interfaz de terminal completa**: la conversación como Markdown, un editor que acepta unos
+  pocos comandos, las sesiones en una barra lateral y paneles. Es lo que abre `rumbo`. Consulta la
   [interfaz de terminal](/es/guides/terminal-ui/).
 - **Tres proveedores**: `anthropic` para Claude mediante la API de Anthropic, `openai` para las API
   de OpenAI y cualquier servidor compatible con Chat Completions, incluidos los locales, y `chatgpt`

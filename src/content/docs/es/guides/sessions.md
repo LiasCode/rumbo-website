@@ -48,8 +48,10 @@ uno de tus mensajes, y sigue desde ahí. La sesión de la que viene queda como e
 trabajando al mismo tiempo.
 
 - En la interfaz de terminal, Shift-Tab sube a la conversación; Enter sobre uno de tus mensajes lo
-  cambia, o lo vuelve a preguntar, en una rama que empieza antes de él.
-- `/branch` ramifica la sesión tal como está y dice qué sesión es la rama.
+  cambia, o lo vuelve a preguntar, en una rama que empieza antes de él, y `b` ramifica desde el
+  mensaje con el que empezó la tarea elegida, una vez que lo aceptas.
+- `/branch` ramifica la sesión tal como está y dice qué sesión es la rama; `/branch <n>` la empieza
+  antes de tu mensaje número `n`, que queda en el editor de la rama.
 
 El rumbo que hizo una rama se queda en su sesión, y otro sigue en la rama: la interfaz de terminal lo
 arranca y la muestra, y en otros casos lo hace `rumbo -s <session>`. Una rama se titula "Branch"
@@ -69,8 +71,9 @@ rumbo sessions rm <session>...          # delete sessions and their history
 rumbo sessions prune 30d                # list those not used in 30 days; -yes deletes them
 ```
 
-Una sesión que está usando un proceso de rumbo nunca se borra. En la interfaz de terminal, `/rename`
-le da un título a la sesión que se muestra, y `/delete` la borra una vez que lo aceptas. La sesión en
+Una sesión que está usando un proceso de rumbo nunca se borra. En la interfaz de terminal,
+`/sessions` lista las sesiones de la carpeta, `/rename` le da un título a la sesión que se muestra, y
+`/delete [session]` la borra, o borra la nombrada, una vez que lo aceptas. La sesión en
 la que se arrancó rumbo queda retenida hasta que sales, así que bórrala después, con
 `rumbo sessions rm`.
 
@@ -104,5 +107,5 @@ puedes ver exactamente qué recibió el modelo.
 
 `/export` en la interfaz de terminal escribe la sesión como Markdown: lo que se pidió, lo que escribió
 el modelo, cada llamada a una herramienta con el cambio que hizo o el principio de lo que devolvió, y
-cómo terminó cada ejecución. Escribe `rumbo-<session>.md` en el directorio en el que trabaja la
+cómo terminó cada ejecución y cuánto tardó. Escribe `rumbo-<session>.md` en el directorio en el que trabaja la
 sesión, o en la ruta que indiques, y nunca sobre un archivo que ya existe.

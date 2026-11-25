@@ -15,7 +15,7 @@ stdout solo lleva mensajes del protocolo. Los diagnósticos van a stderr, que ll
 
 ## Un ejemplo completo
 
-[examples/extension.py](https://github.com/LiasCode/rumbo/blob/v0.10.0/examples/extension.py) es una extensión entera en un archivo de Python. Guarda notas: una herramienta para recordar una, una sección que se las dice todas al modelo y un comando que las olvida. Así responde a una llamada:
+[examples/extension.py](https://github.com/LiasCode/rumbo/blob/v0.11.0/examples/extension.py) es una extensión entera en un archivo de Python. Guarda notas: una herramienta para recordar una, una sección que se las dice todas al modelo y un comando que las olvida. Así responde a una llamada:
 
 ```python
 def call(params):
@@ -50,7 +50,7 @@ tools, declared to the model in every request (161 bytes):
   remember  Keep a note for later in this rumbo.
 ```
 
-En Go, el paquete [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.10.0/protocol) tiene los tipos y `ServeExtension`, un servidor ya hecho.
+En Go, el paquete [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.11.0/protocol) tiene los tipos y `ServeExtension`, un servidor ya hecho.
 
 ## Qué debe hacer una extensión
 
@@ -63,9 +63,10 @@ En Go, el paquete [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.10.0/pr
 ## Qué puede hacer una extensión
 
 - **Decirle algo al modelo cuando empieza una ejecución**, declarando `sections`. El host pide el texto de cada una; tiene 10 segundos para responder y se transmiten 8000 bytes como mucho.
-- **Ofrecer comandos a la persona**, declarando `functions`. Una interfaz muestra `forget`, de una extensión registrada como `notes`, como `/notes-forget`.
+- **Ofrecer comandos a la persona**, declarando `functions`. La interfaz de terminal llama a `forget`, de una extensión registrada como `notes`, como `/extensions notes forget`.
+- **Listar los valores de un campo de su configuración**, con una función con el nombre del campo marcada `lists`. La interfaz de terminal completa el campo con ellos, como hace con `tools` en la extensión `mcp`.
 - **Hablar con la persona** mientras trabaja una herramienta o un comando: `delta` dice algo y `ask` hace una pregunta, cuya respuesta puede marcarse como secreta.
-- **Llamar a las herramientas de rumbo** mientras responde a una llamada, que es como una que sustituye a `bash` deja pasar lo que acepta. [examples/guard.py](https://github.com/LiasCode/rumbo/blob/v0.10.0/examples/guard.py) lo hace.
+- **Llamar a las herramientas de rumbo** mientras responde a una llamada, que es como una que sustituye a `bash` deja pasar lo que acepta. [examples/guard.py](https://github.com/LiasCode/rumbo/blob/v0.11.0/examples/guard.py) lo hace.
 - **Enterarse de lo que hacen las ejecuciones**, declarando los `events` que quiere, como `ended`.
 - **Avisar de que lo que declara cambió**, con `changed`, como cuando un inicio de sesión le da herramientas.
 

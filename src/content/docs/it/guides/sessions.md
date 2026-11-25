@@ -49,8 +49,10 @@ tuoi messaggi, e prosegue da lì. La sessione di partenza resta com'era, e può 
 nello stesso momento.
 
 - Nell'interfaccia da terminale, Maiusc-Tab sale nella conversazione; Invio su uno dei tuoi messaggi lo
-  modifica, o lo ripropone, in un ramo che inizia prima di esso.
-- `/branch` dirama la sessione così com'è, e dice quale sessione è il ramo.
+  modifica, o lo ripropone, in un ramo che inizia prima di esso, e `b` crea un ramo dal messaggio con
+  cui è iniziato il compito scelto, dopo il tuo consenso.
+- `/branch` dirama la sessione così com'è, e dice quale sessione è il ramo; `/branch <n>` lo fa
+  iniziare prima del tuo messaggio numero `n`, che finisce nel campo di scrittura del ramo.
 
 Il rumbo che ha creato un ramo resta nella sua sessione, e un altro prosegue nel ramo: l'interfaccia
 da terminale lo avvia e lo mostra, e altrove lo fa `rumbo -s <session>`. Un ramo si intitola "Branch"
@@ -70,7 +72,8 @@ rumbo sessions prune 30d                # list those not used in 30 days; -yes d
 ```
 
 Una sessione che un processo rumbo sta usando non viene mai eliminata. Nell'interfaccia da terminale,
-`/rename` dà un titolo alla sessione mostrata, e `/delete` la elimina dopo il tuo consenso. La
+`/sessions` elenca le sessioni della cartella, `/rename` dà un titolo alla sessione mostrata, e
+`/delete [session]` la elimina, o elimina quella nominata, dopo il tuo consenso. La
 sessione in cui è stato avviato rumbo resta trattenuta finché non esci: eliminala dopo, con
 `rumbo sessions rm`.
 
@@ -105,5 +108,5 @@ andata male, puoi vedere esattamente cosa ha ricevuto il modello.
 
 `/export` nell'interfaccia da terminale scrive la sessione come Markdown: ciò che è stato chiesto, ciò
 che ha scritto il modello, ogni chiamata a uno strumento con la modifica fatta o l'inizio di ciò che ha
-restituito, e com'è finita ogni esecuzione. Scrive `rumbo-<session>.md` nella directory in cui lavora la
+restituito, e com'è finita ogni esecuzione e quanto è durata. Scrive `rumbo-<session>.md` nella directory in cui lavora la
 sessione, o nel percorso che indichi, e mai sopra un file esistente.

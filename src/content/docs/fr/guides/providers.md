@@ -24,8 +24,9 @@ rumbo provider set anthropic model=claude-opus-5-5   # the model they start with
 rumbo -p openai -m <model> "a task"                  # another one, for this session
 ```
 
-Dans l'interface en terminal, `/use <provider> [model]` les change pour la session, et le sélecteur
-sous la zone de saisie les liste.
+Dans l'interface en terminal, `/model <provider>/<model>` les change pour la session, `/model` seul
+ouvre le sélecteur qui les liste, et `/providers` liste, affiche, configure, ajoute et retire les
+fournisseurs.
 
 ## Anthropic
 
@@ -59,13 +60,13 @@ Le fournisseur `chatgpt` utilise votre abonnement ChatGPT au lieu d'une clé d'A
 propose aux applications open source qui tournent chez vous.
 
 ```sh
-rumbo -p chatgpt                           # then /login signs in with ChatGPT, and /use chatgpt lists the plan's models
+rumbo -p chatgpt                           # then /login signs in with ChatGPT, and /model chatgpt/ lists the plan's models
 rumbo provider set chatgpt model=<model>   # the one new sessions there start with
 ```
 
 `/login` ouvre une connexion dans le navigateur, qui revient à rumbo sur cette machine ; depuis une
 autre machine, collez l'adresse sur laquelle le navigateur s'arrête. Son usage est décompté de votre
-abonnement, que vous gérez dans les réglages de ChatGPT ; `/account` vous dit où.
+abonnement, que vous gérez dans les réglages de ChatGPT ; sa fonction `account` vous dit où.
 
 ## Modèles locaux et autres serveurs
 
@@ -86,13 +87,14 @@ enregistré pour cette adresse.
 
 ## Se connecter
 
-Les fournisseurs intégrés proposent des fonctions que chaque interface affiche comme des commandes :
+Les fournisseurs intégrés proposent trois fonctions, qu'une interface propose comme des commandes.
+Dans l'interface en terminal, ce sont celles du fournisseur de la session :
 
-| Commande   | Action                                                                                                                                     |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `/login`   | `anthropic` et `openai` demandent une clé d'API, la vérifient avec une requête gratuite et la gardent ; `chatgpt` se connecte avec ChatGPT |
-| `/logout`  | Oublier la clé ou la connexion                                                                                                             |
-| `/account` | Dire quel identifiant est utilisé et d'où il vient, sans l'afficher                                                                        |
+| Commande                    | Action                                                                                                                                     |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `/login`                    | `anthropic` et `openai` demandent une clé d'API, la vérifient avec une requête gratuite et la gardent ; `chatgpt` se connecte avec ChatGPT |
+| `/logout`                   | Oublier la clé ou la connexion                                                                                                             |
+| `/providers <name> account` | Dire quel identifiant est utilisé et d'où il vient, sans l'afficher                                                                        |
 
 Les clés sont gardées dans `~/.config/rumbo/credentials/`, lisibles par vous seul. Un secret que vous
 tapez à la question d'un fournisseur va au seul fournisseur et n'est enregistré nulle part.
@@ -108,7 +110,7 @@ rumbo -o effort=low "a quick task"          # this session only
 rumbo provider set anthropic effort=        # back to the provider's default
 ```
 
-Dans l'interface en terminal, `/session-set effort=low` la règle pour la session. Voir la
+Dans l'interface en terminal, `/model effort=low` la règle pour la session. Voir la
 [configuration](/fr/guides/configuration/) pour comprendre comment les niveaux s'articulent.
 
 ## Votre propre fournisseur

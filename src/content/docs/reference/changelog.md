@@ -3,32 +3,33 @@ title: Releases
 description: What each release of rumbo brought, which one this site describes, and whether the development branch has anything no release does yet.
 ---
 
-This site describes **rumbo 0.10.0**. The exact notes of every release are in the repository's [CHANGELOG](https://github.com/LiasCode/rumbo/blob/main/CHANGELOG.md), and the archives on its [releases page](https://github.com/LiasCode/rumbo/releases).
+This site describes **rumbo 0.11.0**. The exact notes of every release are in the repository's [CHANGELOG](https://github.com/LiasCode/rumbo/blob/main/CHANGELOG.md), and the archives on its [releases page](https://github.com/LiasCode/rumbo/releases).
 
 ## Unreleased
 
-Nothing yet: the `main` branch is the 0.10.0 release. [What changes after 0.10.0](/reference/next/).
+Nothing yet: the `main` branch is the 0.11.0 release. [What changes after 0.11.0](/reference/next/).
 
-## 0.10.0 (2026-11-25)
+## 0.11.0 (2026-11-25)
 
-**The current release.** A rumbo is one session.
+**The current release.** The terminal UI does everything with a few commands typed in the composer.
 
-- **One rumbo, one session.** Each `rumbo` works in a session of its own, with its own provider and extensions; another session is another `rumbo`. `-single` is gone. [Sessions](/guides/sessions/#one-rumbo-one-session).
-- **A session's root is where it was started.** rumbo no longer looks for a Git repository: `-c`, `rumbo sessions`, and the `AGENTS.md`, `CLAUDE.md`, and `.agents/skills/` read are those of the starting directory alone.
-- `/sessions`, `/projects`, `/open`, `/new`, and `/prune` are gone. `rumbo sessions`, `rm`, and `prune` manage sessions, and `rumbo sessions -json` lists them for a program.
-- `/branch` says which session it made, and another rumbo goes on in it. A branch is titled after the session it came from.
-- **The terminal UI** starts a rumbo for each session you show, closes those left with nothing to do, and has `/rumbos`, `/delete`, and `/processes`.
-- **The front end protocol is at version 2**, and a front end that speaks version 1 is refused. It adds `processes`, `title`, and the `extension` group of functions. [Front end protocol](/reference/frontend-protocol/).
-- **Extensions are managed from any front end**: `/extensions`, `/extension-add`, `/extension-show`, `/extension-set`, and `/extension-rm`.
-- `{self}` is any word of a command, not only the first.
-- Going back, rumbo 0.9.0 lists a session this version made or changed only with `rumbo sessions -all`, and continues it with `-s <session>`.
+- **The command palette is gone.** A slash on an empty line starts a command, and so does Ctrl-P. [Terminal UI](/guides/terminal-ui/#commands).
+- **Fewer commands, in your words**: `/new`, `/sessions`, `/resume`, `/rename`, `/branch`, `/compact`, `/delete`, `/copy`, `/export`, `/status`, `/changes`, `/model`, `/login`, `/logout`, `/providers`, `/extensions`, `/settings`, `/rumbos`, `/help`, and `/quit`. They take the place of `/use`, `/session-set`, `/config`, `/system-set`, `/skills`, `/processes`, every `/provider-…` and `/extension-…`, and the commands named after an extension, which are called as `/extensions <name> <function>`.
+- **Every word is completed**: what a command still takes shows after the cursor, the menu shows an example, a command typed wrong is answered with the one meant, and `/extensions <name> tools=` chooses an MCP server's tools from all it has.
+- **More room for the conversation.** The bar at the top is gone, the sidebar starts put away (Ctrl-B), and the conversation takes the whole width. Under the composer are the Git branch and the folder, and how many runs work in other sessions.
+- **The keys of the conversation and the sidebar**: j and k, gg and G, K and J between your messages, c to copy, and b to branch from your message; d deletes a session in the sidebar, which says how long ago each was used.
+- The line under a finished task gives its tokens in and out, then what the cache gave, and a session you continue says how long each earlier task took, as `/export` does.
+- **Copying works in more terminals**: also through the desktop's clipboard, or tmux's buffer, when the terminal does not take OSC 52.
+- The `mcp` extension lists every tool its server has with a function of its own, `tools`. Its sign-in is `/login <name>`.
+- **The front end protocol stays at version 2.** A history's `ended` has `took`, how long the run took in milliseconds, and what the host answers no longer names its functions as commands. [Front end protocol](/reference/frontend-protocol/#event).
 
-[Release](https://github.com/LiasCode/rumbo/releases/tag/v0.10.0) · [What changed in the source](https://github.com/LiasCode/rumbo/compare/v0.9.0...v0.10.0)
+[Release](https://github.com/LiasCode/rumbo/releases/tag/v0.11.0) · [What changed in the source](https://github.com/LiasCode/rumbo/compare/v0.10.0...v0.11.0)
 
 ## Earlier releases
 
 | Version | Date       | What it brought                                                                                        |
 | ------- | ---------- | ------------------------------------------------------------------------------------------------------ |
+| 0.10.0  | 2026-11-25 | A rumbo is one session, rooted where it starts. The front end protocol is at version 2.                |
 | 0.9.0   | 2026-11-24 | Extensions, MCP servers, and plugins. rumbo's own providers and terminal UI become the `rumbo` plugin. |
 | 0.8.1   | 2026-11-23 | Misspelled commands and configuration fields are refused, saying where, instead of being ignored.      |
 | 0.8.0   | 2026-11-23 | The terminal UI takes the whole screen, with the sessions in a sidebar. Images go with what you ask.   |

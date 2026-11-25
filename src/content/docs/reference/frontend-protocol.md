@@ -1,11 +1,11 @@
 ---
 title: Agent Frontend Protocol
-description: Version 2 of the protocol between a front end and the rumbo host, as rumbo 0.10.0 speaks it. Both ways of connecting, one host per session, every method, every event, and the functions the host offers, from the source.
+description: Version 2 of the protocol between a front end and the rumbo host, as rumbo 0.11.0 speaks it. Both ways of connecting, one host per session, every method, every event, and the functions the host offers, from the source.
 ---
 
 A front end is the program a person uses: it sends tasks and shows what happens. It speaks **JSON-RPC 2.0, one object per line**, with the host. Lines that are not JSON are skipped.
 
-This page describes **version 2, in rumbo 0.10.0**. rumbo 0.9.0 spoke version 1, in which one host worked in several sessions of a project. A host and a front end that speak different versions refuse each other in `initialize`.
+This page describes **version 2, which rumbo 0.11.0 speaks, as 0.10.0 did**. rumbo 0.9.0 spoke version 1, in which one host worked in several sessions of a project. A host and a front end that speak different versions refuse each other in `initialize`.
 
 ## Two ways to connect
 
@@ -105,18 +105,18 @@ Other requests can be sent while the run works, without waiting for its result. 
 
 Every event has a `type`. `run` is the id of the run request it belongs to and `session` the session of that run; both are absent for what belongs to no run. `invoke` is set instead on what a function says while it works.
 
-| `type`          | Other fields                 | Meaning                                                                                                                    |
-| --------------- | ---------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `context`       | `sections`                   | The names of the context sections sent to the model.                                                                       |
-| `text`          | `text`                       | A piece of the model's visible answer, or something a function says.                                                       |
-| `tool_started`  | `name`, `args`               | The model called a tool.                                                                                                   |
-| `tool_progress` | `name`, `text`               | What a call says it is doing, when it says.                                                                                |
-| `tool_finished` | `name`, `result`, `failed`   | The call ended.                                                                                                            |
-| `turn`          | `usage`, `context`, `window` | One model response: its tokens, how many the conversation now takes, and how many the model holds, when the provider said. |
-| `log`           | `text`, `source`             | A diagnostic: the provider's own output, an extension's, or something the host did, such as retrying a request.            |
-| `objective`     | `text`, `images`             | In a history only: the task a run was given.                                                                               |
-| `steer`         | `text`, `images`             | In a history only: what the person told a run while it worked.                                                             |
-| `ended`         | `status`, `text`             | In a history only: how a run ended, and why a failed one failed.                                                           |
+| `type`          | Other fields                 | Meaning                                                                                                                     |
+| --------------- | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `context`       | `sections`                   | The names of the context sections sent to the model.                                                                        |
+| `text`          | `text`                       | A piece of the model's visible answer, or something a function says.                                                        |
+| `tool_started`  | `name`, `args`               | The model called a tool.                                                                                                    |
+| `tool_progress` | `name`, `text`               | What a call says it is doing, when it says.                                                                                 |
+| `tool_finished` | `name`, `result`, `failed`   | The call ended.                                                                                                             |
+| `turn`          | `usage`, `context`, `window` | One model response: its tokens, how many the conversation now takes, and how many the model holds, when the provider said.  |
+| `log`           | `text`, `source`             | A diagnostic: the provider's own output, an extension's, or something the host did, such as retrying a request.             |
+| `objective`     | `text`, `images`             | In a history only: the task a run was given.                                                                                |
+| `steer`         | `text`, `images`             | In a history only: what the person told a run while it worked.                                                              |
+| `ended`         | `status`, `text`, `took`     | In a history only: how a run ended, why a failed one failed, and how long it took, in milliseconds, when the session knows. |
 
 Ignore a type or a field you do not know. A live run is over when its `run` request is answered, not when text stops arriving.
 
@@ -132,7 +132,7 @@ Ignore a type or a field you do not know. A live run is over when its `run` requ
 
 `invoke` takes the function's `name`, its `params`, and a `target`: `provider` (the default), `host`, or `extension`, which `extension` then names. A function of the host answers `{ "text", "values", "state" }`: the outcome in words, the values of a function that lists something, and what the front end is attached to after the call (`dir`, `session`, `title`, `provider`, `model`), since the call may have changed it. `branch` answers with the session it made as its one value, and the host stays in its own: another host goes on in the branch, started with `-s` and that id.
 
-The host of rumbo 0.10.0 offers these, by `group`:
+The host of rumbo 0.11.0 offers these, by `group`:
 
 | Group       | Functions                                                                                                         |
 | ----------- | ----------------------------------------------------------------------------------------------------------------- |
@@ -165,6 +165,6 @@ Do not take a role you do not know for an error; more may be added. A front end 
 
 ## In Go
 
-The [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.10.0/protocol) package has these types and `DialFrontend`, which answers `initialize` and returns a connection whose methods are the requests above.
+The [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.11.0/protocol) package has these types and `DialFrontend`, which answers `initialize` and returns a connection whose methods are the requests above.
 
-**Source:** [`protocol/frontend.go`](https://github.com/LiasCode/rumbo/blob/v0.10.0/protocol/frontend.go) for the wire, [`internal/frontend/frontend.go`](https://github.com/LiasCode/rumbo/blob/v0.10.0/internal/frontend/frontend.go) for the host's side and the two pipes, and [`internal/cli/functions.go`](https://github.com/LiasCode/rumbo/blob/v0.10.0/internal/cli/functions.go) for the host's functions. [Write a front end](/extend/front-end/).
+**Source:** [`protocol/frontend.go`](https://github.com/LiasCode/rumbo/blob/v0.11.0/protocol/frontend.go) for the wire, [`internal/frontend/frontend.go`](https://github.com/LiasCode/rumbo/blob/v0.11.0/internal/frontend/frontend.go) for the host's side and the two pipes, and [`internal/cli/functions.go`](https://github.com/LiasCode/rumbo/blob/v0.11.0/internal/cli/functions.go) for the host's functions. [Write a front end](/extend/front-end/).

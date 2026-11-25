@@ -62,7 +62,7 @@ skill when a task needs it, so a skill costs a line until it is used.
 rumbo skills    # the skills the model is told of here, and those left out, with why
 ```
 
-`/skills` in the terminal UI says the same. A skill is left out when one of the same name replaced
+In the terminal UI, `/status` shows the same beside the conversation. A skill is left out when one of the same name replaced
 it, or when its frontmatter is missing, unclosed, not valid YAML, or has no description.
 
 ## The environment

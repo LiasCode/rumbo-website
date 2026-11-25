@@ -78,4 +78,4 @@ What you agree to must be all it asks for, and an update that asks for more is r
 
 > A plugin's build and its programs run as you, with your rights. Add one whose code you trust.
 
-**Source:** [`internal/cli/plugins.go`](https://github.com/LiasCode/rumbo/blob/v0.10.0/internal/cli/plugins.go), [`internal/cli/programs.go`](https://github.com/LiasCode/rumbo/blob/v0.10.0/internal/cli/programs.go), rumbo's [own manifest](https://github.com/LiasCode/rumbo/blob/v0.10.0/plugins/rumbo/plugin.yaml), and a [plugin to copy from](https://github.com/LiasCode/rumbo/tree/v0.10.0/examples/plugin). [Install a plugin](/guides/plugins/).
+**Source:** [`internal/cli/plugins.go`](https://github.com/LiasCode/rumbo/blob/v0.11.0/internal/cli/plugins.go), [`internal/cli/programs.go`](https://github.com/LiasCode/rumbo/blob/v0.11.0/internal/cli/programs.go), rumbo's [own manifest](https://github.com/LiasCode/rumbo/blob/v0.11.0/plugins/rumbo/plugin.yaml), and a [plugin to copy from](https://github.com/LiasCode/rumbo/tree/v0.11.0/examples/plugin). [Install a plugin](/guides/plugins/).

@@ -24,8 +24,8 @@ rumbo provider set anthropic model=claude-opus-5-5   # the model they start with
 rumbo -p openai -m <model> "a task"                  # another one, for this session
 ```
 
-In the terminal UI, `/use <provider> [model]` changes them for the session, and the picker under
-the composer lists them.
+In the terminal UI, `/model <provider>/<model>` changes them for the session, `/model` alone opens
+the picker that lists them, and `/providers` lists, shows, sets up, adds, and removes providers.
 
 ## Anthropic
 
@@ -59,13 +59,13 @@ The `chatgpt` provider uses your ChatGPT plan instead of an API key, as OpenAI o
 apps that run where you do.
 
 ```sh
-rumbo -p chatgpt                           # then /login signs in with ChatGPT, and /use chatgpt lists the plan's models
+rumbo -p chatgpt                           # then /login signs in with ChatGPT, and /model chatgpt/ lists the plan's models
 rumbo provider set chatgpt model=<model>   # the one new sessions there start with
 ```
 
 `/login` opens a sign-in in the browser, which comes back to rumbo on this machine; from another
 computer, paste the address the browser ends on. Its usage counts against your plan, which you
-manage in your ChatGPT settings; `/account` says where.
+manage in your ChatGPT settings; its `account` function says where.
 
 ## Local models and other servers
 
@@ -86,13 +86,14 @@ address.
 
 ## Signing in
 
-The built-in providers offer functions that every front end shows as commands:
+The built-in providers offer three functions, which a front end offers as commands. In the
+terminal UI, they are of the session's provider:
 
-| Command    | Does                                                                                                                                  |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `/login`   | `anthropic` and `openai` ask for an API key, check it with a request that costs nothing, and keep it; `chatgpt` signs in with ChatGPT |
-| `/logout`  | Forget the key or the sign-in                                                                                                         |
-| `/account` | Say which credential is in use and where it comes from, without showing it                                                            |
+| Command                     | Does                                                                                                                                  |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `/login`                    | `anthropic` and `openai` ask for an API key, check it with a request that costs nothing, and keep it; `chatgpt` signs in with ChatGPT |
+| `/logout`                   | Forget the key or the sign-in                                                                                                         |
+| `/providers <name> account` | Say which credential is in use and where it comes from, without showing it                                                            |
 
 Keys are kept in `~/.config/rumbo/credentials/`, readable only by you. A secret you type at a
 provider's question goes to the provider alone, and is recorded nowhere.
@@ -108,7 +109,7 @@ rumbo -o effort=low "a quick task"          # this session only
 rumbo provider set anthropic effort=        # back to the provider's default
 ```
 
-In the terminal UI, `/session-set effort=low` sets it for the session. See
+In the terminal UI, `/model effort=low` sets it for the session. See
 [configuration](/guides/configuration/) for how the levels fit.
 
 ## A provider of your own

@@ -71,9 +71,10 @@ rumbo -p openai -m <model> -o effort=low "a task"   # choose for a new session
 In the terminal UI:
 
 ```text
-/use openai <model>       the provider and model of this session
-/session-set effort=low   an option, for this session only
-/session-set effort=      back to the provider's value
+/model openai/<model>     the provider and model of this session
+/model effort=low         an option, for this session only
+/model effort=            back to the provider's value
+/settings                 what applies here, and where each value comes from
 ```
 
 A run keeps what it started with; a change applies to the next one.

@@ -27,7 +27,7 @@ stdout carries only protocol messages. Diagnostics go to stderr, which reaches t
 
 ## A complete example
 
-[examples/provider.py](https://github.com/LiasCode/rumbo/blob/v0.10.0/examples/provider.py) is a whole
+[examples/provider.py](https://github.com/LiasCode/rumbo/blob/v0.11.0/examples/provider.py) is a whole
 provider in one Python file, with no model behind it: it asks for one tool call, then repeats the
 tool's output. This is its loop:
 
@@ -62,7 +62,7 @@ rumbo -p toy -m any "list the files"
 ```
 
 rumbo starts a provider when you add it, which is the test that it works. In Go, the
-[`protocol`](https://github.com/LiasCode/rumbo/tree/v0.10.0/protocol) package has the types and
+[`protocol`](https://github.com/LiasCode/rumbo/tree/v0.11.0/protocol) package has the types and
 `Serve`, a ready-made server.
 
 ## What a provider must do

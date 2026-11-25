@@ -1,9 +1,9 @@
 ---
 title: What each part can do
-description: What the rumbo host, a provider, a front end, an extension, and a plugin must do, can do, and never do in rumbo 0.10.0, with where to read more.
+description: What the rumbo host, a provider, a front end, an extension, and a plugin must do, can do, and never do in rumbo 0.11.0, with where to read more.
 ---
 
-Find the part you are working on, and what it is allowed to do. Each line was checked against the source of rumbo 0.10.0; the protocol pages have the frames.
+Find the part you are working on, and what it is allowed to do. Each line was checked against the source of rumbo 0.11.0; the protocol pages have the frames.
 
 ## Host
 
@@ -19,8 +19,8 @@ Find the part you are working on, and what it is allowed to do. Each line was ch
 | See exactly what the model was sent | `rumbo request <session> [turn]`, and `rumbo log <session>` for every entry.                                   |
 | Keep a long session going           | [Compaction](/guides/sessions/#compaction) summarizes it near the model's limit, or `/compact` when you ask.   |
 | Show the model a picture            | `images` on `run` or `steer`; the `read` tool looks at an image file.                                          |
-| Manage providers and extensions     | `rumbo provider` and `rumbo extension`, or their functions from any front end, such as `/extension-add`.       |
-| See what a rumbo costs the machine  | `processes`, or `/processes`: each process, its memory, and its processor time.                                |
+| Manage providers and extensions     | `rumbo provider` and `rumbo extension`, or their functions from any front end, such as `/extensions add`.      |
+| See what a rumbo costs the machine  | `processes`, or `/rumbos`: each process, its memory, and its processor time.                                   |
 | Limit what the agent can touch      | Run rumbo in a container, a virtual machine, or another account. There are no permission prompts.              |
 
 ## Provider
@@ -51,7 +51,7 @@ A front end **must** answer `initialize`, send the `run` for a task or a resume 
 | Show a run as it happens                 | `event`.                                                            |
 | Offer every command without knowing them | The functions in `initialize` and `describe`, called with `invoke`. |
 | Offer the provider's models and options  | `describe`.                                                         |
-| Show a session it did not follow         | `history`.                                                          |
+| Show a session it did not follow         | `history`, which says how long each run took.                       |
 | Bring back what the person asked before  | `recall`.                                                           |
 | Show several sessions                    | A `rumbo serve` for each, found with `rumbo sessions -json`.        |
 | Say what its hosts cost                  | `processes`, asked of each host.                                    |
@@ -69,7 +69,8 @@ An extension **must** answer `initialize`, and every `call` to a tool it declare
 | Take the place of one of rumbo's tools        | A tool of that name, once the person agreed with `-replaces`. |
 | Use rumbo's own tools while it answers a call | A `call` request of its own.                                  |
 | Tell the model something when a run starts    | `sections`.                                                   |
-| Offer the person commands                     | `functions`, shown as `/<extension>-<function>`.              |
+| Offer the person commands                     | `functions`, as `/extensions <extension> <function>`.         |
+| Have a configuration field completed          | A function of the field's name, marked `lists`.               |
 | Ask the person something, from a tool         | `ask`, such as whether a command may run.                     |
 | Hear what the runs do                         | `events`.                                                     |
 | Change what it declares                       | `changed`; the host starts it again before the next run.      |

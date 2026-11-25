@@ -44,7 +44,7 @@ person asked before (`recall`), and say what the host's processes use (`processe
 
 ## A complete example
 
-[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.10.0/examples/frontend.py) is a whole
+[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.11.0/examples/frontend.py) is a whole
 front end in one Python file: it asks for tasks with `input()` and prints events as they arrive.
 
 ```python
@@ -74,7 +74,7 @@ rumbo frontend add simple python3 /path/to/examples/frontend.py
 rumbo -f simple
 ```
 
-In Go, the [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.10.0/protocol) package has the
+In Go, the [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.11.0/protocol) package has the
 types and `DialFrontend`, a ready-made connection.
 
 ## Commands without knowing them
@@ -85,6 +85,10 @@ forms, and pickers from those descriptions, so it works with a provider it has n
 gains a new function without a change. A function that cannot be undone says so, for the front end
 to ask the person first; a provider's function can ask the person a question, whose answer may be
 secret and must then be neither shown nor kept.
+
+A front end can also make commands of its own out of those functions, in its person's words, as
+the terminal UI does: `/model` calls `use` and `session-set`, and `/providers` the `provider` group.
+A function none of them wraps, as one a newer host has, is still offered under its name.
 
 The [use cases](/reference/use-cases/#front-end) list what a front end must and can do, and the
 [protocol](/reference/frontend-protocol/) specifies every message.

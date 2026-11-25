@@ -47,8 +47,10 @@ of your messages, and goes on from there. The session it came from stays as it w
 working at the same time.
 
 - In the terminal UI, Shift-Tab goes up into the conversation; Enter on one of your messages
-  changes it, or asks it again, in a branch that starts before it.
-- `/branch` branches the session as it is, and says which session the branch is.
+  changes it, or asks it again, in a branch that starts before it, and `b` branches from the
+  message the chosen task started with, once you agree.
+- `/branch` branches the session as it is, and says which session the branch is; `/branch <n>`
+  starts it before your message number `n`, which goes in the branch's composer.
 
 The rumbo that made a branch stays in its session, and another goes on in the branch: the terminal
 UI starts it and shows it, and elsewhere `rumbo -s <session>` does. A branch is titled "Branch",
@@ -67,9 +69,10 @@ rumbo sessions rm <session>...          # delete sessions and their history
 rumbo sessions prune 30d                # list those not used in 30 days; -yes deletes them
 ```
 
-A session that a rumbo process is using is never deleted. In the terminal UI, `/rename` gives the
-session shown a title, and `/delete` deletes it once you agree. The session rumbo was started in is
-held until you quit, so delete that one afterwards, with `rumbo sessions rm`.
+A session that a rumbo process is using is never deleted. In the terminal UI, `/sessions` lists
+the sessions of the folder, `/rename` gives the session shown a title, and `/delete [session]`
+deletes it, or the one named, once you agree. The session rumbo was started in is held until you
+quit, so delete that one afterwards, with `rumbo sessions rm`.
 
 ## Compaction
 
@@ -101,6 +104,6 @@ the model was given.
 ## Export
 
 `/export` in the terminal UI writes the session as Markdown: what was asked, what the model wrote,
-each tool call with the change it made or the start of what it returned, and how each run ended. It
-writes `rumbo-<session>.md` in the directory the session works in, or the path you give, and never
-over a file that exists.
+each tool call with the change it made or the start of what it returned, and how each run ended and
+how long it took. It writes `rumbo-<session>.md` in the directory the session works in, or the path
+you give, and never over a file that exists.

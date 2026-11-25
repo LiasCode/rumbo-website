@@ -1,11 +1,12 @@
 ---
 title: Terminal UI
-description: Use rumbo's terminal UI. Sessions in a sidebar, the conversation, a composer, a command palette, panels with session details and Git changes, and every key it takes.
+description: Use rumbo's terminal UI. The conversation over the whole screen, a composer, a few commands typed in it, the sessions in a sidebar, panels with session details and Git changes, and every key it takes.
 ---
 
-`rumbo` in a terminal opens the terminal UI over the whole screen: a header with the folder and
-the session shown, the sessions started in that folder in a sidebar, the conversation in a column of its own,
-and under it a composer with the model, how full the context is, and what the session spent.
+`rumbo` in a terminal opens the terminal UI over the whole screen: the conversation across it, and
+under it a composer with the model, the Git branch checked out, the folder (under your home as
+`~/`), how full the context is, and what the session spent. The sessions started in that folder are
+in a sidebar, put away until Ctrl-B shows it.
 
 ```sh
 rumbo                      # open it
@@ -25,81 +26,157 @@ Markdown file.
 - A tool call shows with a spinner and its time while it works, and then as a block that says how
   it went: an edit with the lines it changed, a command with the start of what it printed, or, when
   it failed, its status and the end of what it printed.
-- A run ends with a line that says how it ended, how long it took, and its turns and tokens.
+- How the run stands, its spinner and its time, shows over the composer.
+- A run ends with a line that says how it ended, how long it took, its tokens in and out, what the
+  cache gave with its share of what went in, and its turns:
+  `12.3s · 1.1k in · 810 out · 26.5k cached (96%) · 1 turn`. A session you continue says how long
+  each of its earlier tasks took too.
 - Enter during a run tells the run what you typed. It reaches the model before its next request,
   without stopping it.
 - When a run ends while the terminal is not in front, it rings the bell and sends a desktop
   notification, in the terminals that report their focus and take OSC 9 (in tmux, with
   `focus-events` on).
 
-## Sessions
-
-The sidebar lists the sessions started in the folder rumbo was started in. Each is a rumbo of its
-own, which the terminal UI starts when you first show the session and ends when you quit, so a run
-goes on in its session while you look at another. The sidebar marks the sessions that are working,
-those whose run ended while they were not shown, and, with a ring, those a rumbo is still open for.
-
-| Key                                       | Does                                       |
-| ----------------------------------------- | ------------------------------------------ |
-| Tab (on an empty composer), arrows, Enter | Show a session of the sidebar              |
-| Ctrl-N                                    | Start a new session, in a rumbo of its own |
-| Ctrl-B                                    | Show or put away the sidebar               |
-
-The rumbos of the sessions you left with nothing to do are closed past the two shown last, so they
-do not go on costing memory; showing one again starts its rumbo. `/rumbos` says what the rumbo of
-each open session uses, and "Close the rumbos not in use", in the palette, closes them all.
-
-`/delete`, or "Delete this session" in the palette, deletes the session shown once you agree. The
-session rumbo was started in is held until you quit: delete it then, with `rumbo sessions rm`.
-
 ## Commands
 
-- **Ctrl-P** opens a palette of the UI's own actions, the folder's other sessions, and every
-  command, which typing narrows. A command that takes something asks for it in a form, and one that
-  cannot be undone asks you to agree in a dialog.
-- **A slash** in the composer opens a menu of the commands, with what each does, and then of the
-  values its next parameter takes: `/use` lists the providers, `/use openai` the models of
-  `openai`. A parameter that can be left out is typed by name, as `name=value`:
-  `/extension-add docs config={"url":"https://example.com/mcp"} {self} extend mcp`.
-- **`/help`** lists them all: the host's, grouped by what they act on (the system, the session, the
-  providers, and the extensions), the provider's, and the UI's own.
+Everything is a command typed in the composer. A slash on an empty line starts one, and so does
+Ctrl-P. An empty conversation shows the few to start with.
 
-The commands come from what the host and the provider describe, so a provider's functions, such as
-`/login`, show up without the UI knowing them. The UI's own are `/help`, `/copy` (the model's last
-answer, or `/copy code` for its last code block), `/export` (the session as Markdown), `/rumbos`,
-and `/delete`. `/processes` shows the processes the rumbo you are in has running, each under the one
-that started it, with the memory and the processor time it uses.
+- **The menu** lists the commands, with an example of the one chosen, and then the values its next
+  word takes: `/resume` lists the sessions, `/model ` the providers and the options, and
+  `/model openai/` the models of `openai`. Up and Down choose, Tab or Enter take, Escape closes it.
+- **What a command still takes** shows after the cursor, dimmed, as `/resume <session>`.
+- **A command typed wrong** is answered with the one you meant.
+- **`/help`** lists the commands by what they are about, and the keys; `/help <command>` says what
+  one does, with examples.
+- A command that cannot be undone asks you to agree in a dialog, which starts on the button that
+  leaves things as they are.
 
-An extension’s commands appear with its registered name, such as `/notes-forget`, as soon as it is
-added. Its output is marked `[extension]` or `[extension <name>]`. See [Extensions and MCP](/guides/extensions/).
+| Command                         | Does                                                                                   |
+| ------------------------------- | -------------------------------------------------------------------------------------- |
+| `/new`                          | Start the next task in a new session                                                   |
+| `/sessions`                     | List the sessions of this folder, with how each stands and when it was last used       |
+| `/resume <session>`             | Go to another session, by its id, the start of it, or the start of its title           |
+| `/rename <title>`               | Give this session a title of your own                                                  |
+| `/branch [message]`             | Go on in a [branch](/guides/sessions/#branch), before one of your messages or from now |
+| `/compact`                      | Replace the conversation with a summary now                                            |
+| `/delete [session]`             | Delete a session and its history, once you agree; without one, this one                |
+| `/copy [code\|id]`              | Copy the model's last answer, its last code block, or this session's id                |
+| `/export [path]`                | Write this session as Markdown to a file, which it does not overwrite                  |
+| `/model [provider/model]`       | Change the model and its options (`option=value`); without them, open the picker       |
+| `/login [extension]`, `/logout` | Sign in to the provider, or to an extension, and out                                   |
+| `/providers`, `/extensions`     | List, show, set up, add, and remove them                                               |
+| `/settings [name=value]`        | Show what applies here and where each value comes from, or change a setting            |
+| `/status`, `/changes`           | Show the session's details, or what changed in the folder, beside the conversation     |
+| `/rumbos [close]`               | What the rumbo of each open session uses; `close` ends those not in use                |
+| `/help [command]`, `/quit`      | Show the commands and the keys, or leave rumbo                                         |
+
+Answers, errors, and diagnostics are marked `[host]`, `[provider <name>]`, or
+`[extension <name>]`, by where they come from.
+
+## Providers and extensions
+
+`/providers` and `/extensions` work the same way:
+
+```text
+/providers                                list them
+/providers openai                         show one: its settings and what it offers
+/providers openai base_url=http://localhost:11434/v1
+/providers add local {self} provide openai
+/providers remove local                   remove one, once you agree
+/extensions add docs config={"url":"https://example.com/mcp"} {self} extend mcp
+```
+
+What a program offers is called after its name: `/providers anthropic account` for the session's
+provider, or `/extensions notes forget` for an extension. Each word is completed: the programs, the
+changes each takes but those you gave already, what each offers and what its functions take, and,
+for `add`, how the programs there are started, and an extension's `config=` and `replaces=`. A word
+that can be left out, before one that cannot, is typed by name, as `name=value`.
+
+`/extensions <name> tools=` chooses an MCP server's tools from all it has, item by item: first the
+list as it is chosen now, then each tool not in it yet, with what it does; a comma goes on with
+another. See [Extensions and MCP](/guides/extensions/).
 
 ## Model and options
 
-A click on the model under the composer, or Model and options in the palette, opens the picker. It
-changes the provider, the model, and the options of the session, such as `effort`, and shows each
-change as the command it is.
+`/model`, or a click on the model under the composer, opens the picker. It changes the provider, the
+model, and the options of the session, such as `effort`, and shows each change as the `/model` it
+is. Typed in full, it changes them at once:
+
+```text
+/model anthropic/claude-opus-5-5 effort=high
+/model effort=                     the option back to the provider's value
+```
+
+What comes before the slash is a provider only when there is one of that name, so a model's own name
+may hold slashes.
+
+## Sessions
+
+The sidebar lists the sessions started in the folder rumbo was started in, a row apart, each with
+how long ago it was used, as `5m`, `3h`, or `2d`. Each session is a rumbo of its own, which the
+terminal UI starts when you first show the session and ends when you quit, so a run goes on in its
+session while you look at another. The sidebar marks the sessions that are working, those whose run
+ended while they were not shown, and, with a ring, those a rumbo is still open for. How many runs
+work in other sessions shows under the composer, on the right.
+
+| Key                       | Does                                       |
+| ------------------------- | ------------------------------------------ |
+| Ctrl-B                    | Show or put away the sidebar               |
+| Tab, on an empty composer | Go to the sidebar, when it is shown        |
+| Up and Down, k and j      | Choose a session                           |
+| gg and G                  | Choose the first or the last               |
+| Enter                     | Show the session chosen                    |
+| d                         | Delete the session chosen, once you agree  |
+| Ctrl-N                    | Start a new session, in a rumbo of its own |
+
+`/sessions` lists the same sessions in the conversation, and `/resume <session>` goes to one.
+
+The rumbos of the sessions you left with nothing to do are closed past the two shown last, so they
+do not go on costing memory; showing one again starts its rumbo. `/rumbos` says what the rumbo of
+each open session uses: its processes, their memory, and their processor time. `/rumbos close`
+closes those neither shown nor working.
+
+The session rumbo was started in is held until you quit, so it cannot be deleted from inside: delete
+it then, with `rumbo sessions rm`.
 
 ## Panels
 
-- **Ctrl-Alt-B** shows the session's details beside the conversation: its id and how it stands, its
-  folder, its model, how full its context is, what it spent, and the skills the model is told of.
-- **Ctrl-G** shows what changed in the session's folder as Git sees it against the last commit, new
-  files included. It only reads.
+- **`/status`** or **Ctrl-Alt-B** shows the session's details beside the conversation: its id and
+  how it stands, its folder, its model, how full its context is, what it spent, and the skills the
+  model is told of.
+- **`/changes`** or **Ctrl-G** shows what changed in the session's folder as Git sees it against the
+  last commit, new files included. It only reads.
 
 ## Going back in the conversation
 
-Shift-Tab goes up into the conversation, where Up and Down choose an entry and Enter acts on it, as
-a click does:
+Shift-Tab goes up into the conversation, where Enter acts on the entry chosen, as a click does:
 
 - on a tool call, it shows all it was given and returned, or goes back to its excerpt;
 - on a message of yours, it changes it, or asks it again, in a [branch](/guides/sessions/#branch)
   that starts before it;
 - on anything else, it copies it.
 
+| Key                  | Does                                                                   |
+| -------------------- | ---------------------------------------------------------------------- |
+| Up and Down, k and j | Choose an entry                                                        |
+| K and J              | Go to your messages, up and down                                       |
+| gg and G             | Go to the start and the end                                            |
+| c                    | Copy the entry chosen                                                  |
+| b                    | Branch from the message of yours the task started with, once you agree |
+| Tab, Escape          | Go back to the composer                                                |
+
+`b` chooses that message first, and the dialog says what the branch keeps: the conversation as it
+was before it, with the message in the branch's composer, to change it or send it again.
+
+## Copying
+
 Dragging the mouse over the conversation or a panel selects its text, and letting go copies it, to
-the clipboard and to the primary selection. It uses OSC 52, so it also works over ssh in the
-terminals that take it (in tmux, with `set-clipboard on`). With Shift, the terminal selects as it
-does elsewhere.
+the clipboard and to the primary selection. With Shift, the terminal selects as it does elsewhere.
+
+Text is copied with OSC 52, which also works over ssh, and through the desktop rumbo runs on, since a
+terminal or a tmux that does not take OSC 52 drops it without a word: with `wl-copy`, `xclip` or
+`xsel`, or `pbcopy`, else, in tmux, through tmux's buffer. What is copied says where it went.
 
 ## The composer
 

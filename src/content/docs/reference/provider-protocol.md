@@ -5,7 +5,7 @@ description: Version 1 of the protocol between the rumbo host and a provider, th
 
 A provider is a program the host starts as a child process. They exchange **JSON-RPC 2.0 objects, one per line**, on the provider's stdin and stdout. Whatever the provider prints on stderr reaches the person as a diagnostic, and a line on stdout that is not JSON is skipped rather than fatal.
 
-This page describes protocol **version 1**, which rumbo 0.10.0 speaks, as 0.9.0 did.
+This page describes protocol **version 1**, which rumbo 0.11.0 speaks, as 0.10.0 and 0.9.0 did.
 
 ## The methods
 
@@ -106,6 +106,6 @@ No process starts until a request needs one. On `shutdown` the provider has 5 se
 
 ## In Go
 
-The [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.10.0/protocol) package has these types and `Serve`, which turns a `Handler` into a provider.
+The [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.11.0/protocol) package has these types and `Serve`, which turns a `Handler` into a provider.
 
-**Source:** [`protocol/types.go`](https://github.com/LiasCode/rumbo/blob/v0.10.0/protocol/types.go) for the wire, [`internal/provider/stdio.go`](https://github.com/LiasCode/rumbo/blob/v0.10.0/internal/provider/stdio.go) and [`pool.go`](https://github.com/LiasCode/rumbo/blob/v0.10.0/internal/provider/pool.go) for the host's side, and [`internal/agent/agent.go`](https://github.com/LiasCode/rumbo/blob/v0.10.0/internal/agent/agent.go) for what the loop does with each answer. [Write a provider](/extend/provider/).
+**Source:** [`protocol/types.go`](https://github.com/LiasCode/rumbo/blob/v0.11.0/protocol/types.go) for the wire, [`internal/provider/stdio.go`](https://github.com/LiasCode/rumbo/blob/v0.11.0/internal/provider/stdio.go) and [`pool.go`](https://github.com/LiasCode/rumbo/blob/v0.11.0/internal/provider/pool.go) for the host's side, and [`internal/agent/agent.go`](https://github.com/LiasCode/rumbo/blob/v0.11.0/internal/agent/agent.go) for what the loop does with each answer. [Write a provider](/extend/provider/).

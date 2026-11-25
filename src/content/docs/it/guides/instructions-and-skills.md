@@ -62,7 +62,7 @@ quando un compito ne ha bisogno, quindi una skill costa una riga finché non vie
 rumbo skills    # the skills the model is told of here, and those left out, with why
 ```
 
-`/skills` nell'interfaccia da terminale dice lo stesso. Una skill viene esclusa quando un'altra con lo
+Nell'interfaccia da terminale, `/status` mostra lo stesso accanto alla conversazione. Una skill viene esclusa quando un'altra con lo
 stesso nome l'ha sostituita, o quando il suo frontmatter manca, non è chiuso, non è YAML valido o non ha
 una descrizione.
 

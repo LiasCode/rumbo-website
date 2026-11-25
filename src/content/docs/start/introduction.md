@@ -16,8 +16,8 @@ summarizing a folder of notes, or driving a desktop program.
 
 rumbo is ready to use as it is installed. One binary brings:
 
-- **A complete terminal UI**: sessions in a sidebar, the conversation as Markdown, a command
-  palette, panels, and a composer. It is what `rumbo` opens. See the
+- **A complete terminal UI**: the conversation as Markdown, a composer that takes a few commands,
+  sessions in a sidebar, and panels. It is what `rumbo` opens. See the
   [terminal UI](/guides/terminal-ui/).
 - **Three providers**: `anthropic` for Claude through Anthropic's API, `openai` for OpenAI's APIs
   and any server compatible with Chat Completions, local ones included, and `chatgpt` for a ChatGPT

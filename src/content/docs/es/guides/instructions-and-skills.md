@@ -62,7 +62,7 @@ tarea la necesita, así que una skill cuesta una línea hasta que se usa.
 rumbo skills    # the skills the model is told of here, and those left out, with why
 ```
 
-`/skills` en la interfaz de terminal dice lo mismo. Una skill se deja fuera cuando otra con el mismo
+En la interfaz de terminal, `/status` muestra lo mismo junto a la conversación. Una skill se deja fuera cuando otra con el mismo
 nombre la reemplazó, o cuando su frontmatter falta, no está cerrado, no es YAML válido o no tiene
 descripción.
 

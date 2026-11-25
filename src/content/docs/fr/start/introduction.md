@@ -16,9 +16,9 @@ test qui échoue, de résumer un dossier de notes ou de piloter un programme de 
 
 rumbo s'utilise tel qu'il est installé. Un seul binaire apporte :
 
-- **Une interface en terminal complète** : les sessions dans une barre latérale, la conversation en
-  Markdown, une palette de commandes, des panneaux et un éditeur. C'est ce qu'ouvre `rumbo`. Voir
-  l'[interface en terminal](/fr/guides/terminal-ui/).
+- **Une interface en terminal complète** : la conversation en Markdown, un éditeur qui accepte
+  quelques commandes, les sessions dans une barre latérale et des panneaux. C'est ce qu'ouvre
+  `rumbo`. Voir l'[interface en terminal](/fr/guides/terminal-ui/).
 - **Trois fournisseurs** : `anthropic` pour Claude par l'API d'Anthropic, `openai` pour les API
   d'OpenAI et tout serveur compatible avec Chat Completions, y compris local, et `chatgpt` pour une
   offre ChatGPT. Voir [modèles et fournisseurs](/fr/guides/providers/).

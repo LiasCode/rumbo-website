@@ -24,8 +24,9 @@ rumbo provider set anthropic model=claude-opus-5-5   # the model they start with
 rumbo -p openai -m <model> "a task"                  # another one, for this session
 ```
 
-Nell'interfaccia da terminale, `/use <provider> [model]` li cambia per la sessione, e il selettore sotto
-il campo di scrittura li elenca.
+Nell'interfaccia da terminale, `/model <provider>/<model>` li cambia per la sessione, `/model` da
+solo apre il selettore che li elenca, e `/providers` elenca, mostra, configura, aggiunge e rimuove i
+provider.
 
 ## Anthropic
 
@@ -59,13 +60,13 @@ Il provider `chatgpt` usa il tuo abbonamento ChatGPT invece di una chiave API, c
 app open source che girano dove sei tu.
 
 ```sh
-rumbo -p chatgpt                           # then /login signs in with ChatGPT, and /use chatgpt lists the plan's models
+rumbo -p chatgpt                           # then /login signs in with ChatGPT, and /model chatgpt/ lists the plan's models
 rumbo provider set chatgpt model=<model>   # the one new sessions there start with
 ```
 
 `/login` apre un accesso nel browser, che torna a rumbo su questa macchina; da un'altra macchina,
 incolla l'indirizzo su cui si ferma il browser. Il suo uso conta sul tuo abbonamento, che gestisci nelle
-impostazioni di ChatGPT; `/account` ti dice dove.
+impostazioni di ChatGPT; la sua funzione `account` ti dice dove.
 
 ## Modelli locali e altri server
 
@@ -86,13 +87,14 @@ che il suo `/login` ha salvato per quell'indirizzo.
 
 ## Accedere
 
-I provider integrati offrono funzioni che ogni interfaccia mostra come comandi:
+I provider integrati offrono tre funzioni, che un'interfaccia offre come comandi.
+Nell'interfaccia da terminale, sono quelle del provider della sessione:
 
-| Comando    | Cosa fa                                                                                                                                           |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `/login`   | `anthropic` e `openai` chiedono una chiave API, la verificano con una richiesta che non costa nulla e la conservano; `chatgpt` accede con ChatGPT |
-| `/logout`  | Dimenticare la chiave o l'accesso                                                                                                                 |
-| `/account` | Dire quale credenziale è in uso e da dove viene, senza mostrarla                                                                                  |
+| Comando                     | Cosa fa                                                                                                                                           |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/login`                    | `anthropic` e `openai` chiedono una chiave API, la verificano con una richiesta che non costa nulla e la conservano; `chatgpt` accede con ChatGPT |
+| `/logout`                   | Dimenticare la chiave o l'accesso                                                                                                                 |
+| `/providers <name> account` | Dire quale credenziale è in uso e da dove viene, senza mostrarla                                                                                  |
 
 Le chiavi sono conservate in `~/.config/rumbo/credentials/`, leggibili solo da te. Un segreto che scrivi
 alla domanda di un provider va solo al provider e non viene registrato da nessuna parte.
@@ -108,7 +110,7 @@ rumbo -o effort=low "a quick task"          # this session only
 rumbo provider set anthropic effort=        # back to the provider's default
 ```
 
-Nell'interfaccia da terminale, `/session-set effort=low` la imposta per la sessione. Vedi la
+Nell'interfaccia da terminale, `/model effort=low` la imposta per la sessione. Vedi la
 [configurazione](/it/guides/configuration/) per capire come si combinano i livelli.
 
 ## Un provider tuo

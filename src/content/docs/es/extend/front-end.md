@@ -45,7 +45,7 @@ la persona preguntó antes (`recall`) y decir lo que usan los procesos del host 
 
 ## Un ejemplo completo
 
-[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.10.0/examples/frontend.py) es una
+[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.11.0/examples/frontend.py) es una
 interfaz entera en un archivo de Python: pide tareas con `input()` e imprime los eventos según llegan.
 
 ```python
@@ -75,7 +75,7 @@ rumbo frontend add simple python3 /path/to/examples/frontend.py
 rumbo -f simple
 ```
 
-En Go, el paquete [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.10.0/protocol) tiene los tipos
+En Go, el paquete [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.11.0/protocol) tiene los tipos
 y `DialFrontend`, una conexión ya hecha.
 
 ## Comandos sin conocerlos
@@ -87,6 +87,11 @@ proveedor que nunca ha visto y gana una función nueva sin ningún cambio. Una f
 deshacer lo indica, para que la interfaz pregunte antes a la persona; una función de un proveedor
 puede hacerle una pregunta a la persona, cuya respuesta puede ser secreta y entonces no debe mostrarse
 ni guardarse.
+
+Una interfaz también puede hacer comandos propios con esas funciones, en las palabras de su persona,
+como hace la interfaz de terminal: `/model` llama a `use` y `session-set`, y `/providers` al grupo
+`provider`. Una función que ninguno envuelve, como una que trae un host más nuevo, se sigue ofreciendo
+con su nombre.
 
 Los [casos de uso](/es/reference/use-cases/#front-end) listan lo que una interfaz debe y puede hacer,
 y el [protocolo](/es/reference/frontend-protocol/) especifica cada mensaje.

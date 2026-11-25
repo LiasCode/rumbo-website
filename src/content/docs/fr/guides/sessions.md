@@ -49,8 +49,11 @@ telle qu'elle était avant l'un de vos messages, et continue à partir de là. L
 telle quelle, et peut continuer à travailler en même temps.
 
 - Dans l'interface en terminal, Maj-Tab remonte dans la conversation ; Entrée sur l'un de vos messages
-  le modifie, ou le repose, dans une branche qui commence avant lui.
-- `/branch` crée une branche de la session telle qu'elle est, et dit quelle session est la branche.
+  le modifie, ou le repose, dans une branche qui commence avant lui, et `b` crée une branche depuis
+  le message qui a commencé la tâche choisie, après votre accord.
+- `/branch` crée une branche de la session telle qu'elle est, et dit quelle session est la branche ;
+  `/branch <n>` la fait commencer avant votre message numéro `n`, qui va dans la zone de saisie de
+  la branche.
 
 Le rumbo qui a créé une branche reste dans sa session, et un autre continue dans la branche :
 l'interface en terminal le démarre et l'affiche, et ailleurs `rumbo -s <session>` le fait. Une branche
@@ -71,8 +74,8 @@ rumbo sessions prune 30d                # list those not used in 30 days; -yes d
 ```
 
 Une session utilisée par un processus rumbo n'est jamais supprimée. Dans l'interface en terminal,
-`/rename` donne un titre à la session affichée, et `/delete` la supprime une fois que vous êtes
-d'accord. La session dans laquelle rumbo a démarré est retenue jusqu'à ce que vous quittiez :
+`/sessions` liste les sessions du dossier, `/rename` donne un titre à la session affichée, et
+`/delete [session]` la supprime, ou supprime celle nommée, une fois que vous êtes d'accord. La session dans laquelle rumbo a démarré est retenue jusqu'à ce que vous quittiez :
 supprimez-la ensuite, avec `rumbo sessions rm`.
 
 ## Compactage
@@ -106,5 +109,5 @@ exécution a mal tourné, vous pouvez voir exactement ce que le modèle a reçu.
 
 `/export` dans l'interface en terminal écrit la session en Markdown : ce qui a été demandé, ce que le
 modèle a écrit, chaque appel d'outil avec le changement qu'il a fait ou le début de ce qu'il a renvoyé,
-et comment chaque exécution s'est terminée. Il écrit `rumbo-<session>.md` dans le répertoire où
+et comment chaque exécution s'est terminée et sa durée. Il écrit `rumbo-<session>.md` dans le répertoire où
 travaille la session, ou au chemin que vous indiquez, et jamais par-dessus un fichier existant.

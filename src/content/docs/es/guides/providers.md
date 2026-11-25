@@ -24,8 +24,8 @@ rumbo provider set anthropic model=claude-opus-5-5   # the model they start with
 rumbo -p openai -m <model> "a task"                  # another one, for this session
 ```
 
-En la interfaz de terminal, `/use <provider> [model]` los cambia para la sesión, y el selector bajo el
-editor los lista.
+En la interfaz de terminal, `/model <provider>/<model>` los cambia para la sesión, `/model` sin más
+abre el selector que los lista, y `/providers` lista, muestra, configura, añade y quita proveedores.
 
 ## Anthropic
 
@@ -59,13 +59,13 @@ El proveedor `chatgpt` usa tu plan de ChatGPT en lugar de una clave de API, como
 aplicaciones de código abierto que corren donde estás tú.
 
 ```sh
-rumbo -p chatgpt                           # then /login signs in with ChatGPT, and /use chatgpt lists the plan's models
+rumbo -p chatgpt                           # then /login signs in with ChatGPT, and /model chatgpt/ lists the plan's models
 rumbo provider set chatgpt model=<model>   # the one new sessions there start with
 ```
 
 `/login` abre un inicio de sesión en el navegador, que vuelve a rumbo en esta máquina; desde otra
 máquina, pega la dirección en la que termina el navegador. Su uso cuenta contra tu plan, que
-gestionas en los ajustes de ChatGPT; `/account` te dice dónde.
+gestionas en los ajustes de ChatGPT; su función `account` te dice dónde.
 
 ## Modelos locales y otros servidores
 
@@ -86,13 +86,14 @@ esa dirección.
 
 ## Iniciar sesión
 
-Los proveedores integrados ofrecen funciones que cualquier interfaz muestra como comandos:
+Los proveedores integrados ofrecen tres funciones, que una interfaz ofrece como comandos. En la
+interfaz de terminal, son del proveedor de la sesión:
 
-| Comando    | Hace                                                                                                                                               |
-| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `/login`   | `anthropic` y `openai` piden una clave de API, la comprueban con una petición que no cuesta nada y la guardan; `chatgpt` inicia sesión con ChatGPT |
-| `/logout`  | Olvidar la clave o el inicio de sesión                                                                                                             |
-| `/account` | Decir qué credencial se usa y de dónde viene, sin mostrarla                                                                                        |
+| Comando                     | Hace                                                                                                                                               |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/login`                    | `anthropic` y `openai` piden una clave de API, la comprueban con una petición que no cuesta nada y la guardan; `chatgpt` inicia sesión con ChatGPT |
+| `/logout`                   | Olvidar la clave o el inicio de sesión                                                                                                             |
+| `/providers <name> account` | Decir qué credencial se usa y de dónde viene, sin mostrarla                                                                                        |
 
 Las claves se guardan en `~/.config/rumbo/credentials/`, legibles solo por ti. Un secreto que escribes
 cuando un proveedor lo pregunta va solo al proveedor y no se registra en ningún sitio.
@@ -108,7 +109,7 @@ rumbo -o effort=low "a quick task"          # this session only
 rumbo provider set anthropic effort=        # back to the provider's default
 ```
 
-En la interfaz de terminal, `/session-set effort=low` la fija para la sesión. Consulta
+En la interfaz de terminal, `/model effort=low` la fija para la sesión. Consulta
 [configuración](/es/guides/configuration/) para ver cómo encajan los niveles.
 
 ## Un proveedor propio

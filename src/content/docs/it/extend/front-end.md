@@ -46,7 +46,7 @@ richiamare ciò che la persona ha chiesto prima (`recall`) e dire cosa usano i p
 
 ## Un esempio completo
 
-[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.10.0/examples/frontend.py) è
+[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.11.0/examples/frontend.py) è
 un'interfaccia completa in un solo file Python: chiede compiti con `input()` e stampa gli eventi man mano
 che arrivano.
 
@@ -77,7 +77,7 @@ rumbo frontend add simple python3 /path/to/examples/frontend.py
 rumbo -f simple
 ```
 
-In Go, il pacchetto [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.10.0/protocol) contiene i tipi
+In Go, il pacchetto [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.11.0/protocol) contiene i tipi
 e `DialFrontend`, una connessione pronta all'uso.
 
 ## Comandi senza conoscerli
@@ -88,6 +88,11 @@ suoi comandi, moduli e selettori a partire da quelle descrizioni, quindi funzion
 non ha mai visto e guadagna una nuova funzione senza modifiche. Una funzione che non si può annullare lo
 dice, perché l'interfaccia chieda prima alla persona; una funzione di un provider può fare una domanda
 alla persona, la cui risposta può essere segreta e allora non va né mostrata né conservata.
+
+Un'interfaccia può anche fare comandi propri con quelle funzioni, con le parole della sua persona, come
+fa l'interfaccia da terminale: `/model` chiama `use` e `session-set`, e `/providers` il gruppo
+`provider`. Una funzione che nessuno di essi avvolge, come una di un host più recente, resta offerta
+con il suo nome.
 
 I [casi d'uso](/it/reference/use-cases/#front-end) elencano cosa un'interfaccia deve e può fare, e il
 [protocollo](/it/reference/frontend-protocol/) specifica ogni messaggio.

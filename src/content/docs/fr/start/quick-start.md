@@ -47,9 +47,10 @@ rumbo -r                                         # resume a run that stopped
 rumbo "summarize notes.md" > summary.txt         # piped: plain text out, exit code
 ```
 
-`rumbo` seul ouvre l'interface en terminal en plein écran : les sessions du dossier dans une barre
-latérale, la conversation et, en dessous, une zone de saisie avec le modèle et le remplissage de son
-contexte. Ctrl-P ouvre toutes les commandes. Voir le guide de l'[interface en terminal](/fr/guides/terminal-ui/).
+`rumbo` seul ouvre l'interface en terminal en plein écran : la conversation et, en dessous, une
+zone de saisie avec le modèle, la branche Git et le remplissage du contexte. Une barre oblique
+commence une commande, comme `/model` ou `/resume`, et `/help` les liste toutes ; Ctrl-B affiche les
+sessions du dossier. Voir le guide de l'[interface en terminal](/fr/guides/terminal-ui/).
 
 ## 4. Lui dire comment vous travaillez
 

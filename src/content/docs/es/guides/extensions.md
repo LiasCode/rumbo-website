@@ -29,12 +29,12 @@ rumbo extension add -config '{"url":"https://example.com/mcp"}' docs {self} exte
 
 ### Iniciar sesión
 
-Un servidor en una URL que pide iniciar sesión lo ofrece como un comando con el nombre de la extensión. Registrada como `docs`:
+Un servidor en una URL que pide iniciar sesión empieza sin herramientas y con una función `login`. Registrada como `docs`, en la interfaz de terminal:
 
 | Comando        | Hace                                                                                                 |
 | -------------- | ---------------------------------------------------------------------------------------------------- |
-| `/docs-login`  | Abre el inicio de sesión en el navegador. Por ssh, pega la dirección en la que termina el navegador. |
-| `/docs-logout` | Olvida el inicio de sesión.                                                                          |
+| `/login docs`  | Abre el inicio de sesión en el navegador. Por ssh, pega la dirección en la que termina el navegador. |
+| `/logout docs` | Olvida el inicio de sesión.                                                                          |
 
 El inicio de sesión se guarda con las demás credenciales de rumbo, legible solo por ti, y se renueva cuando caduca. Las herramientas del servidor son del modelo desde la siguiente ejecución.
 
@@ -48,11 +48,14 @@ rumbo extension set files tools= # un valor vacío devuelve el campo a su valor 
 rumbo extension rm files
 ```
 
-Desde una interfaz, `/extensions`, `/extension-add`, `/extension-show`, `/extension-set` y `/extension-rm` hacen lo mismo. Un cambio se aplica a las ejecuciones que empiezan después, y la interfaz de terminal ofrece los comandos de una extensión en cuanto se añade:
+Desde cualquier interfaz, las funciones del host hacen lo mismo; en la interfaz de terminal, `/extensions` las lista, las muestra, las configura, las añade y las quita. Un cambio se aplica a las ejecuciones que empiezan después, y la interfaz de terminal ofrece lo que ofrece una extensión en cuanto se añade:
 
 ```text
-/extension-add docs config={"url":"https://example.com/mcp"} {self} extend mcp
+/extensions add docs config={"url":"https://example.com/mcp"} {self} extend mcp
+/extensions files tools=read_text_file,list_directory
 ```
+
+Tras `/extensions files tools=`, el menú ofrece todas las herramientas que tiene el servidor, con lo que hace cada una, elemento a elemento: la extensión `mcp` las lista con una función propia, `tools`.
 
 El nombre, la descripción y el esquema de cada herramienta se envían al modelo con **cada petición**, la use la tarea o no. `show` dice cuántos bytes son. Da al modelo las herramientas que una tarea necesita, con `tools`, en lugar de todo lo que tiene un servidor.
 
@@ -65,12 +68,12 @@ rumbo extension add -replaces bash guard python3 /path/to/examples/guard.py
 rumbo extension set guard replaces=       # devuelve bash a rumbo
 ```
 
-[`examples/guard.py`](https://github.com/LiasCode/rumbo/blob/v0.10.0/examples/guard.py) pregunta antes de cualquier `rm -rf`, en un diálogo, y pasa todo lo demás al `bash` de rumbo.
+[`examples/guard.py`](https://github.com/LiasCode/rumbo/blob/v0.11.0/examples/guard.py) pregunta antes de cualquier `rm -rf`, en un diálogo, y pasa todo lo demás al `bash` de rumbo.
 
 ## Qué más hace una extensión
 
 - **Le dice algo al modelo cuando empieza una ejecución**, en una sección propia, como las notas que guarda. Se envía una vez, y de nuevo solo cuando cambia.
-- **Te ofrece comandos**, con su nombre, como `/notes-forget`.
+- **Te ofrece comandos**, que se llaman tras su nombre, como `/extensions notes forget` en la interfaz de terminal.
 - **Te pregunta algo** mientras una de sus herramientas trabaja.
 - **Escucha** lo que hacen las ejecuciones, para avisarte o contar lo que cuestan.
 
