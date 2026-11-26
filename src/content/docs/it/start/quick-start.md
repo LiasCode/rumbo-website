@@ -54,7 +54,7 @@ cartella. Vedi la guida all'[interfaccia da terminale](/it/guides/terminal-ui/).
 ## 4. Digli come lavori
 
 Il modello legge le tue istruzioni: il file `AGENTS.md` o `CLAUDE.md` della directory in cui si avvia
-rumbo, e i tuoi in `~/.config/rumbo/`. Avvia rumbo nella radice di un repository per lavorare con la
+rumbo, e i tuoi in `~/.rumbo/`. Avvia rumbo nella radice di un repository per lavorare con la
 sua guida. Scrivi lì come va fatto il lavoro e cosa controllare
 prima di considerarlo finito. Vedi [istruzioni e skill](/it/guides/instructions-and-skills/).
 

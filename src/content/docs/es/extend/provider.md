@@ -28,7 +28,7 @@ stdout lleva solo mensajes del protocolo. Los diagnósticos van a stderr, que ll
 
 ## Un ejemplo completo
 
-[examples/provider.py](https://github.com/LiasCode/rumbo/blob/v0.11.0/examples/provider.py) es un
+[examples/provider.py](https://github.com/LiasCode/rumbo/blob/v0.12.0/examples/provider.py) es un
 proveedor entero en un archivo de Python, sin ningún modelo detrás: pide una llamada a una herramienta
 y luego repite su salida. Este es su bucle:
 
@@ -63,7 +63,7 @@ rumbo -p toy -m any "list the files"
 ```
 
 rumbo arranca un proveedor al añadirlo, y esa es la prueba de que funciona. En Go, el paquete
-[`protocol`](https://github.com/LiasCode/rumbo/tree/v0.11.0/protocol) tiene los tipos y `Serve`, un
+[`protocol`](https://github.com/LiasCode/rumbo/tree/v0.12.0/protocol) tiene los tipos y `Serve`, un
 servidor ya hecho.
 
 ## Lo que un proveedor debe hacer

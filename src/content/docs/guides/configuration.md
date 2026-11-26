@@ -81,7 +81,7 @@ A run keeps what it started with; a change applies to the next one.
 
 ## The configuration file
 
-`config.yaml` is in `~/.config/rumbo/` (`~/Library/Application Support/rumbo/` on macOS). It holds
+`config.yaml` is in `~/.rumbo/` (`%USERPROFILE%\.rumbo\` on Windows). It holds
 only what you chose, never a default, and you can edit it: rumbo changes it one value at a time and
 leaves your comments.
 
@@ -100,13 +100,12 @@ says where it is, instead of guessing.
 
 ## Environment variables
 
-| Variable          | What it changes                                           |
-| ----------------- | --------------------------------------------------------- |
-| `RUMBO_CONFIG`    | The configuration file to use instead of `config.yaml`    |
-| `RUMBO_DATA`      | The directory of rumbo's data, which holds the sessions   |
-| `XDG_CONFIG_HOME` | Base directory for `rumbo/config.yaml` on Linux           |
-| `XDG_DATA_HOME`   | Base directory for `rumbo/` data on Linux and macOS       |
-| `NO_COLOR`        | The terminal UI shows no colors, with its default `theme` |
+| Variable       | What it changes                                                 |
+| -------------- | --------------------------------------------------------------- |
+| `RUMBO_HOME`   | The directory rumbo keeps everything in, instead of `~/.rumbo/` |
+| `RUMBO_CONFIG` | The configuration file to use instead of `config.yaml`          |
+| `RUMBO_DATA`   | The directory that holds the sessions and plugins               |
+| `NO_COLOR`     | The terminal UI shows no colors, with its default `theme`       |
 
 The providers read their own, such as `ANTHROPIC_API_KEY` and `OPENAI_API_KEY`. See
 [models and providers](/guides/providers/).

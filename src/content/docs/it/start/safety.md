@@ -19,9 +19,9 @@ dell'utente che l'ha avviato, e limitare ciò che può fare è lasciato a una sa
 ## Cosa conserva rumbo
 
 - **Le sessioni conservano ciò che il modello ha visto**, compresi i segreti nell'output dei comandi,
-  in `~/.local/share/rumbo/sessions/`, leggibile solo da te.
+  in `~/.rumbo/sessions/`, leggibile solo da te.
 - **Una chiave API data al `/login` di un provider integrato** viene conservata in
-  `~/.config/rumbo/credentials/` (`~/Library/Application Support/rumbo/credentials/` su macOS),
+  `~/.rumbo/credentials/`,
   leggibile solo da te, e quindi anche dal modello.
 - **Un segreto chiesto da un provider**, come un codice di accesso, va dall'interfaccia al provider e
   non viene registrato da nessuna parte, nemmeno nella sessione.

@@ -3,32 +3,29 @@ title: Releases
 description: What each release of rumbo brought, which one this site describes, and whether the development branch has anything no release does yet.
 ---
 
-This site describes **rumbo 0.11.0**. The exact notes of every release are in the repository's [CHANGELOG](https://github.com/LiasCode/rumbo/blob/main/CHANGELOG.md), and the archives on its [releases page](https://github.com/LiasCode/rumbo/releases).
+This site describes **rumbo 0.12.0**. The exact notes of every release are in the repository's [CHANGELOG](https://github.com/LiasCode/rumbo/blob/main/CHANGELOG.md), and the archives on its [releases page](https://github.com/LiasCode/rumbo/releases).
 
 ## Unreleased
 
-Nothing yet: the `main` branch is the 0.11.0 release. [What changes after 0.11.0](/reference/next/).
+Nothing yet: the `main` branch is the 0.12.0 release. [What changes after 0.12.0](/reference/next/).
 
-## 0.11.0 (2026-11-25)
+## 0.12.0 (2026-11-26)
 
-**The current release.** The terminal UI does everything with a few commands typed in the composer.
+**The current release.** rumbo runs on Windows, keeps everything in one directory, and the model is given files of any kind.
 
-- **The command palette is gone.** A slash on an empty line starts a command, and so does Ctrl-P. [Terminal UI](/guides/terminal-ui/#commands).
-- **Fewer commands, in your words**: `/new`, `/sessions`, `/resume`, `/rename`, `/branch`, `/compact`, `/delete`, `/copy`, `/export`, `/status`, `/changes`, `/model`, `/login`, `/logout`, `/providers`, `/extensions`, `/settings`, `/rumbos`, `/help`, and `/quit`. They take the place of `/use`, `/session-set`, `/config`, `/system-set`, `/skills`, `/processes`, every `/provider-…` and `/extension-…`, and the commands named after an extension, which are called as `/extensions <name> <function>`.
-- **Every word is completed**: what a command still takes shows after the cursor, the menu shows an example, a command typed wrong is answered with the one meant, and `/extensions <name> tools=` chooses an MCP server's tools from all it has.
-- **More room for the conversation.** The bar at the top is gone, the sidebar starts put away (Ctrl-B), and the conversation takes the whole width. Under the composer are the Git branch and the folder, and how many runs work in other sessions.
-- **The keys of the conversation and the sidebar**: j and k, gg and G, K and J between your messages, c to copy, and b to branch from your message; d deletes a session in the sidebar, which says how long ago each was used.
-- The line under a finished task gives its tokens in and out, then what the cache gave, and a session you continue says how long each earlier task took, as `/export` does.
-- **Copying works in more terminals**: also through the desktop's clipboard, or tmux's buffer, when the terminal does not take OSC 52.
-- The `mcp` extension lists every tool its server has with a function of its own, `tools`. Its sign-in is `/login <name>`.
-- **The front end protocol stays at version 2.** A history's `ended` has `took`, how long the run took in milliseconds, and what the host answers no longer names its functions as commands. [Front end protocol](/reference/frontend-protocol/#event).
+- **Windows.** The releases have a zip with `rumbo.exe`, for amd64 and arm64. The model runs commands with PowerShell there, through a tool called `powershell` in place of `bash`; the computer tool, Ctrl-V, and what the processes use are not available yet, and say so. rumbo passes its checks on Windows and macOS but is used every day only on Linux. [Installation](/start/installation/).
+- **Everything in `~/.rumbo/`**: `config.yaml`, your instructions and skills, credentials, plugins, sessions, and pasted images, the same on every system, or where `RUMBO_HOME` says. What 0.11.0 kept elsewhere is not moved. [Where rumbo keeps things](/start/installation/#where-rumbo-keeps-things).
+- **Files of any kind with what you ask.** `/attach <file>`, Ctrl-V for the files copied in a file manager or the image held, and a file dropped on the terminal give the model the file's path, and it reads the file when it needs to. [Files](/guides/terminal-ui/#files).
+- **The front end protocol is version 3.** `files`, a list of paths, takes the place of `images` in `run`, `steer`, and the `objective` and `steer` events. On Windows a front end rumbo starts reads the protocol from the handles `RUMBO_FRONTEND_HANDLES` names. [Front end protocol](/reference/frontend-protocol/).
+- A plugin built with Go builds into a directory, `-o bin/`, so that Windows gets the `.exe` it runs. [Plugins](/reference/plugins/).
 
-[Release](https://github.com/LiasCode/rumbo/releases/tag/v0.11.0) · [What changed in the source](https://github.com/LiasCode/rumbo/compare/v0.10.0...v0.11.0)
+[Release](https://github.com/LiasCode/rumbo/releases/tag/v0.12.0) · [What changed in the source](https://github.com/LiasCode/rumbo/compare/v0.11.0...v0.12.0)
 
 ## Earlier releases
 
 | Version | Date       | What it brought                                                                                        |
 | ------- | ---------- | ------------------------------------------------------------------------------------------------------ |
+| 0.11.0  | 2026-11-25 | Commands typed in the composer take the place of the palette, and the conversation the whole width.    |
 | 0.10.0  | 2026-11-25 | A rumbo is one session, rooted where it starts. The front end protocol is at version 2.                |
 | 0.9.0   | 2026-11-24 | Extensions, MCP servers, and plugins. rumbo's own providers and terminal UI become the `rumbo` plugin. |
 | 0.8.1   | 2026-11-23 | Misspelled commands and configuration fields are refused, saying where, instead of being ignored.      |

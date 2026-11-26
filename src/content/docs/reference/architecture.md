@@ -1,6 +1,6 @@
 ---
 title: Architecture
-description: How rumbo 0.11.0 is put together. The host and what it owns, the three protocols around it, the loop that turns a task into an answer, and the rules the design depends on, from the source.
+description: How rumbo 0.12.0 is put together. The host and what it owns, the three protocols around it, the loop that turns a task into an answer, and the rules the design depends on, from the source.
 ---
 
 rumbo is one process, **the host**, and the programs it starts. The host owns the loop, the tools, and one session; another session is another host. It draws nothing, calls no model API, and knows nothing of MCP: each of those is another program, reached through a protocol.
@@ -42,13 +42,13 @@ Before each request the host looks for what the person said meanwhile, so a `ste
 
 ## The model's tools
 
-| Tool       | Does                                                                                                 | Bounded by                                                                                 |
-| ---------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| `read`     | Reads a text file, or looks at an image.                                                             | 500 lines a call by default; never more than 2,000 lines or 50,000 bytes.                  |
-| `write`    | Creates a file or replaces all of it. An existing file must have been read first.                    |                                                                                            |
-| `edit`     | Replaces text that occurs exactly once, or every occurrence when asked.                              |                                                                                            |
-| `bash`     | Runs a command in the session's directory, or leaves it running in the background.                   | 2 minutes by default, 30 at most; 12,000 bytes of output inline, the rest saved to a file. |
-| `computer` | Screenshots, pointer, and keyboard of the desktop. Only with [`computer=on`](/guides/computer-use/). |                                                                                            |
+| Tool       | Does                                                                                                                                           | Bounded by                                                                                 |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `read`     | Reads a text file, or looks at an image.                                                                                                       | 500 lines a call by default; never more than 2,000 lines or 50,000 bytes.                  |
+| `write`    | Creates a file or replaces all of it. An existing file must have been read first.                                                              |                                                                                            |
+| `edit`     | Replaces text that occurs exactly once, or every occurrence when asked.                                                                        |                                                                                            |
+| `bash`     | Runs a command in the session's directory, or leaves it running in the background. On Windows it is `powershell`, and runs Windows PowerShell. | 2 minutes by default, 30 at most; 12,000 bytes of output inline, the rest saved to a file. |
+| `computer` | Screenshots, pointer, and keyboard of the desktop. Only with [`computer=on`](/guides/computer-use/).                                           |                                                                                            |
 
 A result is paid for again on every later request, which is why each is kept small and says how to get the rest.
 
@@ -78,4 +78,4 @@ A front end that shows several sessions, as the [terminal UI](/guides/terminal-u
 | The host never touches the terminal once a front end is attached. | The front end owns what the person sees. What they must see is an event.                          |
 | The agent acts with your rights.                                  | Limits come from a sandbox you choose, not from prompts. See [before you run it](/start/safety/). |
 
-**Source:** [`internal/cli`](https://github.com/LiasCode/rumbo/tree/v0.11.0/internal/cli) wires the host; [`internal/agent/agent.go`](https://github.com/LiasCode/rumbo/blob/v0.11.0/internal/agent/agent.go) is the loop; [`internal/transcript`](https://github.com/LiasCode/rumbo/tree/v0.11.0/internal/transcript) rebuilds requests; [`internal/store/files.go`](https://github.com/LiasCode/rumbo/blob/v0.11.0/internal/store/files.go) keeps sessions; [`internal/tool`](https://github.com/LiasCode/rumbo/tree/v0.11.0/internal/tool) has the tools.
+**Source:** [`internal/cli`](https://github.com/LiasCode/rumbo/tree/v0.12.0/internal/cli) wires the host; [`internal/agent/agent.go`](https://github.com/LiasCode/rumbo/blob/v0.12.0/internal/agent/agent.go) is the loop; [`internal/transcript`](https://github.com/LiasCode/rumbo/tree/v0.12.0/internal/transcript) rebuilds requests; [`internal/store/files.go`](https://github.com/LiasCode/rumbo/blob/v0.12.0/internal/store/files.go) keeps sessions; [`internal/tool`](https://github.com/LiasCode/rumbo/tree/v0.12.0/internal/tool) has the tools.

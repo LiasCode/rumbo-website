@@ -54,7 +54,7 @@ Consulta la guía de la [interfaz de terminal](/es/guides/terminal-ui/).
 ## 4. Cuéntale cómo trabajas
 
 El modelo lee tus instrucciones: el archivo `AGENTS.md` o `CLAUDE.md` del directorio en el que
-arranca rumbo, y los tuyos en `~/.config/rumbo/`. Arranca rumbo en la raíz de un repositorio para
+arranca rumbo, y los tuyos en `~/.rumbo/`. Arranca rumbo en la raíz de un repositorio para
 trabajar con su guía. Escribe ahí cómo debe hacerse el trabajo y qué
 comprobar antes de darlo por terminado. Consulta [instrucciones y skills](/es/guides/instructions-and-skills/).
 

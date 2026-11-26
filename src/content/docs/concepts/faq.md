@@ -35,7 +35,9 @@ The built-in `chatgpt` provider can sign in with a ChatGPT plan. The built-in `a
 
 ## Does it run on Windows?
 
-No. rumbo runs on Linux and macOS.
+Yes, since 0.12.0, on amd64 and arm64: the model runs commands with PowerShell there, and the
+[computer tool](/guides/computer-use/) is not available. rumbo passes its checks on Windows and
+macOS, but is used every day only on Linux, so expect rough edges there.
 
 ## Does it ask before running a command?
 
@@ -49,7 +51,7 @@ terminal UI's Ctrl-G, and the desktop app's Changes panel, show what Git sees ch
 
 ## Where are my sessions?
 
-Each is a directory in `~/.local/share/rumbo/sessions/`, with its history in `entries.jsonl`, one
+Each is a directory in `~/.rumbo/sessions/`, with its history in `entries.jsonl`, one
 entry to a line. See [sessions](/guides/sessions/#what-a-session-holds).
 
 ## How does it compare with other agents?

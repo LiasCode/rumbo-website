@@ -13,7 +13,7 @@ travail doit être fait.
 Le modèle lit les fichiers `AGENTS.md` ou `CLAUDE.md` :
 
 - du répertoire où rumbo a démarré, la racine de la session, et d'aucun au-dessus ;
-- les vôtres, dans `~/.config/rumbo/` (`~/Library/Application Support/rumbo/` sur macOS), qui
+- les vôtres, dans `~/.rumbo/`, qui
   s'appliquent partout.
 
 Écrivez-y ce qu'une tâche ne peut pas montrer d'elle-même : comment vous voulez que le travail soit
@@ -40,7 +40,7 @@ Une skill est un ensemble d'instructions pour un type de tâche, au format
 [Agent Skills](https://agentskills.io) : un répertoire avec un `SKILL.md` dont le frontmatter a un
 `name` et une `description` de ce à quoi elle sert et quand l'utiliser.
 
-```markdown title="~/.config/rumbo/skills/meeting-notes/SKILL.md"
+```markdown title="~/.rumbo/skills/meeting-notes/SKILL.md"
 ---
 name: meeting-notes
 description: Write meeting notes in my format. Use for any summary of a meeting.
@@ -51,7 +51,7 @@ One heading per topic, decisions first, then who does what by when.
 
 Les skills se placent dans :
 
-- `~/.config/rumbo/skills/<name>/` (`~/Library/Application Support/rumbo/skills/` sur macOS), les
+- `~/.rumbo/skills/<name>/`, les
   vôtres ;
 - `.agents/skills/<name>/` dans le répertoire où rumbo a démarré, et dans aucun au-dessus. Sa skill
   remplace l'une des vôtres portant le même nom.

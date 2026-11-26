@@ -59,10 +59,12 @@ Une extension d'un plugin peut demander à prendre la place d'un outil de rumbo,
 rumbo plugin add -replaces bash <source>
 ```
 
-Une mise à jour qui demande à remplacer plus que ce que vous avez accepté est refusée.
+Une mise à jour qui demande à remplacer plus que ce que vous avez accepté est refusée. Sous Windows,
+l'outil shell est `powershell` et rumbo n'a pas de `bash` : un plugin qui demande à remplacer `bash`
+y est refusé, en disant quels outils rumbo a.
 
 ## Ensuite
 
 - Le [manifeste d'un plugin](/fr/reference/plugins/) dit tout ce qu'un `plugin.yaml` peut contenir.
-- [`examples/plugin`](https://github.com/LiasCode/rumbo/tree/v0.11.0/examples/plugin) est un modèle à copier.
+- [`examples/plugin`](https://github.com/LiasCode/rumbo/tree/v0.12.0/examples/plugin) est un modèle à copier.
 - L'[application de bureau](/fr/guides/desktop-app/) est distribuée comme un plugin.

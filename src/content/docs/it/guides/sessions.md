@@ -89,7 +89,7 @@ Ciò che c'era prima resta salvato nella sessione. Cambia solo la richiesta.
 
 ## Cosa contiene una sessione
 
-Ogni sessione è una directory in `~/.local/share/rumbo/sessions/<id>/`:
+Ogni sessione è una directory in `~/.rumbo/sessions/<id>/`:
 
 - `session.json` dice cos'è e cosa ha scelto: il suo provider, il suo modello e le opzioni impostate per
   lei;

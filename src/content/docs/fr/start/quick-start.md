@@ -55,7 +55,7 @@ sessions du dossier. Voir le guide de l'[interface en terminal](/fr/guides/termi
 ## 4. Lui dire comment vous travaillez
 
 Le modèle lit vos instructions : le fichier `AGENTS.md` ou `CLAUDE.md` du répertoire où rumbo
-démarre, et les vôtres dans `~/.config/rumbo/`. Démarrez rumbo à la racine d'un dépôt pour travailler
+démarre, et les vôtres dans `~/.rumbo/`. Démarrez rumbo à la racine d'un dépôt pour travailler
 avec son guide. Écrivez-y comment le travail doit être
 fait, et ce qu'il faut vérifier avant de le considérer comme terminé. Voir
 [instructions et skills](/fr/guides/instructions-and-skills/).

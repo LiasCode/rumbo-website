@@ -59,6 +59,7 @@ Ctrl-P. An empty conversation shows the few to start with.
 | `/resume <session>`             | Go to another session, by its id, the start of it, or the start of its title           |
 | `/rename <title>`               | Give this session a title of your own                                                  |
 | `/branch [message]`             | Go on in a [branch](/guides/sessions/#branch), before one of your messages or from now |
+| `/attach <file>`                | Give a file with what you send next, by its path; the model reads it when it needs to  |
 | `/compact`                      | Replace the conversation with a summary now                                            |
 | `/delete [session]`             | Delete a session and its history, once you agree; without one, this one                |
 | `/copy [code\|id]`              | Copy the model's last answer, its last code block, or this session's id                |
@@ -186,16 +187,32 @@ terminal or a tmux that does not take OSC 52 drops it without a word: with `wl-c
 | Alt-Enter, Shift-Enter, Ctrl-J | New line                                                                            |
 | Up, Down                       | Move through the rows typed, and past them through what you entered before          |
 | Ctrl-R                         | Search what you entered before, in any session started in this folder               |
-| Ctrl-V                         | Paste the image in the clipboard, which goes with what you send next                |
-| Backspace on an empty composer | Take the last pasted image away                                                     |
+| Ctrl-V                         | Give the files copied in a file manager, or the image in the clipboard              |
+| Backspace on an empty composer | Take the last file given away                                                       |
 | Escape                         | Give up a provider's function in progress, else cancel the run of the session shown |
 | Ctrl-C                         | The same as Escape, else clear the composer, else quit                              |
 | Ctrl-D                         | Quit, on an empty composer                                                          |
 | PgUp, PgDn, the mouse wheel    | Scroll the conversation                                                             |
 
 The composer edits with readline's keys: Ctrl-A and Ctrl-E, Ctrl-F, Alt-B and Alt-F, Ctrl-W,
-Ctrl-U, and Ctrl-K. Pasting an image reads the desktop's clipboard with `wl-paste` on Wayland,
-`xclip` on X11, or AppKit on macOS, since a terminal pastes only text.
+Ctrl-U, and Ctrl-K.
+
+## Files
+
+What you send can take files of any kind: `/attach`, Ctrl-V, or a file dropped on the terminal.
+The model is told each file's path and reads it with its tools when it needs to, so nothing of the
+file is kept in the session or sent with every request. The files wait over the composer, each
+after an icon for its kind, and show under your message once sent.
+
+| Way              | Gives                                                                          |
+| ---------------- | ------------------------------------------------------------------------------ |
+| `/attach <file>` | The file at that path, from the session's folder                               |
+| Ctrl-V           | The files copied in a file manager, on Wayland and X11, or else the image held |
+| A file dropped   | That file, when the paste is wholly paths of files there are                   |
+
+Ctrl-V reads the desktop's clipboard, with `wl-paste` on Wayland, `xclip` on X11, or AppKit on
+macOS, since a terminal pastes only text. A pasted image is saved in `~/.rumbo/pasted/` and given by
+that path. On Windows rumbo does not read the clipboard yet, and says so: use `/attach`.
 
 ## Colors
 

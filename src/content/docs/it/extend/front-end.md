@@ -14,13 +14,16 @@ Scrivine una per portare rumbo in un editor, un bot di chat, una pagina web o un
 
 I messaggi sono oggetti JSON-RPC 2.0, uno per riga, uguali in entrambi i casi:
 
-| Chi avvia chi                                             | L'interfaccia legge da   | L'interfaccia scrive su  |
-| --------------------------------------------------------- | ------------------------ | ------------------------ |
-| rumbo avvia un'interfaccia registrata (`rumbo -f <name>`) | il descrittore di file 3 | il descrittore di file 4 |
-| L'interfaccia avvia `rumbo serve`, come farebbe un editor | lo stdout dell'host      | lo stdin dell'host       |
+| Chi avvia chi                                             | L'interfaccia legge da                      | L'interfaccia scrive su  |
+| --------------------------------------------------------- | ------------------------------------------- | ------------------------ |
+| rumbo avvia un'interfaccia registrata (`rumbo -f <name>`) | il descrittore di file 3                    | il descrittore di file 4 |
+| Lo stesso, su Windows                                     | il primo handle di `RUMBO_FRONTEND_HANDLES` | il secondo               |
+| L'interfaccia avvia `rumbo serve`, come farebbe un editor | lo stdout dell'host                         | lo stdin dell'host       |
 
 Un'interfaccia avviata da rumbo mantiene il terminale su stdin e stdout, quindi può disegnare e leggere
-i tasti liberamente. Chiudere la connessione termina l'host: annulla l'esecuzione in corso, la registra
+i tasti liberamente. Windows non passa a un programma alcun descrittore dopo stderr, quindi lì riceve
+due handle ereditati, indicati in decimale nel suo ambiente come
+`RUMBO_FRONTEND_HANDLES=<read>,<write>`. Chiudere la connessione termina l'host: annulla l'esecuzione in corso, la registra
 e ferma i suoi provider.
 
 Un host è una sessione. Per mostrarne più d'una, come fa l'interfaccia da terminale, avvia un
@@ -33,8 +36,10 @@ Un host è una sessione. Per mostrarne più d'una, come fa l'interfaccia da term
 
 1. **`initialize`**: l'host parla per primo, con la directory, la sessione, il provider e il modello a
    cui l'interfaccia è collegata, e il compito dato sulla riga di comando, se c'è.
-2. **`run`**: l'interfaccia invia un compito. L'host risponde quando l'esecuzione è finita: completata,
-   fallita o annullata.
+2. **`run`**: l'interfaccia invia un compito, e i percorsi dei file che lo accompagnano, che il modello
+   legge con i suoi strumenti. L'host risponde quando l'esecuzione è finita: completata, fallita o
+   annullata. Ciò che non ha un percorso, come un'immagine incollata, l'interfaccia lo salva prima e
+   lo dà con il suo percorso.
 3. Le notifiche **`event`** riportano l'esecuzione mentre lavora: il testo del modello, le chiamate a
    strumenti e i loro risultati, i token spesi e la diagnostica.
 4. **`steer`** dice qualcosa a un'esecuzione mentre lavora, e **`cancel`** la ferma.
@@ -46,7 +51,7 @@ richiamare ciò che la persona ha chiesto prima (`recall`) e dire cosa usano i p
 
 ## Un esempio completo
 
-[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.11.0/examples/frontend.py) è
+[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.12.0/examples/frontend.py) è
 un'interfaccia completa in un solo file Python: chiede compiti con `input()` e stampa gli eventi man mano
 che arrivano.
 
@@ -77,7 +82,7 @@ rumbo frontend add simple python3 /path/to/examples/frontend.py
 rumbo -f simple
 ```
 
-In Go, il pacchetto [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.11.0/protocol) contiene i tipi
+In Go, il pacchetto [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.12.0/protocol) contiene i tipi
 e `DialFrontend`, una connessione pronta all'uso.
 
 ## Comandi senza conoscerli

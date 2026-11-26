@@ -96,7 +96,7 @@ Dans l'interface en terminal, ce sont celles du fournisseur de la session :
 | `/logout`                   | Oublier la clé ou la connexion                                                                                                             |
 | `/providers <name> account` | Dire quel identifiant est utilisé et d'où il vient, sans l'afficher                                                                        |
 
-Les clés sont gardées dans `~/.config/rumbo/credentials/`, lisibles par vous seul. Un secret que vous
+Les clés sont gardées dans `~/.rumbo/credentials/`, lisibles par vous seul. Un secret que vous
 tapez à la question d'un fournisseur va au seul fournisseur et n'est enregistré nulle part.
 
 ## Options

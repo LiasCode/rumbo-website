@@ -12,8 +12,7 @@ tools. Instructions and skills are where you tell it how work should be done.
 The model reads the `AGENTS.md` or `CLAUDE.md` files:
 
 - of the directory rumbo was started in, the session's root, and none above it;
-- yours, in `~/.config/rumbo/` (`~/Library/Application Support/rumbo/` on macOS), which apply
-  everywhere.
+- yours, in `~/.rumbo/`, which apply everywhere.
 
 Write there what a task cannot show by itself: how you want work done, which commands check it, and
 what must never happen.
@@ -38,7 +37,7 @@ A skill is instructions for one kind of task, in the [Agent Skills](https://agen
 format: a directory with a `SKILL.md` whose frontmatter has a `name` and a `description` of what it
 is for and when to use it.
 
-```markdown title="~/.config/rumbo/skills/meeting-notes/SKILL.md"
+```markdown title="~/.rumbo/skills/meeting-notes/SKILL.md"
 ---
 name: meeting-notes
 description: Write meeting notes in my format. Use for any summary of a meeting.
@@ -49,7 +48,7 @@ One heading per topic, decisions first, then who does what by when.
 
 Skills go in:
 
-- `~/.config/rumbo/skills/<name>/` (`~/Library/Application Support/rumbo/skills/` on macOS), yours;
+- `~/.rumbo/skills/<name>/`, yours;
 - `.agents/skills/<name>/` in the directory rumbo was started in, and none above it. Its skill
   replaces one of yours with the same name.
 - `skills/<name>/` in a [plugin](/guides/plugins/) you added. One of yours with the same name replaces

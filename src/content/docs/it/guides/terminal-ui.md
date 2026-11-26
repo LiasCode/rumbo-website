@@ -59,6 +59,7 @@ anche Ctrl-P. Una conversazione vuota mostra i pochi comandi da cui partire.
 | `/resume <session>`             | Andare a un'altra sessione, per il suo id, il suo inizio o l'inizio del suo titolo                        |
 | `/rename <title>`               | Dare a questa sessione un titolo tuo                                                                      |
 | `/branch [message]`             | Continuare in un [ramo](/it/guides/sessions/#creare-un-ramo), prima di un tuo messaggio o da adesso       |
+| `/attach <file>`                | Dare un file con ciò che invii dopo, per percorso; il modello lo legge quando gli serve                   |
 | `/compact`                      | Sostituire subito la conversazione con un riassunto                                                       |
 | `/delete [session]`             | Eliminare una sessione e la sua cronologia, dopo la tua conferma; senza, questa                           |
 | `/copy [code\|id]`              | Copiare l'ultima risposta del modello, il suo ultimo blocco di codice o l'id della sessione               |
@@ -191,16 +192,31 @@ copiato dice dove è andato.
 | Alt-Invio, Maiusc-Invio, Ctrl-J     | Nuova riga                                                                                                |
 | Su, Giù                             | Muoversi tra le righe scritte e, oltre, tra ciò che hai inviato prima                                     |
 | Ctrl-R                              | Cercare ciò che hai inviato prima, in qualsiasi sessione avviata in questa cartella                       |
-| Ctrl-V                              | Incollare l'immagine negli appunti, che parte con ciò che invii dopo                                      |
-| Backspace con il campo vuoto        | Togliere l'ultima immagine incollata                                                                      |
+| Ctrl-V                              | Dare i file copiati in un gestore di file, o l'immagine negli appunti                                     |
+| Backspace con il campo vuoto        | Togliere l'ultimo file dato                                                                               |
 | Esc                                 | Abbandonare una funzione del provider in corso, altrimenti annullare l'esecuzione della sessione mostrata |
 | Ctrl-C                              | Come Esc, altrimenti svuotare il campo, altrimenti uscire                                                 |
 | Ctrl-D                              | Uscire, con il campo vuoto                                                                                |
 | PagSu, PagGiù, la rotella del mouse | Scorrere la conversazione                                                                                 |
 
 Il campo usa i tasti di readline: Ctrl-A e Ctrl-E, Ctrl-F, Alt-B e Alt-F, Ctrl-W, Ctrl-U e Ctrl-K.
-Incollare un'immagine legge gli appunti del desktop con `wl-paste` su Wayland, `xclip` su X11 o AppKit su
-macOS, perché un terminale incolla solo testo.
+
+## File
+
+Ciò che invii può portare file di qualsiasi tipo: `/attach`, Ctrl-V o un file trascinato sul
+terminale. Al modello si dice il percorso di ogni file, e lo legge con i suoi strumenti quando gli
+serve: nulla del file resta nella sessione né viene inviato a ogni richiesta. I file attendono sopra
+il campo, ciascuno dopo un'icona del suo tipo, e si vedono sotto il tuo messaggio una volta inviato.
+
+| Modo               | Dà                                                                           |
+| ------------------ | ---------------------------------------------------------------------------- |
+| `/attach <file>`   | Il file in quel percorso, dalla cartella della sessione                      |
+| Ctrl-V             | I file copiati in un gestore di file, su Wayland e X11, oppure l'immagine    |
+| Un file trascinato | Quel file, quando ciò che si incolla sono solo percorsi di file che esistono |
+
+Ctrl-V legge gli appunti del desktop, con `wl-paste` su Wayland, `xclip` su X11 o AppKit su macOS,
+perché un terminale incolla solo testo. Un'immagine incollata viene salvata in `~/.rumbo/pasted/` e
+data con quel percorso. Su Windows rumbo non legge ancora gli appunti, e lo dice: usa `/attach`.
 
 ## Colori
 

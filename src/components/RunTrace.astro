@@ -4,7 +4,7 @@ import { arc, brush, pressed } from './ink';
 import Rule from './Rule.astro';
 import Icon from './Icon.astro';
 
-// One run of rumbo 0.11.0, frame by frame, in the two ways a front end and
+// One run of rumbo 0.12.0, frame by frame, in the two ways a front end and
 // a host come to speak: the host starts the front end ("attached"), or the
 // front end starts the host. The frames are those a host was seen to send
 // and take with a provider and an extension made for the purpose; nothing
@@ -14,7 +14,7 @@ const { locale } = Astro.props as { locale: Locale };
 const copy = {
 	en: {
 		title: 'Follow one run',
-		summary: 'A front end, the host, a provider, and an extension, speaking JSON-RPC line by line. The task is made up; the frames are the ones rumbo 0.11.0 sends.',
+		summary: 'A front end, the host, a provider, and an extension, speaking JSON-RPC line by line. The task is made up; the frames are the ones rumbo 0.12.0 sends.',
 		reference: 'Front end protocol',
 		mode: 'Who starts whom',
 		modes: ['Attached · rumbo starts the front end', 'Standalone · the front end starts rumbo'],
@@ -53,7 +53,7 @@ const copy = {
 	},
 	es: {
 		title: 'Sigue una ejecución',
-		summary: 'Una interfaz, el host, un proveedor y una extensión hablando JSON-RPC línea a línea. La tarea es inventada; los mensajes son los que envía rumbo 0.11.0.',
+		summary: 'Una interfaz, el host, un proveedor y una extensión hablando JSON-RPC línea a línea. La tarea es inventada; los mensajes son los que envía rumbo 0.12.0.',
 		reference: 'Protocolo de interfaz',
 		mode: 'Quién arranca a quién',
 		modes: ['Attached · rumbo abre la interfaz', 'Independiente · la interfaz abre rumbo'],
@@ -92,7 +92,7 @@ const copy = {
 	},
 	fr: {
 		title: 'Suivre une exécution',
-		summary: 'Une interface, l’hôte, un fournisseur et une extension qui se parlent en JSON-RPC, ligne par ligne. La tâche est inventée ; les messages sont ceux qu’envoie rumbo 0.11.0.',
+		summary: 'Une interface, l’hôte, un fournisseur et une extension qui se parlent en JSON-RPC, ligne par ligne. La tâche est inventée ; les messages sont ceux qu’envoie rumbo 0.12.0.',
 		reference: 'Protocole d’interface',
 		mode: 'Qui lance qui',
 		modes: ['Attaché · rumbo lance l’interface', 'Indépendant · l’interface lance rumbo'],
@@ -131,7 +131,7 @@ const copy = {
 	},
 	it: {
 		title: 'Segui un’esecuzione',
-		summary: 'Un’interfaccia, l’host, un provider e un’estensione che parlano JSON-RPC riga per riga. Il compito è inventato; i messaggi sono quelli che invia rumbo 0.11.0.',
+		summary: 'Un’interfaccia, l’host, un provider e un’estensione che parlano JSON-RPC riga per riga. Il compito è inventato; i messaggi sono quelli che invia rumbo 0.12.0.',
 		reference: 'Protocollo dell’interfaccia',
 		mode: 'Chi avvia chi',
 		modes: ['Collegata · rumbo avvia l’interfaccia', 'Indipendente · l’interfaccia avvia rumbo'],
@@ -178,8 +178,8 @@ const modes = [
 // Each step after the start: the frames that cross, as "from>to:label",
 // and the line of JSON-RPC that matters in it.
 const frames = [
-	{ hops: ['host>fe:initialize'], code: 'initialize { protocol: 2, dir, provider, model, functions }' },
-	{ hops: ['fe>host:result'], code: 'result { protocol: 2, name: "ink-ui" }' },
+	{ hops: ['host>fe:initialize'], code: 'initialize { protocol: 3, dir, provider, model, functions }' },
+	{ hops: ['fe>host:result'], code: 'result { protocol: 3, name: "ink-ui" }' },
 	{ hops: ['fe>host:run'], code: 'run #20 { objective: "…" }' },
 	{ hops: ['host>provider:initialize', 'host>extension:initialize'], code: 'initialize → { tools: [ink_catalog] }' },
 	{ hops: ['host>fe:event context', 'host>provider:complete'], code: 'complete { model, system, messages, tools }' },
@@ -193,7 +193,7 @@ const frames = [
 ].map((frame, index) => ({ ...frame, detail: copy.details[index] }));
 
 const names: Record<string, string> = { fe: copy.parts[0], host: copy.parts[1], provider: copy.parts[2], extension: copy.parts[3] };
-const kinds: Record<string, string> = { fe: 'ink-ui', host: 'rumbo 0.11.0', provider: 'stdin · stdout', extension: 'stdin · stdout' };
+const kinds: Record<string, string> = { fe: 'ink-ui', host: 'rumbo 0.12.0', provider: 'stdin · stdout', extension: 'stdin · stdout' };
 const route = (hops: string[]) => hops.map((hop) => hop.split(':')[0].split('>').map((part) => names[part]).join(' → ')).join(' · ');
 const segment = ([x1, y1, x2, y2]: readonly number[]) => `M${x1} ${y1}L${x2} ${y2}`;
 

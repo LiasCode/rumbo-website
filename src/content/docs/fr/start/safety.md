@@ -21,9 +21,9 @@ choix.
 ## Ce que rumbo garde
 
 - **Les sessions gardent ce que le modèle a vu**, y compris les secrets dans la sortie des commandes,
-  dans `~/.local/share/rumbo/sessions/`, lisible par vous seul.
+  dans `~/.rumbo/sessions/`, lisible par vous seul.
 - **Une clé d'API donnée au `/login` d'un fournisseur intégré** est gardée dans
-  `~/.config/rumbo/credentials/` (`~/Library/Application Support/rumbo/credentials/` sur macOS),
+  `~/.rumbo/credentials/`,
   lisible par vous seul, et donc aussi par le modèle.
 - **Un secret demandé par un fournisseur**, comme un code de connexion, va de l'interface au
   fournisseur et n'est enregistré nulle part, pas même dans la session.

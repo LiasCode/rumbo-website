@@ -35,7 +35,9 @@ Il provider integrato `chatgpt` permette di accedere con un abbonamento ChatGPT.
 
 ## Funziona su Windows?
 
-No. rumbo funziona su Linux e macOS.
+Sì, dalla 0.12.0, su amd64 e arm64: lì il modello esegue i comandi con PowerShell, e lo
+[strumento computer](/it/guides/computer-use/) non è disponibile. rumbo supera i controlli su Windows e
+macOS, ma è usato ogni giorno solo su Linux, quindi aspettati qualche asperità.
 
 ## Chiede prima di eseguire un comando?
 
@@ -50,7 +52,7 @@ cambiato.
 
 ## Dove sono le mie sessioni?
 
-Ciascuna è una directory in `~/.local/share/rumbo/sessions/`, con la sua cronologia in `entries.jsonl`,
+Ciascuna è una directory in `~/.rumbo/sessions/`, con la sua cronologia in `entries.jsonl`,
 una voce per riga. Vedi [sessioni](/it/guides/sessions/#cosa-contiene-una-sessione).
 
 ## Come si confronta con altri agenti?

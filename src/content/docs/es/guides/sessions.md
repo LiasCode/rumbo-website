@@ -89,7 +89,7 @@ Lo anterior se queda guardado en la sesión. Solo cambia la petición.
 
 ## Qué guarda una sesión
 
-Cada sesión es un directorio en `~/.local/share/rumbo/sessions/<id>/`:
+Cada sesión es un directorio en `~/.rumbo/sessions/<id>/`:
 
 - `session.json` dice qué es y qué eligió: su proveedor, su modelo y las opciones fijadas para ella;
 - `entries.jsonl` guarda su historial, una entrada por línea, y solo se le añaden líneas.

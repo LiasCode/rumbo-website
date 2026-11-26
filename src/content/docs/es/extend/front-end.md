@@ -14,13 +14,16 @@ Escribe una para llevar rumbo a un editor, un bot de chat, una página web o un 
 
 Los mensajes son objetos JSON-RPC 2.0, uno por línea, iguales en los dos casos:
 
-| Quién arranca a quién                                     | La interfaz lee de         | La interfaz escribe en     |
-| --------------------------------------------------------- | -------------------------- | -------------------------- |
-| rumbo arranca una interfaz registrada (`rumbo -f <name>`) | el descriptor de archivo 3 | el descriptor de archivo 4 |
-| La interfaz arranca `rumbo serve`, como haría un editor   | el stdout del host         | el stdin del host          |
+| Quién arranca a quién                                     | La interfaz lee de                           | La interfaz escribe en     |
+| --------------------------------------------------------- | -------------------------------------------- | -------------------------- |
+| rumbo arranca una interfaz registrada (`rumbo -f <name>`) | el descriptor de archivo 3                   | el descriptor de archivo 4 |
+| Lo mismo, en Windows                                      | el primer handle de `RUMBO_FRONTEND_HANDLES` | el segundo                 |
+| La interfaz arranca `rumbo serve`, como haría un editor   | el stdout del host                           | el stdin del host          |
 
 Una interfaz iniciada por rumbo conserva la terminal en stdin y stdout, así que puede dibujar y leer
-teclas libremente. Cerrar la conexión termina el host: cancela la ejecución en curso, la registra
+teclas libremente. Windows no pasa a un programa ningún descriptor después de stderr, así que allí
+recibe dos handles heredados, nombrados en decimal en su entorno como
+`RUMBO_FRONTEND_HANDLES=<read>,<write>`. Cerrar la conexión termina el host: cancela la ejecución en curso, la registra
 y detiene sus proveedores.
 
 Un host es una sesión. Para mostrar varias, como hace la interfaz de terminal, arranca un
@@ -33,8 +36,10 @@ Un host es una sesión. Para mostrar varias, como hace la interfaz de terminal, 
 
 1. **`initialize`**: el host habla primero, con el directorio, la sesión, el proveedor y el modelo a
    los que está conectada la interfaz, y la tarea dada en la línea de comandos, si la hay.
-2. **`run`**: la interfaz envía una tarea. El host responde cuando la ejecución termina: hecha, fallida
-   o cancelada.
+2. **`run`**: la interfaz envía una tarea, y las rutas de los archivos que la acompañen, que el modelo
+   lee con sus herramientas. El host responde cuando la ejecución termina: hecha, fallida o
+   cancelada. Lo que no tiene ruta, como una imagen pegada, la interfaz lo guarda antes y lo da por su
+   ruta.
 3. Las notificaciones **`event`** informan de la ejecución mientras trabaja: el texto del modelo, las
    llamadas a herramientas y sus resultados, los tokens gastados y los diagnósticos.
 4. **`steer`** le dice algo a una ejecución mientras trabaja, y **`cancel`** la detiene.
@@ -45,7 +50,7 @@ la persona preguntó antes (`recall`) y decir lo que usan los procesos del host 
 
 ## Un ejemplo completo
 
-[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.11.0/examples/frontend.py) es una
+[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.12.0/examples/frontend.py) es una
 interfaz entera en un archivo de Python: pide tareas con `input()` e imprime los eventos según llegan.
 
 ```python
@@ -75,7 +80,7 @@ rumbo frontend add simple python3 /path/to/examples/frontend.py
 rumbo -f simple
 ```
 
-En Go, el paquete [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.11.0/protocol) tiene los tipos
+En Go, el paquete [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.12.0/protocol) tiene los tipos
 y `DialFrontend`, una conexión ya hecha.
 
 ## Comandos sin conocerlos

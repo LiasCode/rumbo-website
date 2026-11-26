@@ -19,9 +19,9 @@ permisos del usuario que lo inició, y limitar lo que puede hacer se deja a un s
 ## Qué guarda rumbo
 
 - **Las sesiones guardan lo que vio el modelo**, incluidos los secretos que salgan en la salida de los
-  comandos, en `~/.local/share/rumbo/sessions/`, legible solo por ti.
+  comandos, en `~/.rumbo/sessions/`, legible solo por ti.
 - **Una clave de API que le das al `/login` de un proveedor integrado** se guarda en
-  `~/.config/rumbo/credentials/` (`~/Library/Application Support/rumbo/credentials/` en macOS),
+  `~/.rumbo/credentials/`,
   legible solo por ti, y por tanto también por el modelo.
 - **Un secreto que pide un proveedor**, como un código de inicio de sesión, va de la interfaz al
   proveedor y no se registra en ningún sitio, ni siquiera en la sesión.

@@ -68,7 +68,10 @@ rumbo extension add -replaces bash guard python3 /path/to/examples/guard.py
 rumbo extension set guard replaces=       # give bash back to rumbo
 ```
 
-[`examples/guard.py`](https://github.com/LiasCode/rumbo/blob/v0.11.0/examples/guard.py) asks before any `rm -rf`, in a dialog, and passes everything else on to rumbo's own `bash`.
+[`examples/guard.py`](https://github.com/LiasCode/rumbo/blob/v0.12.0/examples/guard.py) asks before any `rm -rf`, in a dialog, and passes everything else on to rumbo's own `bash`.
+
+On Windows rumbo's shell tool is `powershell`, which runs Windows PowerShell: an extension takes its
+place there with `-replaces powershell`.
 
 ## What else an extension does
 

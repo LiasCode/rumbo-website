@@ -86,13 +86,14 @@ rumbo frontend rm <name>                           remove one you added, or what
 ```
 
 A front end is any program that speaks the Agent Frontend Protocol on file descriptors 3 (read) and
-4 (write), and keeps the terminal on stdin and stdout. See [write a front end](/extend/front-end/).
+4 (write), or on Windows the two handles `RUMBO_FRONTEND_HANDLES` names, and keeps the terminal on
+stdin and stdout. See [write a front end](/extend/front-end/).
 
 ## Built-in programs and version
 
 ```text
 rumbo provide <name>           run a built-in provider on stdin/stdout
-rumbo attach <name>            run a built-in front end on descriptors 3/4
+rumbo attach <name>            run a built-in front end on descriptors 3/4 (handles on Windows)
 rumbo extend mcp [command...]  run the built-in MCP extension on stdin/stdout
 rumbo version                  print the version
 ```

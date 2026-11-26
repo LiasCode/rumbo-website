@@ -87,14 +87,15 @@ rumbo frontend rm <name>                           remove one you added, or what
 ```
 
 Un'interfaccia è qualsiasi programma che parla l'Agent Frontend Protocol sui descrittori di file 3
-(lettura) e 4 (scrittura), e mantiene il terminale su stdin e stdout. Vedi
+(lettura) e 4 (scrittura), o su Windows sui due handle che indica `RUMBO_FRONTEND_HANDLES`, e
+mantiene il terminale su stdin e stdout. Vedi
 [scrivere un'interfaccia](/it/extend/front-end/).
 
 ## Programmi integrati e versione
 
 ```text
 rumbo provide <name>           run a built-in provider on stdin/stdout
-rumbo attach <name>            run a built-in front end on descriptors 3/4
+rumbo attach <name>            run a built-in front end on descriptors 3/4 (handles on Windows)
 rumbo extend mcp [command...]  run the built-in MCP extension on stdin/stdout
 rumbo version                  print the version
 ```

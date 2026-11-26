@@ -1,18 +1,21 @@
 ---
 title: Agent Frontend Protocol
-description: Version 2 of the protocol between a front end and the rumbo host, as rumbo 0.11.0 speaks it. Both ways of connecting, one host per session, every method, every event, and the functions the host offers, from the source.
+description: Version 3 of the protocol between a front end and the rumbo host, as rumbo 0.12.0 speaks it. Both ways of connecting, one host per session, every method, every event, and the functions the host offers, from the source.
 ---
 
 A front end is the program a person uses: it sends tasks and shows what happens. It speaks **JSON-RPC 2.0, one object per line**, with the host. Lines that are not JSON are skipped.
 
-This page describes **version 2, which rumbo 0.11.0 speaks, as 0.10.0 did**. rumbo 0.9.0 spoke version 1, in which one host worked in several sessions of a project. A host and a front end that speak different versions refuse each other in `initialize`.
+This page describes **version 3, which rumbo 0.12.0 speaks**. rumbo 0.10.0 and 0.11.0 spoke version 2, in which a person gave images, in base64, where version 3 gives files by their paths. rumbo 0.9.0 spoke version 1, in which one host worked in several sessions of a project. A host and a front end that speak different versions refuse each other in `initialize`.
 
 ## Two ways to connect
 
-| Who starts whom                                               | The front end reads | The front end writes | The terminal                               |
-| ------------------------------------------------------------- | ------------------- | -------------------- | ------------------------------------------ |
-| **Attached.** `rumbo -f <name>` starts a registered front end | File descriptor 3   | File descriptor 4    | Stays the front end's, on stdin and stdout |
-| **Standalone.** The front end starts `rumbo serve`            | The host's stdout   | The host's stdin     | Whatever the front end does with its own   |
+| Who starts whom                                               | The front end reads                          | The front end writes | The terminal                               |
+| ------------------------------------------------------------- | -------------------------------------------- | -------------------- | ------------------------------------------ |
+| **Attached.** `rumbo -f <name>` starts a registered front end | File descriptor 3                            | File descriptor 4    | Stays the front end's, on stdin and stdout |
+| **Attached, on Windows**                                      | The first handle of `RUMBO_FRONTEND_HANDLES` | The second           | Stays the front end's, on stdin and stdout |
+| **Standalone.** The front end starts `rumbo serve`            | The host's stdout                            | The host's stdin     | Whatever the front end does with its own   |
+
+Windows passes a program no file descriptor past stderr. There, attached, the host gives the front end two inherited handles instead and names them in its environment, `RUMBO_FRONTEND_HANDLES=<read>,<write>`, in decimal. On Linux and macOS the variable is not set.
 
 The frames are the same either way, and in both **the host speaks first**. [Watch the two side by side](/#run-trace).
 
@@ -24,7 +27,7 @@ The host's first frame is a request, and nothing else happens until the front en
 
 | The host says       | Meaning                                                                                          |
 | ------------------- | ------------------------------------------------------------------------------------------------ |
-| `protocol`          | `2`.                                                                                             |
+| `protocol`          | `3`.                                                                                             |
 | `dir`               | The directory the session works in, which is its root.                                           |
 | `session`           | The host's session; absent until the first run of a new one.                                     |
 | `title`             | What the session is called; absent with `session`.                                               |
@@ -34,7 +37,7 @@ The host's first frame is a request, and nothing else happens until the front en
 | `config`            | The front end's registered configuration.                                                        |
 | `functions`         | What the host itself can be asked through `invoke`.                                              |
 
-The front end answers `{ "protocol": 2, "name": "…" }`, and optionally `config`: the configuration in force, with its own default for each field it was not given. Answering any other protocol version ends the connection, and the host says why.
+The front end answers `{ "protocol": 3, "name": "…" }`, and optionally `config`: the configuration in force, with its own default for each field it was not given. Answering any other protocol version ends the connection, and the host says why.
 
 ## One host, one session
 
@@ -84,12 +87,14 @@ It learns the sessions there are from `rumbo sessions -json`, which prints those
 }
 ```
 
-| Param              | Meaning                                                                                               |
-| ------------------ | ----------------------------------------------------------------------------------------------------- |
-| `objective`        | The task.                                                                                             |
-| `images`           | Pictures given with it, each `{ "media_type", "data" }` in base64.                                    |
-| `resume`           | Continue the session's unfinished run instead. Sent **without** an objective or images.               |
-| `model`, `options` | What to use for this run, among what the provider described. What is left out keeps its stored value. |
+| Param              | Meaning                                                                                                   |
+| ------------------ | --------------------------------------------------------------------------------------------------------- |
+| `objective`        | The task.                                                                                                 |
+| `files`            | Paths of files of any kind given with it, where the host runs: absolute, or from the session's directory. |
+| `resume`           | Continue the session's unfinished run instead. Sent **without** an objective or files.                    |
+| `model`, `options` | What to use for this run, among what the provider described. What is left out keeps its stored value.     |
+
+The host reads none of the `files`: it tells the model each path after the task, and the model reads a file with its tools when it needs to. A run of files alone, with no objective, is taken too. What has no path, such as an image pasted from the clipboard, the front end saves first, where and for as long as it chooses; the session keeps the path, not the file.
 
 A request the host does not start is answered at once with a JSON-RPC **error**: no id, neither a task nor `resume` (or both), an id that is already a run in progress, a run sent while another works or while the session is being compacted, or a session that cannot run, such as one with no model chosen. A run that starts is answered when it ends with a **result**:
 
@@ -99,7 +104,7 @@ A request the host does not start is answered at once with a JSON-RPC **error**:
 | `error`   | Why a failed run failed.          |
 | `session` | The session it ran in.            |
 
-Other requests can be sent while the run works, without waiting for its result. A version 1 `run` named a `session` or asked for a `new` one; version 2 has neither, since the run always goes to the host's session.
+Other requests can be sent while the run works, without waiting for its result. A version 1 `run` named a `session` or asked for a `new` one; versions 2 and 3 have neither, since the run always goes to the host's session.
 
 ## `event`
 
@@ -114,15 +119,15 @@ Every event has a `type`. `run` is the id of the run request it belongs to and `
 | `tool_finished` | `name`, `result`, `failed`   | The call ended.                                                                                                             |
 | `turn`          | `usage`, `context`, `window` | One model response: its tokens, how many the conversation now takes, and how many the model holds, when the provider said.  |
 | `log`           | `text`, `source`             | A diagnostic: the provider's own output, an extension's, or something the host did, such as retrying a request.             |
-| `objective`     | `text`, `images`             | In a history only: the task a run was given.                                                                                |
-| `steer`         | `text`, `images`             | In a history only: what the person told a run while it worked.                                                              |
+| `objective`     | `text`, `files`              | In a history only: the task a run was given, and the paths of the files given with it.                                      |
+| `steer`         | `text`, `files`              | In a history only: what the person told a run while it worked, and the files given with it.                                 |
 | `ended`         | `status`, `text`, `took`     | In a history only: how a run ended, why a failed one failed, and how long it took, in milliseconds, when the session knows. |
 
 Ignore a type or a field you do not know. A live run is over when its `run` request is answered, not when text stops arriving.
 
 ## `steer`, `cancel`, and `ask`
 
-- **`steer`** takes `text`, optional `images`, and `run`, the id of the run it is for. Without `run` it goes to the run in progress, and fails when there is none. The run's task stays as it was.
+- **`steer`** takes `text`, optional `files`, and `run`, the id of the run it is for. Without `run` it goes to the run in progress, and fails when there is none. The run's task stays as it was.
 - **`cancel`** takes `run` to stop one run, `invoke` to stop one function, or neither to stop the run in progress. A cancelled run still answers its request, with `status: "cancelled"`.
 - **`ask`** arrives with `text`, and `secret` when the answer must not be shown while typed or recorded anywhere. `invoke` names the function that asks; otherwise `run`, `session`, and `name` say which tool of which run does. A front end that cannot show a question answers with an error rather than leave it open.
 
@@ -132,7 +137,7 @@ Ignore a type or a field you do not know. A live run is over when its `run` requ
 
 `invoke` takes the function's `name`, its `params`, and a `target`: `provider` (the default), `host`, or `extension`, which `extension` then names. A function of the host answers `{ "text", "values", "state" }`: the outcome in words, the values of a function that lists something, and what the front end is attached to after the call (`dir`, `session`, `title`, `provider`, `model`), since the call may have changed it. `branch` answers with the session it made as its one value, and the host stays in its own: another host goes on in the branch, started with `-s` and that id.
 
-The host of rumbo 0.11.0 offers these, by `group`:
+The host of rumbo 0.12.0 offers these, by `group`:
 
 | Group       | Functions                                                                                                         |
 | ----------- | ----------------------------------------------------------------------------------------------------------------- |
@@ -151,20 +156,20 @@ Do not hard-code them. Build the commands, forms, and pickers from the descripti
 { "jsonrpc": "2.0", "id": 6, "method": "processes", "params": {} }
 ```
 
-The answer is `{ "processes": [...] }`, the host first and each other process after the one that started it. Each has `pid`, `parent`, `role`, `name` for a provider or an extension, `command` (the program's name, without its arguments), `memory` in bytes, and `cpu`, the processor time used since it started, in seconds, as the system's `ps` reports them.
+The answer is `{ "processes": [...] }`, the host first and each other process after the one that started it. Each has `pid`, `parent`, `role`, `name` for a provider or an extension, `command` (the program's name, without its arguments), `memory` in bytes, and `cpu`, the processor time used since it started, in seconds, as the system's `ps` reports them. Windows has no `ps`, so there the request is answered with an error that says so.
 
 | `role`                  | The process                                                                       |
 | ----------------------- | --------------------------------------------------------------------------------- |
 | `host`                  | The host itself.                                                                  |
 | `frontend`              | The front end, when the host started it. One that started the host is not listed. |
 | `provider`, `extension` | The provider or extension `name` names, or a process it started.                  |
-| `background`            | What the model left running with `bash`.                                          |
+| `background`            | What the model left running with `bash`, or `powershell` on Windows.              |
 | `command`               | Anything else the host started for the moment, such as the command a tool runs.   |
 
 Do not take a role you do not know for an error; more may be added. A front end that holds several hosts asks each, to say what they cost and close those nobody uses. The host's `processes` function shows the same to a person.
 
 ## In Go
 
-The [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.11.0/protocol) package has these types and `DialFrontend`, which answers `initialize` and returns a connection whose methods are the requests above.
+The [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.12.0/protocol) package has these types and `DialFrontend`, which answers `initialize` and returns a connection whose methods are the requests above.
 
-**Source:** [`protocol/frontend.go`](https://github.com/LiasCode/rumbo/blob/v0.11.0/protocol/frontend.go) for the wire, [`internal/frontend/frontend.go`](https://github.com/LiasCode/rumbo/blob/v0.11.0/internal/frontend/frontend.go) for the host's side and the two pipes, and [`internal/cli/functions.go`](https://github.com/LiasCode/rumbo/blob/v0.11.0/internal/cli/functions.go) for the host's functions. [Write a front end](/extend/front-end/).
+**Source:** [`protocol/frontend.go`](https://github.com/LiasCode/rumbo/blob/v0.12.0/protocol/frontend.go) for the wire, [`internal/frontend/frontend.go`](https://github.com/LiasCode/rumbo/blob/v0.12.0/internal/frontend/frontend.go) for the host's side and the two pipes, with `pass_windows.go` and `attached_windows.go` for Windows, and [`internal/cli/functions.go`](https://github.com/LiasCode/rumbo/blob/v0.12.0/internal/cli/functions.go) for the host's functions. [Write a front end](/extend/front-end/).

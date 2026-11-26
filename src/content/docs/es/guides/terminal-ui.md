@@ -59,6 +59,7 @@ también. Una conversación vacía muestra los pocos con los que empezar.
 | `/resume <session>`             | Ir a otra sesión, por su id, su principio o el principio de su título                        |
 | `/rename <title>`               | Darle a esta sesión un título propio                                                         |
 | `/branch [message]`             | Seguir en una [rama](/es/guides/sessions/#ramificar), antes de un mensaje tuyo o desde ahora |
+| `/attach <file>`                | Dar un archivo con lo siguiente que envíes, por su ruta; el modelo lo lee cuando lo necesite |
 | `/compact`                      | Sustituir ya la conversación por un resumen                                                  |
 | `/delete [session]`             | Borrar una sesión y su historial, una vez que lo aceptas; sin ella, esta                     |
 | `/copy [code\|id]`              | Copiar la última respuesta del modelo, su último bloque de código o el id de esta sesión     |
@@ -190,16 +191,32 @@ adónde fue.
 | Alt-Enter, Shift-Enter, Ctrl-J   | Nueva línea                                                                                      |
 | Arriba, Abajo                    | Moverse por las filas escritas y, más allá, por lo que enviaste antes                            |
 | Ctrl-R                           | Buscar lo que enviaste antes, en cualquier sesión empezada en esta carpeta                       |
-| Ctrl-V                           | Pegar la imagen del portapapeles, que va con lo siguiente que envíes                             |
-| Retroceso con el editor vacío    | Quitar la última imagen pegada                                                                   |
+| Ctrl-V                           | Dar los archivos copiados en un gestor de archivos, o la imagen del portapapeles                 |
+| Retroceso con el editor vacío    | Quitar el último archivo dado                                                                    |
 | Escape                           | Abandonar una función del proveedor en curso; si no, cancelar la ejecución de la sesión mostrada |
 | Ctrl-C                           | Lo mismo que Escape; si no, vaciar el editor; si no, salir                                       |
 | Ctrl-D                           | Salir, con el editor vacío                                                                       |
 | RePág, AvPág, la rueda del ratón | Desplazar la conversación                                                                        |
 
 El editor usa las teclas de readline: Ctrl-A y Ctrl-E, Ctrl-F, Alt-B y Alt-F, Ctrl-W, Ctrl-U y
-Ctrl-K. Pegar una imagen lee el portapapeles del escritorio con `wl-paste` en Wayland, `xclip` en X11
-o AppKit en macOS, ya que una terminal solo pega texto.
+Ctrl-K.
+
+## Archivos
+
+Lo que envías puede llevar archivos de cualquier tipo: `/attach`, Ctrl-V o un archivo soltado en la
+terminal. Al modelo se le dice la ruta de cada archivo y lo lee con sus herramientas cuando lo
+necesita, así que nada del archivo se guarda en la sesión ni se envía en cada petición. Los archivos
+esperan sobre el editor, cada uno tras un icono de su tipo, y se ven bajo tu mensaje una vez enviado.
+
+| Forma              | Da                                                                            |
+| ------------------ | ----------------------------------------------------------------------------- |
+| `/attach <file>`   | El archivo de esa ruta, desde la carpeta de la sesión                         |
+| Ctrl-V             | Los archivos copiados en un gestor de archivos, en Wayland y X11, o la imagen |
+| Un archivo soltado | Ese archivo, cuando lo pegado son solo rutas de archivos que existen          |
+
+Ctrl-V lee el portapapeles del escritorio, con `wl-paste` en Wayland, `xclip` en X11 o AppKit en
+macOS, ya que una terminal solo pega texto. Una imagen pegada se guarda en `~/.rumbo/pasted/` y se da
+por esa ruta. En Windows rumbo todavía no lee el portapapeles, y lo dice: usa `/attach`.
 
 ## Colores
 

@@ -59,10 +59,12 @@ Un'estensione di un plugin può chiedere di prendere il posto di uno strumento d
 rumbo plugin add -replaces bash <source>
 ```
 
-Un aggiornamento che chiede di sostituire più di quanto hai accettato viene rifiutato.
+Un aggiornamento che chiede di sostituire più di quanto hai accettato viene rifiutato. Su Windows lo
+strumento della shell è `powershell` e rumbo non ha `bash`: un plugin che chiede di sostituire `bash`
+lì viene rifiutato, dicendo quali strumenti ha rumbo.
 
 ## Prossimi passi
 
 - Il [manifesto di un plugin](/it/reference/plugins/) dice tutto ciò che un `plugin.yaml` può contenere.
-- [`examples/plugin`](https://github.com/LiasCode/rumbo/tree/v0.11.0/examples/plugin) è uno da cui partire.
+- [`examples/plugin`](https://github.com/LiasCode/rumbo/tree/v0.12.0/examples/plugin) è uno da cui partire.
 - L'[applicazione desktop](/it/guides/desktop-app/) è distribuita come plugin.

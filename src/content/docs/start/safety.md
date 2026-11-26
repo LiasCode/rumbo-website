@@ -19,10 +19,9 @@ the user who started it, and limiting what it may do is left to a sandbox of you
 ## What rumbo keeps
 
 - **Sessions keep what the model saw**, secrets in command output included, in
-  `~/.local/share/rumbo/sessions/`, readable only by you.
+  `~/.rumbo/sessions/`, readable only by you.
 - **An API key you give a built-in provider's `/login`** is kept in
-  `~/.config/rumbo/credentials/` (`~/Library/Application Support/rumbo/credentials/` on macOS),
-  readable only by you, and so by the model too.
+  `~/.rumbo/credentials/`, readable only by you, and so by the model too.
 - **A secret a provider asks for**, such as a sign-in code, goes from the front end to the
   provider and is recorded nowhere, not even in the session.
 

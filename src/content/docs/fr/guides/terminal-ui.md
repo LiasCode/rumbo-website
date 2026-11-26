@@ -62,6 +62,7 @@ une, et Ctrl-P aussi. Une conversation vide montre les quelques commandes par le
 | `/resume <session>`             | Aller à une autre session, par son id, son début ou le début de son titre                                                  |
 | `/rename <title>`               | Donner à cette session un titre à vous                                                                                     |
 | `/branch [message]`             | Continuer dans une [branche](/fr/guides/sessions/#créer-une-branche), avant l'un de vos messages ou à partir de maintenant |
+| `/attach <file>`                | Donner un fichier avec ce que vous envoyez ensuite, par son chemin ; le modèle le lit quand il en a besoin                 |
 | `/compact`                      | Remplacer dès maintenant la conversation par un résumé                                                                     |
 | `/delete [session]`             | Supprimer une session et son historique, après votre accord ; sans session, celle-ci                                       |
 | `/copy [code\|id]`              | Copier la dernière réponse du modèle, son dernier bloc de code ou l'id de cette session                                    |
@@ -196,16 +197,34 @@ est allé.
 | Alt-Entrée, Maj-Entrée, Ctrl-J      | Nouvelle ligne                                                                                    |
 | Haut, Bas                           | Parcourir les lignes tapées et, au-delà, ce que vous avez envoyé avant                            |
 | Ctrl-R                              | Rechercher ce que vous avez envoyé avant, dans n'importe quelle session démarrée dans ce dossier  |
-| Ctrl-V                              | Coller l'image du presse-papiers, qui part avec ce que vous envoyez ensuite                       |
-| Retour arrière, zone de saisie vide | Retirer la dernière image collée                                                                  |
+| Ctrl-V                              | Donner les fichiers copiés dans un gestionnaire de fichiers, ou l'image du presse-papiers         |
+| Retour arrière, zone de saisie vide | Retirer le dernier fichier donné                                                                  |
 | Échap                               | Abandonner une fonction du fournisseur en cours, sinon annuler l'exécution de la session affichée |
 | Ctrl-C                              | Comme Échap, sinon vider la zone de saisie, sinon quitter                                         |
 | Ctrl-D                              | Quitter, zone de saisie vide                                                                      |
 | Pg préc, Pg suiv, la molette        | Faire défiler la conversation                                                                     |
 
 La zone de saisie utilise les touches de readline : Ctrl-A et Ctrl-E, Ctrl-F, Alt-B et Alt-F, Ctrl-W,
-Ctrl-U et Ctrl-K. Coller une image lit le presse-papiers du bureau avec `wl-paste` sous Wayland,
-`xclip` sous X11 ou AppKit sur macOS, car un terminal ne colle que du texte.
+Ctrl-U et Ctrl-K.
+
+## Fichiers
+
+Ce que vous envoyez peut emporter des fichiers de tout type : `/attach`, Ctrl-V, ou un fichier déposé
+sur le terminal. Le modèle reçoit le chemin de chaque fichier et le lit avec ses outils quand il en a
+besoin : rien du fichier n'est gardé dans la session ni envoyé à chaque requête. Les fichiers
+attendent au-dessus de la zone de saisie, chacun après une icône de son type, et s'affichent sous
+votre message une fois envoyé.
+
+| Moyen             | Donne                                                                                 |
+| ----------------- | ------------------------------------------------------------------------------------- |
+| `/attach <file>`  | Le fichier à ce chemin, depuis le dossier de la session                               |
+| Ctrl-V            | Les fichiers copiés dans un gestionnaire de fichiers, sous Wayland et X11, ou l'image |
+| Un fichier déposé | Ce fichier, quand le collage n'est fait que de chemins de fichiers qui existent       |
+
+Ctrl-V lit le presse-papiers du bureau, avec `wl-paste` sous Wayland, `xclip` sous X11 ou AppKit sur
+macOS, car un terminal ne colle que du texte. Une image collée est enregistrée dans `~/.rumbo/pasted/`
+et donnée par ce chemin. Sous Windows, rumbo ne lit pas encore le presse-papiers, et le dit : utilisez
+`/attach`.
 
 ## Couleurs
 

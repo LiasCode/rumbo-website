@@ -86,7 +86,7 @@ What came before stays stored in the session. Only the request changes.
 
 ## What a session holds
 
-Each session is a directory in `~/.local/share/rumbo/sessions/<id>/`:
+Each session is a directory in `~/.rumbo/sessions/<id>/`:
 
 - `session.json` says what it is and what it chose: its provider, its model, and the options set
   for it;

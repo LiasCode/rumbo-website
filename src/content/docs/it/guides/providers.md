@@ -96,7 +96,7 @@ Nell'interfaccia da terminale, sono quelle del provider della sessione:
 | `/logout`                   | Dimenticare la chiave o l'accesso                                                                                                                 |
 | `/providers <name> account` | Dire quale credenziale è in uso e da dove viene, senza mostrarla                                                                                  |
 
-Le chiavi sono conservate in `~/.config/rumbo/credentials/`, leggibili solo da te. Un segreto che scrivi
+Le chiavi sono conservate in `~/.rumbo/credentials/`, leggibili solo da te. Un segreto che scrivi
 alla domanda di un provider va solo al provider e non viene registrato da nessuna parte.
 
 ## Opzioni

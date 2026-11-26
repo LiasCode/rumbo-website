@@ -1,21 +1,20 @@
 ---
-title: What changes after 0.11.0
-description: What the development branch of rumbo changes after 0.11.0, checked against its source. Today nothing, since main is the 0.11.0 release.
+title: What changes after 0.12.0
+description: What the development branch of rumbo changes after 0.12.0, checked against its source. Today nothing, since main is the 0.12.0 release.
 ---
 
-> **Nothing unreleased yet.** The `main` branch of rumbo is the [0.11.0](/reference/changelog/) release, commit `3be63cd`, and its changelog has nothing under _Unreleased_. Everything on this site describes 0.11.0, which is what the install instructions give you.
+> **Nothing unreleased yet.** The `main` branch of rumbo is the [0.12.0](/reference/changelog/) release, commit `c84580d`, and its changelog has nothing under _Unreleased_. Everything on this site describes 0.12.0, which is what the install instructions give you.
 
-## What 0.11.0 changed
+## What 0.12.0 changed
 
-0.11.0 changed the terminal UI most, and what it changed of the protocols is additive:
+0.12.0 changed where rumbo keeps things, and the front end protocol, incompatibly:
 
-| In 0.10.0                                                                       | In 0.11.0                                                                                            |
-| ------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| Ctrl-P opens a command palette.                                                 | Ctrl-P starts a command in the composer, as a slash does. [Commands](/guides/terminal-ui/#commands). |
-| A command for each function: `/use`, `/session-set`, `/provider-set`, and more. | A few in your words: `/model`, `/resume`, `/providers`, `/extensions`, `/settings`, and the rest.    |
-| An extension's functions are `/<name>-<function>`, such as `/docs-login`.       | `/extensions <name> <function>`, and `/login <name>` to sign in.                                     |
-| A header over the conversation, which is at most 100 columns wide.              | No header; the conversation takes the whole width, and the sidebar starts put away.                  |
-| The history's `ended` has `status` and `text`.                                  | It also has `took`, in milliseconds. [Front end protocol](/reference/frontend-protocol/#event).      |
-| The `mcp` extension declares its server's tools.                                | It also lists every tool the server has, with its `tools` function, for a front end to choose among. |
+| In 0.11.0                                                                                        | In 0.12.0                                                                                                          |
+| ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| Linux and macOS.                                                                                 | Windows too, where the shell tool is `powershell`. [Installation](/start/installation/).                           |
+| `~/.config/rumbo/` and `~/.local/share/rumbo/`, `~/Library/Application Support/rumbo/` on macOS. | `~/.rumbo/` on every system, or `RUMBO_HOME`. Nothing is moved for you.                                            |
+| Ctrl-V pastes an image, which goes to the model in base64.                                       | `/attach`, Ctrl-V, and a dropped file give files of any kind, by their paths. [Files](/guides/terminal-ui/#files). |
+| Front end protocol version 2, with `images` in `run` and `steer`.                                | Version 3, with `files`, a list of paths. [Front end protocol](/reference/frontend-protocol/).                     |
+| A registered front end reads the protocol on file descriptors 3 and 4.                           | The same, and on Windows from the handles `RUMBO_FRONTEND_HANDLES` names.                                          |
 
-**Source:** the [changes since 0.11.0](https://github.com/LiasCode/rumbo/compare/v0.11.0...main), and the [changelog](https://github.com/LiasCode/rumbo/blob/main/CHANGELOG.md).
+**Source:** the [changes since 0.12.0](https://github.com/LiasCode/rumbo/compare/v0.12.0...main), and the [changelog](https://github.com/LiasCode/rumbo/blob/main/CHANGELOG.md).

@@ -82,7 +82,7 @@ Un'esecuzione conserva ciò con cui è iniziata; una modifica si applica alla su
 
 ## Il file di configurazione
 
-`config.yaml` si trova in `~/.config/rumbo/` (`~/Library/Application Support/rumbo/` su macOS). Contiene
+`config.yaml` si trova in `~/.rumbo/` (`%USERPROFILE%\.rumbo\` su Windows). Contiene
 solo le tue scelte, mai un valore predefinito, e puoi modificarlo: rumbo lo cambia un valore alla volta
 e conserva i tuoi commenti.
 
@@ -101,13 +101,12 @@ dove si trova, invece di tirare a indovinare.
 
 ## Variabili d'ambiente
 
-| Variabile         | Cosa cambia                                                                  |
-| ----------------- | ---------------------------------------------------------------------------- |
-| `RUMBO_CONFIG`    | Il file di configurazione da usare al posto di `config.yaml`                 |
-| `RUMBO_DATA`      | La directory dei dati di rumbo, che contiene le sessioni                     |
-| `XDG_CONFIG_HOME` | Directory di base di `rumbo/config.yaml` su Linux                            |
-| `XDG_DATA_HOME`   | Directory di base dei dati `rumbo/` su Linux e macOS                         |
-| `NO_COLOR`        | L'interfaccia da terminale non mostra colori, con il suo `theme` predefinito |
+| Variabile      | Cosa cambia                                                                  |
+| -------------- | ---------------------------------------------------------------------------- |
+| `RUMBO_HOME`   | La directory in cui rumbo conserva tutto, al posto di `~/.rumbo/`            |
+| `RUMBO_CONFIG` | Il file di configurazione da usare al posto di `config.yaml`                 |
+| `RUMBO_DATA`   | La directory che contiene le sessioni e i plugin                             |
+| `NO_COLOR`     | L'interfaccia da terminale non mostra colori, con il suo `theme` predefinito |
 
 I provider leggono le proprie, come `ANTHROPIC_API_KEY` e `OPENAI_API_KEY`. Vedi
 [modelli e provider](/it/guides/providers/).

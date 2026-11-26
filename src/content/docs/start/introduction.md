@@ -4,7 +4,7 @@ description: rumbo is a minimal, open-source agent harness. It gives a model fou
 ---
 
 rumbo is a minimal agent harness. Give it a task, and it works through four tools, `read`,
-`write`, `edit`, and `bash`, and a fifth that uses the screen if you turn it on, until the model
+`write`, `edit`, and `bash` (`powershell` on Windows), and a fifth that uses the screen if you turn it on, until the model
 is done. The models behind it and the interfaces in front of it are separate programs you can
 replace.
 
@@ -32,7 +32,7 @@ Two more are published apart, as [plugins](/guides/plugins/) you add if you want
 | Plugin                                                   | Adds                                                                                                                                  |
 | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | [rumbo-claude](https://github.com/LiasCode/rumbo-claude) | A provider, `claude`, that uses a Claude Pro or Max subscription. It is not an official Anthropic integration: read its README first. |
-| [rumbo-gui](https://github.com/LiasCode/rumbo-gui)       | A front end, `gui`: a [desktop window](/guides/desktop-app/) for rumbo. It needs rumbo 0.10.0 or later.                               |
+| [rumbo-gui](https://github.com/LiasCode/rumbo-gui)       | A front end, `gui`: a [desktop window](/guides/desktop-app/) for rumbo. It needs rumbo 0.10.0 or 0.11.0, not yet 0.12.0.              |
 
 ```sh
 rumbo plugin add https://github.com/LiasCode/rumbo-claude

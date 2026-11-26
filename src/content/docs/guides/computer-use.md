@@ -24,7 +24,8 @@ rumbo system set computer=on
 | X11                                            | `xdotool`, and `maim` or ImageMagick                                                                      |
 | macOS                                          | Screen Recording, Accessibility, and Automation of System Events, allowed for the program that runs rumbo |
 
-On macOS the tool is written, and has not been tried yet.
+On macOS the tool is written, and has not been tried yet. On Windows there is no screen to act on
+yet: with `computer=on` the tool says so.
 
 ## How it behaves
 

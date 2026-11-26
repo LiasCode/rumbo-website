@@ -90,7 +90,7 @@ Ce qui précède reste enregistré dans la session. Seule la requête change.
 
 ## Ce que contient une session
 
-Chaque session est un répertoire dans `~/.local/share/rumbo/sessions/<id>/` :
+Chaque session est un répertoire dans `~/.rumbo/sessions/<id>/` :
 
 - `session.json` dit ce qu'elle est et ce qu'elle a choisi : son fournisseur, son modèle et les options
   réglées pour elle ;

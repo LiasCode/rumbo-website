@@ -54,7 +54,7 @@ the [terminal UI](/guides/terminal-ui/) guide.
 ## 4. Tell it how you work
 
 The model reads your instructions: the `AGENTS.md` or `CLAUDE.md` file of the directory rumbo
-starts in, and yours in `~/.config/rumbo/`. Start rumbo at the top of a repository to work with its
+starts in, and yours in `~/.rumbo/`. Start rumbo at the top of a repository to work with its
 guide. Write there how work should be done, and
 what to check before it is finished. See [instructions and skills](/guides/instructions-and-skills/).
 

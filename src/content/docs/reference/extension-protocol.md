@@ -5,7 +5,7 @@ description: Version 1 of the protocol between the rumbo host and an extension, 
 
 An extension is a program the host starts as a child process. They exchange **JSON-RPC 2.0 objects, one per line**, on the extension's stdin and stdout; stderr reaches the person as a diagnostic, and a stdout line that is not JSON is skipped. The framing, `initialize`, `invoke`, `delta`, `ask`, `cancel`, and `shutdown` are the [provider protocol's](/reference/provider-protocol/).
 
-This page describes protocol **version 1**, which rumbo 0.11.0 speaks, as 0.10.0 and 0.9.0 did.
+This page describes protocol **version 1**, which rumbo 0.12.0 speaks, as 0.9.0 to 0.11.0 did.
 
 ## Four things an extension can declare
 
@@ -72,7 +72,7 @@ While it answers a call, an extension can call **rumbo's own tools** with a `cal
 | A section        | `^[a-z0-9_-]{1,64}$`      | Rumbo or another extension has one of that name.                                                    |
 | A function       | `^[a-z][a-z0-9_-]{0,63}$` | The name is not one.                                                                                |
 
-**A tool never replaces rumbo's by its name alone.** The person says so, with `rumbo extension add -replaces bash …` or `replaces=bash`, and the extension must then declare a tool of that name. When any extension fails to start or declares something refused, the run does not start at all: a run with some of its tools missing would not be the one the person asked for.
+**A tool never replaces rumbo's by its name alone.** The person says so, with `rumbo extension add -replaces bash …` or `replaces=bash`, and the extension must then declare a tool of that name. On Windows rumbo's shell tool is `powershell`, so one that takes its place there says `replaces=powershell`. When any extension fails to start or declares something refused, the run does not start at all: a run with some of its tools missing would not be the one the person asked for.
 
 ## Sections
 
@@ -94,6 +94,6 @@ The host starts an extension when a run first needs it and keeps that **one proc
 
 ## In Go
 
-The [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.11.0/protocol) package has these types and `ServeExtension`, which turns an `ExtensionHandler` into an extension.
+The [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.12.0/protocol) package has these types and `ServeExtension`, which turns an `ExtensionHandler` into an extension.
 
-**Source:** [`protocol/extension.go`](https://github.com/LiasCode/rumbo/blob/v0.11.0/protocol/extension.go) for the wire, [`internal/extension/process.go`](https://github.com/LiasCode/rumbo/blob/v0.11.0/internal/extension/process.go) for one process, and [`set.go`](https://github.com/LiasCode/rumbo/blob/v0.11.0/internal/extension/set.go) for the rules on names, replacement, and sections. [Write an extension](/extend/extension/) · [Extensions and MCP](/guides/extensions/).
+**Source:** [`protocol/extension.go`](https://github.com/LiasCode/rumbo/blob/v0.12.0/protocol/extension.go) for the wire, [`internal/extension/process.go`](https://github.com/LiasCode/rumbo/blob/v0.12.0/internal/extension/process.go) for one process, and [`set.go`](https://github.com/LiasCode/rumbo/blob/v0.12.0/internal/extension/set.go) for the rules on names, replacement, and sections. [Write an extension](/extend/extension/) · [Extensions and MCP](/guides/extensions/).

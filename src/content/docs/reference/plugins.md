@@ -12,11 +12,11 @@ name: ink
 description: A catalog of inks, and how we write orders.
 
 # Run in the plugin's directory when it is added and updated.
-build: [go, build, -o, catalog, ./cmd/catalog]
+build: [go, build, -o, bin/, ./cmd/catalog]
 
 extensions:
   catalog:
-    command: ['{plugin}/catalog']
+    command: ['{plugin}/bin/catalog']
     config:
       source: local
     replaces: [bash]
@@ -53,9 +53,9 @@ A key that is none of these is refused, saying which, rather than ignored. So is
 
 ## What adding one does
 
-1. **Fetch.** A directory is used where it is. An address, anything with `://` or starting with `git@`, is cloned with `git clone --depth 1` into `plugins/` under [rumbo's data directory](/guides/configuration/#environment-variables).
+1. **Fetch.** A directory is used where it is. An address, anything with `://` or starting with `git@`, is cloned with `git clone --depth 1` into `~/.rumbo/plugins/`, or `plugins/` in the directory [`RUMBO_HOME`](/guides/configuration/#environment-variables) names.
 2. **Read** `plugin.yaml`, and refuse a plugin that does not fit beside what there is: one of the same name, a program another plugin brings or you registered, or a replacement you did not agree to.
-3. **Build**, when the manifest has a `build`, with its output on your screen.
+3. **Build**, when the manifest has a `build`, with its output on your screen. On Windows a program runs only with its extension, and `{plugin}/bin/catalog` finds `bin/catalog.exe`: build into a directory, as `-o bin/` does, and Go names the program `catalog.exe` there and `catalog` elsewhere. Windows has no `sh` either, for a build script.
 4. **Try.** Every provider and extension it brings is started, with the extensions you already have, and stopped. A plugin that does not pass is not added. A front end needs the terminal, so it is tried when it is first used.
 
 | Command               | A directory                                                         | A Git address                                                                                    |
@@ -78,4 +78,4 @@ What you agree to must be all it asks for, and an update that asks for more is r
 
 > A plugin's build and its programs run as you, with your rights. Add one whose code you trust.
 
-**Source:** [`internal/cli/plugins.go`](https://github.com/LiasCode/rumbo/blob/v0.11.0/internal/cli/plugins.go), [`internal/cli/programs.go`](https://github.com/LiasCode/rumbo/blob/v0.11.0/internal/cli/programs.go), rumbo's [own manifest](https://github.com/LiasCode/rumbo/blob/v0.11.0/plugins/rumbo/plugin.yaml), and a [plugin to copy from](https://github.com/LiasCode/rumbo/tree/v0.11.0/examples/plugin). [Install a plugin](/guides/plugins/).
+**Source:** [`internal/cli/plugins.go`](https://github.com/LiasCode/rumbo/blob/v0.12.0/internal/cli/plugins.go), [`internal/cli/programs.go`](https://github.com/LiasCode/rumbo/blob/v0.12.0/internal/cli/programs.go), rumbo's [own manifest](https://github.com/LiasCode/rumbo/blob/v0.12.0/plugins/rumbo/plugin.yaml), and a [plugin to copy from](https://github.com/LiasCode/rumbo/tree/v0.12.0/examples/plugin). [Install a plugin](/guides/plugins/).

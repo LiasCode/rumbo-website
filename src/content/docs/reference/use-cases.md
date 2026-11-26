@@ -1,9 +1,9 @@
 ---
 title: What each part can do
-description: What the rumbo host, a provider, a front end, an extension, and a plugin must do, can do, and never do in rumbo 0.11.0, with where to read more.
+description: What the rumbo host, a provider, a front end, an extension, and a plugin must do, can do, and never do in rumbo 0.12.0, with where to read more.
 ---
 
-Find the part you are working on, and what it is allowed to do. Each line was checked against the source of rumbo 0.11.0; the protocol pages have the frames.
+Find the part you are working on, and what it is allowed to do. Each line was checked against the source of rumbo 0.12.0; the protocol pages have the frames.
 
 ## Host
 
@@ -18,7 +18,7 @@ Find the part you are working on, and what it is allowed to do. Each line was ch
 | Try another direction               | [Branch](/guides/sessions/#branch): a new session from before any of your messages. Files are not rolled back. |
 | See exactly what the model was sent | `rumbo request <session> [turn]`, and `rumbo log <session>` for every entry.                                   |
 | Keep a long session going           | [Compaction](/guides/sessions/#compaction) summarizes it near the model's limit, or `/compact` when you ask.   |
-| Show the model a picture            | `images` on `run` or `steer`; the `read` tool looks at an image file.                                          |
+| Give the model a file               | `files` on `run` or `steer`: paths, which the model reads with `read`, and looks at an image that way.         |
 | Manage providers and extensions     | `rumbo provider` and `rumbo extension`, or their functions from any front end, such as `/extensions add`.      |
 | See what a rumbo costs the machine  | `processes`, or `/rumbos`: each process, its memory, and its processor time.                                   |
 | Limit what the agent can touch      | Run rumbo in a container, a virtual machine, or another account. There are no permission prompts.              |
@@ -27,17 +27,17 @@ Find the part you are working on, and what it is allowed to do. Each line was ch
 
 A provider **must** answer `initialize` and `complete`, one request at a time, keep its own credentials, and stop a cancelled request within 5 seconds.
 
-| It can                                          | Through                                                                              |
-| ----------------------------------------------- | ------------------------------------------------------------------------------------ |
-| Stream the answer as it is written              | `delta`.                                                                             |
-| List its models and describe its options        | `model`, `options`, and `fields` in its answer to `initialize`.                      |
-| Offer commands, such as signing in              | `functions`, called with `invoke`, which can say things and `ask` questions.         |
-| Keep what it needs to continue a conversation   | `opaque` blocks, stored and returned unchanged.                                      |
-| Have a failed request sent again                | An error with code `1`.                                                              |
-| Have a conversation that did not fit summarized | An error with code `2`.                                                              |
-| Say how large the model's context is            | `context_window`, which compaction goes by.                                          |
-| Say what it read from its cache                 | `cache_read` and `cache_write` in `usage`. The host tells you when a request missed. |
-| Show the model images                           | The `images` of a user's text and of a tool's result.                                |
+| It can                                          | Through                                                                                |
+| ----------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Stream the answer as it is written              | `delta`.                                                                               |
+| List its models and describe its options        | `model`, `options`, and `fields` in its answer to `initialize`.                        |
+| Offer commands, such as signing in              | `functions`, called with `invoke`, which can say things and `ask` questions.           |
+| Keep what it needs to continue a conversation   | `opaque` blocks, stored and returned unchanged.                                        |
+| Have a failed request sent again                | An error with code `1`.                                                                |
+| Have a conversation that did not fit summarized | An error with code `2`.                                                                |
+| Say how large the model's context is            | `context_window`, which compaction goes by.                                            |
+| Say what it read from its cache                 | `cache_read` and `cache_write` in `usage`. The host tells you when a request missed.   |
+| Show the model images                           | The `images` of a tool's result, and of a user's text in a session from before 0.12.0. |
 
 It **never** runs a tool, and never counts on getting the next request of the same conversation. [Write a provider](/extend/provider/) · [Protocol](/reference/provider-protocol/).
 

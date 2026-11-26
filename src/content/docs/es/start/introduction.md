@@ -4,7 +4,7 @@ description: rumbo es un arnés de agentes mínimo y de código abierto. Da al m
 ---
 
 rumbo es un arnés de agentes mínimo. Dale una tarea y trabajará con cuatro herramientas, `read`,
-`write`, `edit` y `bash`, más una quinta que usa la pantalla si la activas, hasta que el modelo
+`write`, `edit` y `bash` (`powershell` en Windows), más una quinta que usa la pantalla si la activas, hasta que el modelo
 termine. Los modelos que hay detrás y las interfaces que hay delante son programas aparte que puedes
 reemplazar.
 
@@ -29,10 +29,10 @@ rumbo se puede usar tal como se instala. Un solo binario trae:
 
 Hay dos más que se publican aparte, como [plugins](/es/guides/plugins/) que añades si los quieres:
 
-| Plugin                                                   | Añade                                                                                                                              |
-| -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| [rumbo-claude](https://github.com/LiasCode/rumbo-claude) | Un proveedor, `claude`, que usa una suscripción Claude Pro o Max. No es una integración oficial de Anthropic: lee antes su README. |
-| [rumbo-gui](https://github.com/LiasCode/rumbo-gui)       | Una interfaz, `gui`: una [ventana de escritorio](/es/guides/desktop-app/) para rumbo. Necesita rumbo 0.10.0 o posterior.           |
+| Plugin                                                   | Añade                                                                                                                                    |
+| -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| [rumbo-claude](https://github.com/LiasCode/rumbo-claude) | Un proveedor, `claude`, que usa una suscripción Claude Pro o Max. No es una integración oficial de Anthropic: lee antes su README.       |
+| [rumbo-gui](https://github.com/LiasCode/rumbo-gui)       | Una interfaz, `gui`: una [ventana de escritorio](/es/guides/desktop-app/) para rumbo. Necesita rumbo 0.10.0 o 0.11.0, todavía no 0.12.0. |
 
 ```sh
 rumbo plugin add https://github.com/LiasCode/rumbo-claude

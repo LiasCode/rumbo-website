@@ -95,7 +95,7 @@ terminal UI, they are of the session's provider:
 | `/logout`                   | Forget the key or the sign-in                                                                                                         |
 | `/providers <name> account` | Say which credential is in use and where it comes from, without showing it                                                            |
 
-Keys are kept in `~/.config/rumbo/credentials/`, readable only by you. A secret you type at a
+Keys are kept in `~/.rumbo/credentials/`, readable only by you. A secret you type at a
 provider's question goes to the provider alone, and is recorded nowhere.
 
 ## Options

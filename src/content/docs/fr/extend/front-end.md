@@ -16,13 +16,16 @@ flux de travail.
 
 Les messages sont des objets JSON-RPC 2.0, un par ligne, identiques dans les deux cas :
 
-| Qui démarre qui                                               | L'interface lit depuis      | L'interface écrit vers      |
-| ------------------------------------------------------------- | --------------------------- | --------------------------- |
-| rumbo démarre une interface enregistrée (`rumbo -f <name>`)   | le descripteur de fichier 3 | le descripteur de fichier 4 |
-| L'interface démarre `rumbo serve`, comme le ferait un éditeur | le stdout de l'hôte         | le stdin de l'hôte          |
+| Qui démarre qui                                               | L'interface lit depuis                        | L'interface écrit vers      |
+| ------------------------------------------------------------- | --------------------------------------------- | --------------------------- |
+| rumbo démarre une interface enregistrée (`rumbo -f <name>`)   | le descripteur de fichier 3                   | le descripteur de fichier 4 |
+| La même chose, sous Windows                                   | le premier handle de `RUMBO_FRONTEND_HANDLES` | le second                   |
+| L'interface démarre `rumbo serve`, comme le ferait un éditeur | le stdout de l'hôte                           | le stdin de l'hôte          |
 
 Une interface démarrée par rumbo garde le terminal sur stdin et stdout, elle peut donc dessiner et
-lire les touches librement. Fermer la connexion termine l'hôte : il annule l'exécution en cours, l'enregistre
+lire les touches librement. Windows ne passe à un programme aucun descripteur après stderr : elle y
+reçoit donc deux handles hérités, nommés en décimal dans son environnement par
+`RUMBO_FRONTEND_HANDLES=<read>,<write>`. Fermer la connexion termine l'hôte : il annule l'exécution en cours, l'enregistre
 et arrête ses fournisseurs.
 
 Un hôte est une session. Pour en afficher plusieurs, comme le fait l'interface en terminal, démarrez un
@@ -35,8 +38,10 @@ Un hôte est une session. Pour en afficher plusieurs, comme le fait l'interface 
 
 1. **`initialize`** : l'hôte parle en premier, avec le répertoire, la session, le fournisseur et le
    modèle auxquels l'interface est rattachée, et la tâche donnée en ligne de commande, s'il y en a une.
-2. **`run`** : l'interface envoie une tâche. L'hôte répond quand l'exécution est terminée : faite,
-   échouée ou annulée.
+2. **`run`** : l'interface envoie une tâche, et les chemins des fichiers qui l'accompagnent, que le
+   modèle lit avec ses outils. L'hôte répond quand l'exécution est terminée : faite, échouée ou
+   annulée. Ce qui n'a pas de chemin, comme une image collée, l'interface l'enregistre d'abord et le
+   donne par son chemin.
 3. Les notifications **`event`** rendent compte de l'exécution pendant qu'elle travaille : le texte du
    modèle, les appels d'outils et leurs résultats, les tokens dépensés et les diagnostics.
 4. **`steer`** dit quelque chose à une exécution pendant qu'elle travaille, et **`cancel`** l'arrête.
@@ -48,7 +53,7 @@ l'hôte (`processes`).
 
 ## Un exemple complet
 
-[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.11.0/examples/frontend.py) est une
+[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.12.0/examples/frontend.py) est une
 interface complète dans un seul fichier Python : elle demande des tâches avec `input()` et affiche les
 événements à mesure qu'ils arrivent.
 
@@ -79,7 +84,7 @@ rumbo frontend add simple python3 /path/to/examples/frontend.py
 rumbo -f simple
 ```
 
-En Go, le paquet [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.11.0/protocol) contient les types
+En Go, le paquet [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.12.0/protocol) contient les types
 et `DialFrontend`, une connexion prête à l'emploi.
 
 ## Des commandes sans les connaître

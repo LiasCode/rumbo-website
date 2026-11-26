@@ -95,7 +95,7 @@ interfaz de terminal, son del proveedor de la sesión:
 | `/logout`                   | Olvidar la clave o el inicio de sesión                                                                                                             |
 | `/providers <name> account` | Decir qué credencial se usa y de dónde viene, sin mostrarla                                                                                        |
 
-Las claves se guardan en `~/.config/rumbo/credentials/`, legibles solo por ti. Un secreto que escribes
+Las claves se guardan en `~/.rumbo/credentials/`, legibles solo por ti. Un secreto que escribes
 cuando un proveedor lo pregunta va solo al proveedor y no se registra en ningún sitio.
 
 ## Opciones

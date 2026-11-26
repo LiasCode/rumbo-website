@@ -1,6 +1,6 @@
 ---
 title: Glossary
-description: The words rumbo uses for its parts, its messages, and what it stores, each as the source of rumbo 0.11.0 means it.
+description: The words rumbo uses for its parts, its messages, and what it stores, each as the source of rumbo 0.12.0 means it.
 ---
 
 ## The parts

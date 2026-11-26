@@ -24,7 +24,8 @@ rumbo system set computer=on
 | X11                                        | `xdotool`, y `maim` o ImageMagick                                                                                     |
 | macOS                                      | Grabación de pantalla, Accesibilidad y Automatización de System Events, permitidos para el programa que ejecuta rumbo |
 
-En macOS la herramienta está escrita, pero aún no se ha probado.
+En macOS la herramienta está escrita, pero aún no se ha probado. En Windows todavía no hay pantalla
+sobre la que actuar: con `computer=on` la herramienta lo dice.
 
 ## Cómo se comporta
 
