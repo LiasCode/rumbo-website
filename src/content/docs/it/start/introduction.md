@@ -31,7 +31,7 @@ Altri due sono pubblicati a parte, come [plugin](/it/guides/plugins/) da aggiung
 | Plugin                                                   | Aggiunge                                                                                                                                 |
 | -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | [rumbo-claude](https://github.com/LiasCode/rumbo-claude) | Un provider, `claude`, che usa un abbonamento Claude Pro o Max. Non è un'integrazione ufficiale di Anthropic: leggi prima il suo README. |
-| [rumbo-gui](https://github.com/LiasCode/rumbo-gui)       | Un'interfaccia, `gui`: una [finestra desktop](/it/guides/desktop-app/) per rumbo. Richiede rumbo 0.10.0 o 0.11.0, non ancora 0.12.0.     |
+| [rumbo-gui](https://github.com/LiasCode/rumbo-gui)       | Un'interfaccia, `gui`: una [finestra desktop](/it/guides/desktop-app/) per rumbo. Richiede rumbo 0.12.0 o successivo.                    |
 
 ```sh
 rumbo plugin add https://github.com/LiasCode/rumbo-claude

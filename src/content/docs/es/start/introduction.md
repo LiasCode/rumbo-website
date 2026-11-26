@@ -29,10 +29,10 @@ rumbo se puede usar tal como se instala. Un solo binario trae:
 
 Hay dos más que se publican aparte, como [plugins](/es/guides/plugins/) que añades si los quieres:
 
-| Plugin                                                   | Añade                                                                                                                                    |
-| -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| [rumbo-claude](https://github.com/LiasCode/rumbo-claude) | Un proveedor, `claude`, que usa una suscripción Claude Pro o Max. No es una integración oficial de Anthropic: lee antes su README.       |
-| [rumbo-gui](https://github.com/LiasCode/rumbo-gui)       | Una interfaz, `gui`: una [ventana de escritorio](/es/guides/desktop-app/) para rumbo. Necesita rumbo 0.10.0 o 0.11.0, todavía no 0.12.0. |
+| Plugin                                                   | Añade                                                                                                                              |
+| -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| [rumbo-claude](https://github.com/LiasCode/rumbo-claude) | Un proveedor, `claude`, que usa una suscripción Claude Pro o Max. No es una integración oficial de Anthropic: lee antes su README. |
+| [rumbo-gui](https://github.com/LiasCode/rumbo-gui)       | Una interfaz, `gui`: una [ventana de escritorio](/es/guides/desktop-app/) para rumbo. Necesita rumbo 0.12.0 o posterior.           |
 
 ```sh
 rumbo plugin add https://github.com/LiasCode/rumbo-claude

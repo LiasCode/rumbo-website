@@ -7,8 +7,8 @@ description: rumbo-gui est une fenêtre de bureau pour rumbo. Tous les projets e
 projets et sessions au même endroit, chaque session comme une conversation, et les réglages de rumbo,
 sans terminal. C'est une interface comme une autre, écrite en Rust avec
 [GPUI](https://github.com/zed-industries/zed), qui parle la
-version 2 de l'Agent Frontend Protocol, et il lui faut donc rumbo 0.10.0 ou 0.11.0 : rumbo 0.12.0
-parle la [version 3](/fr/reference/frontend-protocol/).
+[version 3 de l'Agent Frontend Protocol](/fr/reference/frontend-protocol/), et il lui faut donc
+rumbo 0.12.0 ou ultérieur.
 
 ## Ce que vous pouvez faire
 
@@ -29,7 +29,7 @@ parle la [version 3](/fr/reference/frontend-protocol/).
 - **Laisser des exécutions tourner.** Les exécutions continuent dans d'autres sessions et projets, et
   la fenêtre, ou le bureau si vous l'activez, vous prévient quand l'une se termine.
 
-> **rumbo-gui a besoin de rumbo 0.10.0 ou 0.11.0**, qui parlent la version 2 du protocole d'interface et possèdent `rumbo sessions -json`. rumbo 0.12.0 parle la version 3, où une personne donne des fichiers par leur chemin au lieu d'images, et refuse rumbo-gui tant qu'il ne parle pas la version 3. Tout autre rumbo est refusé quand la fenêtre le démarre, et elle le dit.
+> **rumbo-gui a besoin de rumbo 0.12.0 ou ultérieur**, qui parle la version 3 du protocole d'interface, où une personne donne des fichiers par leur chemin, et possède `rumbo sessions -json`. Tout autre rumbo est refusé quand la fenêtre le démarre, et elle le dit. Une image collée dans la fenêtre est enregistrée dans `~/.cache/rumbo-gui/pasted/` et donnée par ce chemin.
 
 ## Comment il fonctionne avec rumbo
 
