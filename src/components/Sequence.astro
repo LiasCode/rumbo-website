@@ -3,15 +3,16 @@ import type { Locale } from '../navigation';
 
 // A conversation between two or three programs, drawn as lanes and the
 // frames that cross them, which redraw themselves one after the other for
-// as long as the page is open. The articles that have one are named here,
-// with the frames their protocol really has; an answer is drawn dashed.
-const { locale, slug } = Astro.props as { locale: Locale; slug: string };
+// as long as the page is open, the one crossing in red. The articles that
+// have one are named here, with the frames their protocol really has; an
+// answer is drawn dashed.
+const { locale, slug, number = 1 } = Astro.props as { locale: Locale; slug: string; number?: number };
 
 const words = {
-	en: { host: 'Host', provider: 'Provider', frontend: 'Front end', extension: 'Extension', bridge: 'rumbo extend mcp', server: 'MCP server', you: 'You', rumbo: 'rumbo', plugin: 'Plugin', label: 'Sequence of frames' },
-	es: { host: 'Host', provider: 'Proveedor', frontend: 'Interfaz', extension: 'Extensión', bridge: 'rumbo extend mcp', server: 'Servidor MCP', you: 'Tú', rumbo: 'rumbo', plugin: 'Plugin', label: 'Secuencia de mensajes' },
-	fr: { host: 'Hôte', provider: 'Fournisseur', frontend: 'Interface', extension: 'Extension', bridge: 'rumbo extend mcp', server: 'Serveur MCP', you: 'Vous', rumbo: 'rumbo', plugin: 'Plugin', label: 'Séquence de messages' },
-	it: { host: 'Host', provider: 'Provider', frontend: 'Interfaccia', extension: 'Estensione', bridge: 'rumbo extend mcp', server: 'Server MCP', you: 'Tu', rumbo: 'rumbo', plugin: 'Plugin', label: 'Sequenza di messaggi' },
+	en: { host: 'Host', provider: 'Provider', frontend: 'Front end', extension: 'Extension', bridge: 'rumbo extend mcp', server: 'MCP server', you: 'You', rumbo: 'rumbo', plugin: 'Plugin', label: 'Sequence of frames', caption: 'The frames, in the order they cross. An answer is dashed; the one in red is crossing now.' },
+	es: { host: 'Host', provider: 'Proveedor', frontend: 'Interfaz', extension: 'Extensión', bridge: 'rumbo extend mcp', server: 'Servidor MCP', you: 'Tú', rumbo: 'rumbo', plugin: 'Plugin', label: 'Secuencia de mensajes', caption: 'Los mensajes, en el orden en que cruzan. Una respuesta va discontinua; el de rojo es el que cruza ahora.' },
+	fr: { host: 'Hôte', provider: 'Fournisseur', frontend: 'Interface', extension: 'Extension', bridge: 'rumbo extend mcp', server: 'Serveur MCP', you: 'Vous', rumbo: 'rumbo', plugin: 'Plugin', label: 'Séquence de messages', caption: 'Les messages, dans l’ordre où ils passent. Une réponse est en pointillés ; celui en rouge passe en ce moment.' },
+	it: { host: 'Host', provider: 'Provider', frontend: 'Interfaccia', extension: 'Estensione', bridge: 'rumbo extend mcp', server: 'Server MCP', you: 'Tu', rumbo: 'rumbo', plugin: 'Plugin', label: 'Sequenza di messaggi', caption: 'I messaggi, nell’ordine in cui passano. Una risposta è tratteggiata; quello in rosso sta passando ora.' },
 }[locale];
 
 type Step = [from: number, to: number, label: string, answer?: boolean];
@@ -97,37 +98,27 @@ const name = `sequence-${slug.replace('/', '-')}`;
 const percent = (value: number) => `${((value / lanes.length) * 100).toFixed(3)}%`;
 ---
 
-<figure class="sequence" aria-label={words.label} style={`--round:${round}s;--beat:${beat}s;--draw:${name}-draw;--dot:${name}-dot;--dot-back:${name}-dot-back;--lit:${name}-lit`}>
-	<ol class="lanes" aria-hidden="true">{lanes.map((lane) => <li>{lane}</li>)}</ol>
+<figure class="figure sequence" aria-label={words.label} style={`--round:${round}s;--beat:${beat}s;--act:${name}-act`}>
+	<ol class="lanes" aria-hidden="true">{lanes.map((lane) => <li><span>{lane}</span></li>)}</ol>
 	<div class="track">
 		{lanes.map((_, lane) => <i class="lifeline" style={`left:${percent(lane + 0.5)}`}></i>)}
 		<ol class="steps">
 			{steps.map(([from, to, label, answer], index) => (
 				<li class:list={[to < from ? 'leftward' : 'rightward', { answer }]} style={`--order:${index};--left:${percent(Math.min(from, to) + 0.5)};--span:${percent(Math.abs(to - from))}`}>
-					<span class="arrow" aria-hidden="true"><i></i></span>
 					<code><span class="who">{lanes[from]} → {lanes[to]}: </span>{label}</code>
+					<span class="arrow" aria-hidden="true"></span>
 				</li>
 			))}
 		</ol>
 	</div>
+	<figcaption><b>Fig. {number} ·</b> {words.caption}</figcaption>
 </figure>
 
 <style is:inline set:html={`
-@keyframes ${name}-draw { 0% { transform: scaleX(0); opacity: 1; } ${drawn}%, 96% { transform: scaleX(1); opacity: 1; } 100% { transform: scaleX(1); opacity: 0; } }
-@keyframes ${name}-dot { 0% { left: 0; opacity: 1; } ${drawn}% { left: 100%; opacity: 1; } ${(Number(drawn) + 1).toFixed(2)}%, 100% { left: 100%; opacity: 0; } }
-@keyframes ${name}-dot-back { 0% { left: 100%; opacity: 1; } ${drawn}% { left: 0; opacity: 1; } ${(Number(drawn) + 1).toFixed(2)}%, 100% { left: 0; opacity: 0; } }
-@keyframes ${name}-lit { 0%, ${turn}% { color: var(--accent); background: var(--surface); } ${(Number(turn) + 2).toFixed(2)}%, 100% { color: var(--ink); background: var(--paper); } }
+@keyframes ${name}-act { 0% { transform: scaleX(0); opacity: 1; } ${drawn}% { transform: scaleX(1); opacity: 1; } ${turn}% { transform: scaleX(1); opacity: 1; } ${(Number(turn) + 2).toFixed(2)}%, 100% { transform: scaleX(1); opacity: 0; } }
 `}></style>
 
 <style>
-	.sequence {
-		margin: 1.6rem 0 2.2rem;
-		padding: 1rem clamp(0.5rem, 2vw, 1.2rem) 1.2rem;
-		border: 1px solid var(--line);
-		border-top: 3px solid var(--ink);
-		background: var(--paper);
-	}
-
 	.lanes,
 	.steps {
 		margin: 0;
@@ -139,109 +130,106 @@ const percent = (value: number) => `${((value / lanes.length) * 100).toFixed(3)}
 		display: grid;
 		grid-auto-flow: column;
 		grid-auto-columns: minmax(0, 1fr);
-		gap: 0.5rem;
+		gap: 1ch;
 	}
 
 	.lanes li {
-		justify-self: center;
-		max-width: 100%;
-		padding: 0.35rem 0.7rem;
-		background: var(--ink);
-		color: var(--surface);
-		font: 700 0.82rem/1.3 var(--sans);
 		text-align: center;
+	}
+
+	.lanes span {
+		display: inline-block;
+		max-width: 100%;
+		padding: 0.2lh 1.5ch;
+		border: 1.5px solid var(--ink);
+		font-weight: 800;
 		overflow-wrap: anywhere;
 	}
 
 	.track {
 		position: relative;
-		padding-block: 0.5rem 0.2rem;
+		padding: 0.5lh 0 0.2lh;
 	}
 
 	.lifeline {
 		position: absolute;
 		top: 0;
 		bottom: 0;
-		width: 0;
-		border-left: 1.5px dashed var(--line);
+		border-left: 1px dashed var(--dim);
 	}
 
 	.steps li {
 		position: relative;
-		padding-top: 1.15rem;
+		padding-bottom: 0.9lh;
 	}
 
-	.arrow {
-		position: absolute;
-		top: 0.72rem;
-		left: var(--left);
-		width: var(--span);
-		height: 2px;
-		background: var(--ink);
-		transform-origin: left;
-		animation: var(--draw) var(--round) calc(var(--order) * var(--beat)) linear infinite backwards;
-	}
-
-	.leftward .arrow {
-		transform-origin: right;
-	}
-
-	.answer .arrow {
-		background: repeating-linear-gradient(90deg, var(--ink) 0 5px, transparent 5px 9px);
-	}
-
-	/* The head of the arrow, at the end it points to. */
-	.arrow::after {
-		content: '';
-		position: absolute;
-		top: -4px;
-		right: -1px;
-		border: 5px solid transparent;
-		border-left: 8px solid var(--ink);
-		border-right: 0;
-	}
-
-	.leftward .arrow::after {
-		right: auto;
-		left: -1px;
-		border-left: 0;
-		border-right: 8px solid var(--ink);
-	}
-
-	/* The frame itself, which runs the arrow as it is drawn. */
-	.arrow i {
-		position: absolute;
-		top: -4px;
-		left: 0;
-		width: 10px;
-		height: 10px;
-		margin-left: -5px;
-		border-radius: 50%;
-		background: var(--seal);
-		opacity: 0;
-		animation: var(--dot) var(--round) calc(var(--order) * var(--beat)) cubic-bezier(0.45, 0, 0.25, 1) infinite backwards;
-	}
-
-	.leftward .arrow i {
-		animation-name: var(--dot-back);
-	}
-
+	/* The label of the frame, over its arrow, on paper so the lifelines
+	   pass behind it. */
 	.steps code {
 		position: relative;
 		display: block;
 		width: fit-content;
 		max-width: 100%;
-		margin: 0.25rem auto 0.3rem;
-		padding: 0.1rem 0.45rem;
+		margin: 0 auto;
+		padding: 0 1ch;
 		background: var(--paper);
-		font: 0.78rem/1.5 var(--mono);
+		font-weight: 400;
+		font-size: 0.875rem;
 		text-align: center;
 		overflow-wrap: anywhere;
-		animation: var(--lit) var(--round) calc(var(--order) * var(--beat)) linear infinite;
+	}
+
+	/* The arrow: a line from one lane to the other, solid for a request and
+	   dashed for an answer, and a head where it points. */
+	.arrow {
+		position: absolute;
+		bottom: 0.45lh;
+		left: var(--left);
+		width: var(--span);
+		border-top: 1.5px solid var(--ink);
+	}
+
+	.answer .arrow {
+		border-top-style: dashed;
+	}
+
+	.arrow::after {
+		content: '';
+		position: absolute;
+		top: calc(-0.35em - 0.75px);
+		right: -1px;
+		width: 0.6em;
+		height: 0.7em;
+		background: var(--ink);
+		clip-path: polygon(0 0, 100% 50%, 0 100%);
+	}
+
+	.leftward .arrow::after {
+		right: auto;
+		left: -1px;
+		clip-path: polygon(100% 0, 0 50%, 100% 100%);
+	}
+
+	/* The frame crossing now: the same line in red, drawn over it in its
+	   turn, and gone when the next one starts. */
+	.arrow::before {
+		content: '';
+		position: absolute;
+		top: -2px;
+		left: 0;
+		right: 0;
+		border-top: 2.5px solid var(--red);
+		transform-origin: left;
+		opacity: 0;
+		animation: var(--act) var(--round) calc(var(--order) * var(--beat)) linear infinite backwards;
+	}
+
+	.leftward .arrow::before {
+		transform-origin: right;
 	}
 
 	/* Who speaks to whom is in the arrow; it is said in words for those who
-	   do not see it. */
+	   do not see it, and shown when there is no room for lanes. */
 	.who {
 		position: absolute;
 		width: 1px;
@@ -251,9 +239,42 @@ const percent = (value: number) => `${((value / lanes.length) * 100).toFixed(3)}
 		white-space: nowrap;
 	}
 
+	@container (max-width: 30rem) {
+		.lanes,
+		.lifeline {
+			display: none;
+		}
+
+		.track {
+			padding-top: 0;
+		}
+
+		.steps code {
+			margin: 0;
+			padding: 0;
+			text-align: left;
+		}
+
+		.who {
+			position: static;
+			display: block;
+			width: auto;
+			height: auto;
+			overflow: visible;
+			clip-path: none;
+			color: var(--dim);
+			white-space: normal;
+		}
+
+		.arrow {
+			left: 0;
+			width: 100%;
+		}
+	}
+
 	@media (prefers-reduced-motion: reduce) {
-		.sequence * {
-			animation: none !important;
+		.arrow::before {
+			animation: none;
 		}
 	}
 </style>

@@ -1,7 +1,7 @@
 // Moves the drawings that grow. Every element with data-span="from to"
 // takes part between those two shares of the whole, and is given --t, how
-// far along it is, from 0 to 1. The styles turn --t into a stroke being
-// drawn, a label settling, or a seal being pressed, so a drawing can be
+// far along it is, from 0 to 1. The styles turn --t into a line being
+// drawn, a box being set down, or a label settling, so a drawing can be
 // played, held, and dragged to any point, backwards too.
 
 const ease = (t: number) => 1 - (1 - t) ** 3;

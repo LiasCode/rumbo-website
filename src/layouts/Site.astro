@@ -1,7 +1,7 @@
 ---
 import Search from '../components/Search.astro';
-import Icon from '../components/Icon.astro';
-import { href, interfaceCopy, languageNames, locales, type Locale } from '../navigation';
+import { directory, documents } from '../documents';
+import { href, interfaceCopy, languageNames, locales, section, type Locale } from '../navigation';
 import { repository, release } from '../site.mjs';
 import '../styles/site.css';
 
@@ -12,12 +12,19 @@ interface Props {
 	slug?: string;
 	canonicalLocale?: Locale;
 	alternates?: Locale[];
+	// The pages before and after this one, which j and k open.
+	previous?: string;
+	next?: string;
 }
 
-const { locale, title, description, slug = '', canonicalLocale = locale, alternates = [...locales] } = Astro.props;
+const { locale, title, description, slug = '', canonicalLocale = locale, alternates = [...locales], previous, next } = Astro.props;
 const copy = interfaceCopy[locale];
 const canonical = new URL(href(canonicalLocale, slug), Astro.site);
 const image = new URL('/og.png', Astro.site);
+const sidebar = directory(await documents(), locale);
+// Where the reader is, as man names a page: its title and its section.
+const here = slug ? `${title}(${section(slug)})` : 'rumbo(1)';
+const front = Astro.url.pathname === href(locale);
 ---
 
 <!doctype html>
@@ -25,12 +32,15 @@ const image = new URL('/og.png', Astro.site);
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="color-scheme" content="light dark" />
 		<title>{slug ? `${title} · rumbo` : `rumbo — ${title}`}</title>
 		<meta name="description" content={description} />
 		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 		<link rel="canonical" href={canonical} />
 		{alternates.map((language) => <link rel="alternate" hreflang={language} href={new URL(href(language, slug), Astro.site)} />)}
 		<link rel="alternate" hreflang="x-default" href={new URL(href('en', slug), Astro.site)} />
+		{previous && <link rel="prev" href={previous} />}
+		{next && <link rel="next" href={next} />}
 		<meta property="og:type" content="website" />
 		<meta property="og:title" content={`${title} · rumbo`} />
 		<meta property="og:description" content={description} />
@@ -39,24 +49,160 @@ const image = new URL('/og.png', Astro.site);
 		<meta property="og:image:width" content="1200" />
 		<meta property="og:image:height" content="630" />
 		<meta name="twitter:card" content="summary_large_image" />
+		<script is:inline>
+			// The ribbon the reader chose, before anything is painted.
+			try {
+				const ribbon = localStorage.getItem('rumbo-ribbon');
+				if (ribbon === 'paper' || ribbon === 'carbon') {
+					document.documentElement.dataset.ribbon = ribbon;
+				}
+			} catch {}
+		</script>
 	</head>
-	<body>
+	<body data-copy={copy.copy} data-copied={copy.copied}>
 		<a class="skip-link" href="#main">{copy.skip}</a>
-		<header class="masthead">
-			<div class="masthead-inner">
-				<a class="wordmark" href={href(locale)}><img src="/favicon.svg" alt="" width="29" height="29" />rumbo<span>.</span></a>
-				<nav class="top-nav" aria-label={copy.docs}>
-					<a href={href(locale, 'start/introduction')}>{copy.docs}</a>
-					<a class="top-github with-icon" href={repository}>GitHub <Icon name="arrow-up-right" /></a>
-					<Search locale={locale} />
-					<details class="language-menu">
-						<summary class="button small" aria-label={`${copy.language}: ${languageNames[locale]}`}>{locale.toUpperCase()} <Icon name="chevron-down" /></summary>
-						<ul>{locales.map((language) => <li><a lang={language} aria-current={language === locale ? 'page' : undefined} href={href(language, slug)}>{languageNames[language]}</a></li>)}</ul>
-					</details>
+		<div class="sheet">
+			<aside class="index" id="index" aria-label={copy.docs}>
+				<p class="index-top">
+					<a class="brand" href={href(locale)} aria-current={front ? 'page' : undefined}>rumbo<span>(1)</span></a>
+					<span class="languages" aria-label={copy.language}>
+						{locales.map((language) => <a lang={language} hreflang={language} href={href(language, slug)} title={languageNames[language]} aria-current={language === locale ? 'true' : undefined}>{language}</a>)}
+					</span>
+				</p>
+				<Search {locale} />
+				<nav aria-label={copy.docs}>
+					{sidebar.map(({ label, items }) => (
+						<section>
+							<h2>{label}</h2>
+							<ol>
+								{items.map((item) => (
+									<li data-href={item.href}>
+										<a lang={item.fallback ? 'en' : locale} href={item.href} aria-current={item.slug === slug ? 'page' : undefined}><span>{item.title}</span></a>
+										<small hidden></small>
+									</li>
+								))}
+							</ol>
+						</section>
+					))}
 				</nav>
-			</div>
-		</header>
-		<slot />
-		<footer class="site-footer"><a class="wordmark" href={href(locale)}>rumbo<span>.</span></a><a href={href(locale, 'reference/changelog')}>v{release.version}</a><a class="with-icon" href={repository}>GitHub <Icon name="arrow-up-right" /></a><a href={`${repository}/blob/main/LICENSE`}>MIT</a></footer>
+				<p class="index-foot"><a href={repository}>GitHub</a> · <a href={`${repository}/blob/main/LICENSE`}>MIT</a></p>
+				<a class="control index-close" href="#main">{copy.close}</a>
+			</aside>
+			<slot />
+		</div>
+		<footer class="pager-line">
+			<a class="control narrow" href="#index">{copy.index}</a>
+			<span class="where"><span class="manual">{copy.manual} · </span>{here}<span data-progress hidden></span></span>
+			<span class="keys" data-keys hidden><kbd>/</kbd> {copy.keys.search}&ensp;<kbd>j</kbd> <kbd>k</kbd> {copy.keys.page}&ensp;<kbd>q</kbd> {copy.keys.home}</span>
+			<span class="end">
+				<button type="button" class="control" data-ribbon-switch hidden data-label={copy.ribbon} data-paper={copy.ribbons.paper} data-carbon={copy.ribbons.carbon}></button>
+				<span class="release">v{release.version} · {locale.toUpperCase()}</span>
+			</span>
+		</footer>
 	</body>
 </html>
+
+<script>
+	const root = document.documentElement;
+	const dark = matchMedia('(prefers-color-scheme: dark)');
+	const narrow = matchMedia('(max-width: 860px)');
+
+	// The ribbon: the system's until the reader picks one, then the reader's.
+	const switcher = document.querySelector<HTMLButtonElement>('[data-ribbon-switch]')!;
+	const ribbon = () => root.dataset.ribbon ?? (dark.matches ? 'carbon' : 'paper');
+	const label = () => {
+		const other = ribbon() === 'paper' ? 'carbon' : 'paper';
+		switcher.textContent = `t: ${switcher.dataset[other]}`;
+		switcher.setAttribute('aria-label', `${switcher.dataset.label}: ${switcher.dataset[other]}`);
+	};
+	const toggle = () => {
+		root.dataset.ribbon = ribbon() === 'paper' ? 'carbon' : 'paper';
+		try {
+			localStorage.setItem('rumbo-ribbon', root.dataset.ribbon);
+		} catch {}
+		label();
+	};
+
+	switcher.addEventListener('click', toggle);
+	dark.addEventListener('change', label);
+	switcher.hidden = false;
+	label();
+
+	// How far down the page the reader is, as a pager says it.
+	const progress = document.querySelector<HTMLElement>('[data-progress]')!;
+	const measure = () => {
+		const room = document.documentElement.scrollHeight - innerHeight;
+		const share = room > 0 ? scrollY / room : 1;
+		progress.textContent = share > 0.995 ? ' · (END)' : ` · ${Math.round(share * 100)}%`;
+	};
+
+	addEventListener('scroll', measure, { passive: true });
+	addEventListener('resize', measure);
+	progress.hidden = false;
+	measure();
+
+	// Copying a listing, confirmed on the control itself.
+	const body = document.body;
+	for (const pre of document.querySelectorAll<HTMLElement>('main pre')) {
+		if (!navigator.clipboard) {
+			break;
+		}
+
+		const frame = document.createElement('div');
+		const button = document.createElement('button');
+		frame.className = 'listing-frame';
+		button.type = 'button';
+		button.className = 'control copy';
+		button.textContent = body.dataset.copy!;
+		pre.before(frame);
+		frame.append(button, pre);
+
+		button.addEventListener('click', async () => {
+			try {
+				await navigator.clipboard.writeText(pre.textContent!.trimEnd());
+				button.dataset.on = '';
+				button.textContent = body.dataset.copied!;
+				setTimeout(() => {
+					delete button.dataset.on;
+					button.textContent = body.dataset.copy!;
+				}, 1500);
+			} catch {
+				button.hidden = true;
+			}
+		});
+	}
+
+	// The keys of a pager. They act only when nothing is being typed, and
+	// leave the browser's own shortcuts alone.
+	const typing = (target: EventTarget | null) => target instanceof HTMLElement && (target.isContentEditable || ['INPUT', 'SELECT', 'TEXTAREA'].includes(target.tagName));
+	const open = (selector: string) => {
+		const link = document.querySelector<HTMLLinkElement | HTMLAnchorElement>(selector);
+		if (link) {
+			location.href = link.href;
+		}
+	};
+
+	document.addEventListener('keydown', (event) => {
+		if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey || typing(event.target)) {
+			return;
+		}
+
+		if (event.key === '/') {
+			event.preventDefault();
+			if (narrow.matches) {
+				location.hash = 'index';
+			}
+			document.querySelector<HTMLInputElement>('.apropos input')!.focus();
+		} else if (event.key === 'j') {
+			open('link[rel="next"]');
+		} else if (event.key === 'k') {
+			open('link[rel="prev"]');
+		} else if (event.key === 'q') {
+			open('.brand');
+		} else if (event.key === 't') {
+			toggle();
+		}
+	});
+
+	document.querySelector<HTMLElement>('[data-keys]')!.hidden = false;
+</script>

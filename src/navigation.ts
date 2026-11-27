@@ -58,6 +58,12 @@ export const groups = [
 
 export const slugs = groups.flatMap(({ items }) => items);
 
+// The section of the manual a page is in, as man numbers them: its group's
+// place in the navigation, from 1.
+export function section(slug: string) {
+	return groups.findIndex(({ items }) => items.includes(slug)) + 1;
+}
+
 export const interfaceCopy = {
 	en: {
 		docs: 'Documentation',
@@ -72,7 +78,19 @@ export const interfaceCopy = {
 		copy: 'Copy',
 		copied: 'Copied',
 		language: 'Language',
-		release: 'For rumbo',
+		manual: 'rumbo manual',
+		index: 'index',
+		heads: {
+			name: 'Name',
+			synopsis: 'Synopsis',
+			description: 'Description',
+			examples: 'Examples',
+			seeAlso: 'See also',
+		},
+		keys: { search: 'search', page: 'page', home: 'front page' },
+		ribbon: 'ribbon',
+		ribbons: { paper: 'paper', carbon: 'carbon' },
+		missing: 'No manual entry for this page.',
 	},
 	es: {
 		docs: 'Documentación',
@@ -87,7 +105,19 @@ export const interfaceCopy = {
 		copy: 'Copiar',
 		copied: 'Copiado',
 		language: 'Idioma',
-		release: 'Para rumbo',
+		manual: 'Manual de rumbo',
+		index: 'índice',
+		heads: {
+			name: 'Nombre',
+			synopsis: 'Sinopsis',
+			description: 'Descripción',
+			examples: 'Ejemplos',
+			seeAlso: 'Véase también',
+		},
+		keys: { search: 'buscar', page: 'página', home: 'portada' },
+		ribbon: 'cinta',
+		ribbons: { paper: 'papel', carbon: 'carbón' },
+		missing: 'No hay entrada de manual para esta página.',
 	},
 	fr: {
 		docs: 'Documentation',
@@ -102,7 +132,19 @@ export const interfaceCopy = {
 		copy: 'Copier',
 		copied: 'Copié',
 		language: 'Langue',
-		release: 'Pour rumbo',
+		manual: 'Manuel de rumbo',
+		index: 'index',
+		heads: {
+			name: 'Nom',
+			synopsis: 'Synopsis',
+			description: 'Description',
+			examples: 'Exemples',
+			seeAlso: 'Voir aussi',
+		},
+		keys: { search: 'rechercher', page: 'page', home: 'accueil' },
+		ribbon: 'ruban',
+		ribbons: { paper: 'papier', carbon: 'carbone' },
+		missing: 'Aucune entrée de manuel pour cette page.',
 	},
 	it: {
 		docs: 'Documentazione',
@@ -117,6 +159,18 @@ export const interfaceCopy = {
 		copy: 'Copia',
 		copied: 'Copiato',
 		language: 'Lingua',
-		release: 'Per rumbo',
+		manual: 'Manuale di rumbo',
+		index: 'indice',
+		heads: {
+			name: 'Nome',
+			synopsis: 'Sinossi',
+			description: 'Descrizione',
+			examples: 'Esempi',
+			seeAlso: 'Vedi anche',
+		},
+		keys: { search: 'cerca', page: 'pagina', home: 'copertina' },
+		ribbon: 'nastro',
+		ribbons: { paper: 'carta', carbon: 'carbone' },
+		missing: 'Nessuna voce di manuale per questa pagina.',
 	},
 };

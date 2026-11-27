@@ -4,5 +4,6 @@ import { site } from './src/site.mjs';
 export default defineConfig({
 	site,
 	trailingSlash: 'always',
-	markdown: { shikiConfig: { theme: 'github-dark' } },
+	// Listings are printed in ink, with comments dimmed: site.css gives the colors.
+	markdown: { shikiConfig: { theme: 'css-variables' } },
 });

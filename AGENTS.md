@@ -11,22 +11,22 @@ builds from this repository alone.
 - `src/content/docs/` holds Markdown articles. `src/documents.ts` connects
   content to navigation, search, and locale fallbacks. Reference pages may
   fall back to English; show that explicitly and use the English canonical URL.
-- `src/layouts/` owns the shared shell and documentation layout.
-  `src/styles/site.css` owns the palette (rice paper, sumi ink, and the
-  vermilion of a seal; the dark panels are "night"), the typography, and the
-  responsive layout. Add no color outside those tokens.
-- Controls and icons are shared. Every button, select, and text field uses
-  `.button`, `.select`, or `.field` from `site.css` (with `.solid`, `.square`,
-  `.small`, and `.night` on a dark panel), and every arrow or mark is an
-  `Icon.astro`. Style no control in a component, and type no arrow character.
-- `src/components/ink.ts` computes the brush strokes at build time, from
-  seeds, so nothing is filtered in the browser. `timeline.ts` drives the
-  drawings that grow: an element with `data-span="from to"` is given `--t`.
-- The drawings: `Heart.astro` (the cover), `Growth.astro` (the host growing
-  into everything built on it; `compact` in the introduction and the
-  architecture article), `RunTrace.astro` (one run, frame by frame),
-  `Compositions.astro` (recipes), and `Sequence.astro` (the frames of a
-  protocol, at the top of the articles `Article.astro` names).
+- `design/system.md` is the design system every page follows: a manual page
+  printed on continuous paper. `src/layouts/` owns the shared shell (the
+  sheet, the index, the pager's line) and the documentation layout.
+  `src/styles/site.css` owns the tokens (two ribbons, paper and carbon), the
+  typography, and the responsive layout. Add no color outside those tokens.
+- Controls and icons are shared. Every control is a `.control` from
+  `site.css`, a word in square brackets, and every arrow is an `Icon.astro`.
+  Style no control in a component, and type no arrow character.
+- `src/components/timeline.ts` drives the drawings that grow: an element with
+  `data-span="from to"` is given `--t`.
+- The drawings: `Growth.astro` (the host and everything built on it;
+  `compact` in the introduction and the architecture article),
+  `RunTrace.astro` (one run, frame by frame), `Flow.astro` (the steps of the
+  quick start), and `Sequence.astro` (the frames of a protocol, at the top of
+  the articles `Article.astro` names). `Compositions.astro` lists the recipes
+  as examples.
 - `src/site.mjs` owns the site address, repository, and published release.
   The production output includes a local search index, sitemap, and robots.txt.
   `design/og.svg` is the editable social image; `bun run og` renders it.

@@ -1,7 +1,5 @@
 ---
 import { href, type Locale } from '../navigation';
-import { arc, brush, pressed } from './ink';
-import Rule from './Rule.astro';
 import Icon from './Icon.astro';
 
 // One run of rumbo 0.12.0, frame by frame, in the two ways a front end and
@@ -9,7 +7,7 @@ import Icon from './Icon.astro';
 // front end starts the host. The frames are those a host was seen to send
 // and take with a provider and an extension made for the purpose; nothing
 // here calls a model.
-const { locale } = Astro.props as { locale: Locale };
+const { locale, number = 1 } = Astro.props as { locale: Locale; number?: number };
 
 const copy = {
 	en: {
@@ -197,7 +195,7 @@ const kinds: Record<string, string> = { fe: 'ink-ui', host: 'rumbo 0.12.0', prov
 const route = (hops: string[]) => hops.map((hop) => hop.split(':')[0].split('>').map((part) => names[part]).join(' → ')).join(' · ');
 const segment = ([x1, y1, x2, y2]: readonly number[]) => `M${x1} ${y1}L${x2} ${y2}`;
 
-// The stage is drawn twice, wide and tall, and the narrow screens get the
+// The stage is drawn twice, wide and tall, and a narrow figure gets the
 // tall one. Each says where its parts stand and the line every frame flies.
 const stages = [
 	{
@@ -231,92 +229,78 @@ const stages = [
 ] as const;
 ---
 
-<section id="run-trace" class="chapter" aria-labelledby="trace-title">
-	<Rule seed={2} />
-	<div class="section-label" data-seen><span>02 /</span><h2 id="trace-title">{copy.title}</h2></div>
-	<p class="run-summary" data-seen>{copy.summary} <a class="with-icon" href={href(locale, 'reference/frontend-protocol')}>{copy.reference} <Icon name="arrow-up-right" /></a></p>
+<h3 class="body" id="run-trace">{copy.title}</h3>
 
-	<run-trace class="night" data-play={copy.play} data-pause={copy.pause} data-mode="attached">
+<run-trace data-mode="attached">
+	<figure class="figure" aria-label={copy.title}>
 		<div class="trace-controls" hidden>
-			<label class="control">
-				<span>{copy.mode}</span>
-				<select class="select" data-mode-select>{modes.map(({ id, label }) => <option value={id}>{label}</option>)}</select>
-			</label>
-			<label class="control">
-				<span>{copy.speed}</span>
-				<select class="select" data-speed>
-					<option value="0.5">0.5×</option>
-					<option value="1" selected>1×</option>
-					<option value="2">2×</option>
-				</select>
-			</label>
+			<fieldset class="choice">
+				<legend>{copy.mode}</legend>
+				{modes.map(({ id, label }, index) => <label><input type="radio" name="trace-mode" value={id} checked={index === 0} data-mode-choice /><span class="control">{label}</span></label>)}
+			</fieldset>
+			<fieldset class="choice">
+				<legend>{copy.speed}</legend>
+				{['0.5', '1', '2'].map((speed) => <label><input type="radio" name="trace-speed" value={speed} checked={speed === '1'} data-speed-choice /><span class="control">{speed}×</span></label>)}
+			</fieldset>
 			<div class="trace-actions">
 				<span class="trace-count" data-count></span>
-				<button type="button" class="button square" data-prev aria-label={copy.previous} title={copy.previous}><Icon name="arrow-left" /></button>
-				<button type="button" class="button solid" data-playback><Icon name="play" class="when-off" /><Icon name="pause" class="when-on" /><span data-label>{copy.play}</span></button>
-				<button type="button" class="button square" data-next aria-label={copy.next} title={copy.next}><Icon name="arrow-right" /></button>
+				<button type="button" class="control" data-prev aria-label={copy.previous} title={copy.previous}><Icon name="arrow-left" /></button>
+				<button type="button" class="control" data-playback><span class="when-off">{copy.play}</span><span class="when-on">{copy.pause}</span></button>
+				<button type="button" class="control" data-next aria-label={copy.next} title={copy.next}><Icon name="arrow-right" /></button>
 			</div>
 		</div>
 
-		<div class="trace-body">
-			<div class="trace-scene">
-				{stages.map(({ shape, width, height, box, nodes, links, arcs, command, pipes }) => (
-					<svg class:list={['stage', shape]} viewBox={`0 0 ${width} ${height}`} data-links={JSON.stringify(links)} aria-hidden="true">
-						<defs>
-							<marker id={`tip-${shape}`} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-								<path d="M0 0L10 5L0 10z" />
-							</marker>
-						</defs>
-						<path class="stage-enso" d={brush(arc([nodes.host[0], nodes.host[1]], box[0] * 0.78, -70, 330, 6), pressed(30), 17, 0.25)} />
+		{stages.map(({ shape, width, height, box, nodes, links, arcs, command, pipes }) => (
+			<svg class:list={['drawing', 'stage', shape]} viewBox={`0 0 ${width} ${height}`} data-links={JSON.stringify(links)} aria-hidden="true">
+				<defs>
+					<marker id={`tip-${shape}`} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+						<path class="tip" d="M0 0L10 5L0 10z" />
+					</marker>
+				</defs>
 
-						<path class="pipe" d={segment(links['host>fe'])} marker-end={`url(#tip-${shape})`} />
-						<path class="pipe" d={segment(links['fe>host'])} marker-end={`url(#tip-${shape})`} />
-						{(['provider', 'extension'] as const).map((part) => (
-							<g class="chain">
-								<path class="link" d={segment(links[`host>${part}`])} />
-								<path class="hole" d={segment(links[`host>${part}`])} />
-							</g>
-						))}
+				<path class="wire" d={segment(links['host>fe'])} marker-end={`url(#tip-${shape})`} />
+				<path class="wire" d={segment(links['fe>host'])} marker-end={`url(#tip-${shape})`} />
+				{(['provider', 'extension'] as const).map((part) => <path class="wire" d={segment(links[`host>${part}`])} />)}
 
-						{modes.map(({ id, command: text, pipes: labels }) => (
-							<g class="topology" data-topology={id}>
-								<path class="spawn" d={arcs[id]} pathLength="1" marker-end={`url(#tip-${shape})`} />
-								<text class="spawn-command" x={command[0]} y={command[1]} text-anchor="middle" transform={command[2] ? `rotate(${command[2]} ${command[0]} ${command[1]})` : undefined}>
-									<tspan class="spawn-verb">{copy.starts} · </tspan>{text}
-								</text>
-								{labels.map((label, index) => <text class="pipe-name" x={pipes[index][0]} y={pipes[index][1]} text-anchor={pipes[index][2]}>{label}</text>)}
-							</g>
-						))}
-
-						<path class="trail" pathLength="1" />
-
-						{Object.entries(nodes).map(([part, [x, y]]) => (
-							<g class="node" data-part={part}>
-								<rect x={x - box[0] / 2} y={y - box[1] / 2} width={box[0]} height={box[1]} rx="3" />
-								<text class="node-name" {x} y={y - 3} text-anchor="middle">{names[part]}</text>
-								<text class="node-kind" {x} y={y + 16} text-anchor="middle">{kinds[part]}</text>
-							</g>
-						))}
-
-						<g class="packet">
-							<rect height="26" y="-13" rx="13" />
-							<text y="4.5" text-anchor="middle"></text>
-						</g>
-					</svg>
+				{modes.map(({ id, command: text, pipes: labels }) => (
+					<g class="topology" data-topology={id}>
+						<path class="wire spawn" d={arcs[id]} pathLength="1" marker-end={`url(#tip-${shape})`} />
+						<text x={command[0]} y={command[1]} text-anchor="middle" transform={command[2] ? `rotate(${command[2]} ${command[0]} ${command[1]})` : undefined}>
+							{copy.starts} · <tspan class="command">{text}</tspan>
+						</text>
+						{labels.map((label, index) => <text x={pipes[index][0]} y={pipes[index][1]} text-anchor={pipes[index][2]}>{label}</text>)}
+					</g>
 				))}
 
-				<p class="trace-now" data-now></p>
+				<path class="trail" pathLength="1" />
 
-				<aside class="trace-chat">
-					<h3>{copy.conversation}</h3>
-					<p class="bubble person" data-at="3"><b>{copy.person}</b><span>{copy.question}</span></p>
-					<p class="bubble tool" data-at="8"><b>ink_catalog</b><span>{copy.stock}</span></p>
-					<p class="bubble model" data-at="10"><b>{copy.model}</b><span data-typed>{copy.answer}</span></p>
-				</aside>
-			</div>
+				{Object.entries(nodes).map(([part, [x, y]]) => (
+					<g class="node" data-part={part}>
+						<rect class="box" x={x - box[0] / 2} y={y - box[1] / 2} width={box[0]} height={box[1]} />
+						<text class="name" {x} y={y - 2} text-anchor="middle">{names[part]}</text>
+						<text {x} y={y + 17} text-anchor="middle">{kinds[part]}</text>
+					</g>
+				))}
+
+				<g class="packet">
+					<rect class="box" height="24" y="-12" />
+					<text class="packet-label" y="4.5" text-anchor="middle"></text>
+				</g>
+			</svg>
+		))}
+
+		<p class="trace-now" data-now aria-live="polite"></p>
+
+		<div class="trace-body">
+			<aside class="trace-chat">
+				<h4>{copy.conversation}</h4>
+				<p data-at="3"><b>{copy.person}</b> <span>{copy.question}</span></p>
+				<p class="tool" data-at="8"><b>ink_catalog</b> <span>{copy.stock}</span></p>
+				<p data-at="10"><b>{copy.model}</b> <span data-typed>{copy.answer}</span></p>
+			</aside>
 
 			<div class="trace-log">
-				<h3>{copy.frames}</h3>
+				<h4>{copy.frames}</h4>
 				<ol>
 					{modes.map(({ id, label, command, detail }) => (
 						<li data-step="0" data-topology={id} data-hops="">
@@ -341,8 +325,10 @@ const stages = [
 				</ol>
 			</div>
 		</div>
-	</run-trace>
-</section>
+
+		<figcaption><b>Fig. {number} ·</b> {copy.summary} <a href={href(locale, 'reference/frontend-protocol')}>{copy.reference}</a></figcaption>
+	</figure>
+</run-trace>
 
 <script>
 	import { reducedMotion, whenSeen } from './timeline';
@@ -356,10 +342,9 @@ const stages = [
 
 	class RunTrace extends HTMLElement {
 		connectedCallback() {
-			const modeSelect = this.querySelector<HTMLSelectElement>('[data-mode-select]')!;
-			const speedSelect = this.querySelector<HTMLSelectElement>('[data-speed]')!;
+			const modes = [...this.querySelectorAll<HTMLInputElement>('[data-mode-choice]')];
+			const speeds = [...this.querySelectorAll<HTMLInputElement>('[data-speed-choice]')];
 			const playback = this.querySelector<HTMLButtonElement>('[data-playback]')!;
-			const label = playback.querySelector('[data-label]')!;
 			const previous = this.querySelector<HTMLButtonElement>('[data-prev]')!;
 			const next = this.querySelector<HTMLButtonElement>('[data-next]')!;
 			const count = this.querySelector<HTMLElement>('[data-count]')!;
@@ -376,18 +361,19 @@ const stages = [
 			let turn = 0;
 			let playing = false;
 
-			const speed = () => Number(speedSelect.value);
+			const mode = () => modes.find((each) => each.checked)!.value;
+			const speed = () => Number(speeds.find((each) => each.checked)!.value);
 			const stage = () => [...this.querySelectorAll<SVGSVGElement>('.stage')].find((each) => getComputedStyle(each).display !== 'none')!;
-			const row = () => rows.find((each) => Number(each.dataset.step) === step && (!each.dataset.topology || each.dataset.topology === modeSelect.value))!;
+			const row = () => rows.find((each) => Number(each.dataset.step) === step && (!each.dataset.topology || each.dataset.topology === mode()))!;
 
 			const render = () => {
-				this.dataset.mode = modeSelect.value;
+				this.dataset.mode = mode();
 				this.classList.toggle('cold', step < started);
 
 				for (const each of rows) {
 					const at = Number(each.dataset.step);
 
-					each.hidden = Boolean(each.dataset.topology) && each.dataset.topology !== modeSelect.value;
+					each.hidden = Boolean(each.dataset.topology) && each.dataset.topology !== mode();
 					each.classList.toggle('now', at === step);
 					each.classList.toggle('done', at < step);
 				}
@@ -408,7 +394,8 @@ const stages = [
 			};
 
 			// One frame crossing the stage: a labelled packet along its line,
-			// leaving a trail that fades behind it.
+			// leaving a trail that fades behind it. The sender is the part
+			// that acts, so it is the one in red while the frame flies.
 			const fly = async (hop: string, mine: number) => {
 				const [path, label] = hop.split(':');
 				const [from, to] = path.split('>');
@@ -418,7 +405,7 @@ const stages = [
 				const trail = scene.querySelector<SVGPathElement>('.trail')!;
 				const plate = packet.querySelector('rect')!;
 				const sender = scene.querySelector(`.node[data-part="${from}"]`)!;
-				const wide = label.length * 8 + 24;
+				const wide = label.length * 7.6 + 20;
 				const time = 780 / speed();
 				const along = (share: number) => `translate(${x1 + (x2 - x1) * share}px, ${y1 + (y2 - y1) * share}px)`;
 
@@ -475,7 +462,7 @@ const stages = [
 				}
 
 				if (step === 0) {
-					const spawn = stage().querySelector<SVGPathElement>(`[data-topology="${modeSelect.value}"] .spawn`)!;
+					const spawn = stage().querySelector<SVGPathElement>(`[data-topology="${mode()}"] .spawn`)!;
 
 					await spawn.animate([{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { duration: 900 / speed(), easing: 'ease-out' }).finished.catch(() => {});
 				}
@@ -506,9 +493,8 @@ const stages = [
 				turn += 1;
 				playing = false;
 				delete playback.dataset.on;
-				label.textContent = this.dataset.play!;
 
-				// Only what this script set moving: the styles' own loops go on.
+				// Only what this script set moving: the styles' own go on.
 				for (const animation of this.getAnimations({ subtree: true })) {
 					if (animation.constructor === Animation) {
 						animation.cancel();
@@ -529,7 +515,6 @@ const stages = [
 				stop();
 				playing = true;
 				playback.dataset.on = '';
-				label.textContent = this.dataset.pause!;
 
 				const mine = turn;
 
@@ -547,7 +532,7 @@ const stages = [
 					}
 
 					if (step === last) {
-						modeSelect.selectedIndex = (modeSelect.selectedIndex + 1) % modeSelect.options.length;
+						modes[(modes.findIndex((each) => each.checked) + 1) % modes.length].checked = true;
 						step = 0;
 					} else {
 						step += 1;
@@ -560,7 +545,9 @@ const stages = [
 			playback.addEventListener('click', () => (playing ? stop() : void play()));
 			previous.addEventListener('click', () => go(step - 1));
 			next.addEventListener('click', () => go(step + 1));
-			modeSelect.addEventListener('change', () => go(0));
+			for (const each of modes) {
+				each.addEventListener('change', () => go(0));
+			}
 
 			for (const each of rows) {
 				each.querySelector('button')!.addEventListener('click', () => go(Number(each.dataset.step)));
@@ -580,438 +567,265 @@ const stages = [
 </script>
 
 <style>
-	.run-summary {
-		max-width: 62ch;
-		margin: 0 0 1.4rem;
-		color: var(--muted);
-	}
-
-	.run-summary a {
-		color: var(--accent);
-		white-space: nowrap;
-	}
-
 	run-trace {
 		display: block;
-		border-top: 4px solid var(--seal);
-		background: var(--night);
-		color: var(--bone);
-		box-shadow: 0.55rem 0.55rem 0 var(--wash);
-	}
-
-	/* Every control is one row high and sits on the same line: the two
-	   selects under their labels, the buttons level with the selects. */
-	.trace-controls {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: end;
-		gap: 0.8rem 1rem;
-		padding: 0.9rem clamp(0.8rem, 2vw, 1.3rem);
-		border-bottom: 1px solid var(--night-line);
-	}
-
-	.control {
-		display: grid;
-		gap: 0.3rem;
 		min-width: 0;
 	}
 
-	.control span {
-		color: #b9afa2;
-		font: 0.68rem var(--mono);
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
+	/* The controls: words in brackets, the chosen one in weight. */
+	.trace-controls {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: 0.5lh 3ch;
+		margin-bottom: 1lh;
+	}
+
+	.choice {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0 1.5ch;
+		margin: 0;
+		padding: 0;
+		border: 0;
+		min-width: 0;
+	}
+
+	.choice legend {
+		float: left;
+		margin-right: 1ch;
+		padding: 0;
+		color: var(--dim);
+	}
+
+	.choice label {
+		position: relative;
+	}
+
+	.choice input {
+		position: absolute;
+		opacity: 0;
+		width: 1px;
+		height: 1px;
+		margin: 0;
+	}
+
+	.choice input:checked + .control {
+		color: var(--ink);
+		font-weight: 800;
+	}
+
+	.choice input:focus-visible + .control {
+		outline: 2px solid var(--red);
+		outline-offset: 2px;
+	}
+
+	.choice .control {
+		white-space: normal;
 	}
 
 	.trace-actions {
 		display: flex;
-		align-items: center;
-		gap: 0.4rem;
+		align-items: baseline;
+		gap: 1.5ch;
 		margin-left: auto;
 	}
 
 	.trace-count {
-		margin-right: 0.4rem;
-		color: var(--ember);
-		font: 0.78rem var(--mono);
+		color: var(--dim);
 	}
 
-	.trace-actions [data-playback] {
-		min-width: 7.2rem;
-	}
-
-	.trace-body {
-		display: grid;
-		grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
-	}
-
-	.trace-scene {
-		min-width: 0;
-		padding: clamp(0.8rem, 2vw, 1.3rem);
-	}
-
-	.stage {
-		display: block;
-		width: 100%;
-		height: auto;
-	}
-
+	/* The stage. */
 	.stage.tall {
 		display: none;
-		max-width: 24rem;
-		margin-inline: auto;
-	}
-
-	.stage-enso {
-		fill: #232023;
-	}
-
-	marker path {
-		fill: #8d837c;
-	}
-
-	.pipe {
-		fill: none;
-		stroke: #8d837c;
-		stroke-width: 1.6;
-		stroke-dasharray: 5 6;
-		animation: flow 0.9s linear infinite;
-	}
-
-	.chain path {
-		fill: none;
-		stroke-linecap: round;
-		stroke-dasharray: 8 9;
-		animation: flow-chain 1.6s linear infinite;
-	}
-
-	.chain {
-		transition: opacity 0.5s;
-	}
-
-	.link {
-		stroke: #8d837c;
-		stroke-width: 5.5;
-	}
-
-	.hole {
-		stroke: var(--night);
-		stroke-width: 2.2;
-	}
-
-	.topology {
-		opacity: 0;
-		transition: opacity 0.45s;
-	}
-
-	run-trace[data-mode='attached'] [data-topology='attached'],
-	run-trace[data-mode='standalone'] [data-topology='standalone'] {
-		opacity: 1;
-	}
-
-	.spawn {
-		fill: none;
-		stroke: var(--ember);
-		stroke-width: 2;
-		stroke-dasharray: 1;
-	}
-
-	.spawn-command {
-		fill: var(--ember);
-		font: 600 14px var(--mono);
-	}
-
-	.spawn-verb {
-		fill: #b9afa2;
-		font-weight: 400;
-	}
-
-	.pipe-name {
-		fill: #d8cebf;
-		font: 12.5px var(--mono);
-	}
-
-	.node {
-		transition: opacity 0.5s;
-	}
-
-	.node rect {
-		fill: var(--night-raised);
-		stroke: #7d7470;
-		stroke-width: 1.2;
-		transition: stroke 0.3s;
-	}
-
-	.node[data-part='host'] rect {
-		fill: var(--seal);
-		stroke: var(--seal);
-	}
-
-	.node-name {
-		fill: var(--bone);
-		font: 700 19px var(--sans);
-	}
-
-	.node-kind {
-		fill: #cfc4b6;
-		font: 12.5px var(--mono);
-	}
-
-	.node[data-part='host'] .node-kind {
-		fill: #ffe3d6;
-	}
-
-	/* Until the run needs them, the provider and the extension are not
-	   running: their boxes are only outlines. */
-	.cold .node[data-part='provider'],
-	.cold .node[data-part='extension'],
-	.cold .chain {
-		opacity: 0.32;
-	}
-
-	.cold .node[data-part='provider'] rect,
-	.cold .node[data-part='extension'] rect {
-		stroke-dasharray: 5 5;
-	}
-
-	.speaking rect {
-		stroke: var(--ember);
-	}
-
-	.node[data-part='host'].speaking rect {
-		stroke: var(--bone);
-	}
-
-	.struck {
-		animation: struck 0.5s ease-out;
-		transform-box: fill-box;
-		transform-origin: center;
 	}
 
 	.trail {
 		fill: none;
-		stroke: var(--ember);
+		stroke: var(--ink);
 		stroke-width: 2.5;
 		stroke-dasharray: 1;
+		stroke-dashoffset: 1;
 		opacity: 0;
+	}
+
+	.spawn {
+		stroke-dasharray: 1;
+	}
+
+	.command {
+		fill: var(--ink);
+	}
+
+	run-trace[data-mode='attached'] [data-topology='standalone'],
+	run-trace[data-mode='standalone'] [data-topology='attached'] {
+		display: none;
+	}
+
+	.node {
+		transform-box: fill-box;
+		transform-origin: center;
+		transition: opacity 0.3s;
+	}
+
+	.cold .node[data-part='provider'],
+	.cold .node[data-part='extension'] {
+		opacity: 0.35;
+	}
+
+	.speaking .box {
+		stroke: var(--red);
+		stroke-width: 2.5;
+	}
+
+	.speaking .name {
+		fill: var(--red);
+	}
+
+	.struck {
+		animation: struck 0.4s ease-out;
 	}
 
 	.packet {
 		opacity: 0;
 	}
 
-	.packet rect {
-		fill: var(--bone);
+	.packet-label {
+		fill: var(--ink);
 	}
 
-	.packet text {
-		fill: var(--night);
-		font: 600 13px var(--mono);
-	}
-
+	/* What the current frame is, and what it means. */
 	.trace-now {
-		display: grid;
-		align-content: start;
-		gap: 0.3rem;
-		min-height: 5.8rem;
-		margin: 0.9rem 0 0;
-		padding: 0.7rem 0.85rem;
-		border-left: 3px solid var(--seal);
-		background: var(--night-raised);
-		font-size: 0.92rem;
-		line-height: 1.45;
+		min-height: 3lh;
+		margin: 0.75lh 0 1lh;
 	}
 
-	.trace-now code {
-		color: var(--ember);
-		font: 0.82rem var(--mono);
+	.trace-now :global(code) {
+		display: block;
 		overflow-wrap: anywhere;
 	}
 
-	.trace-chat {
-		min-height: 11.2rem;
-		margin-top: 0.9rem;
-		padding: 0.75rem 0.85rem 0.9rem;
-		border: 1px solid var(--night-line);
+	.trace-now :global(.row-detail) {
+		display: block;
 	}
 
-	h3 {
-		margin: 0 0 0.6rem;
-		color: #b9afa2;
-		font: 0.68rem var(--mono);
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-	}
-
-	.bubble {
+	.trace-body {
 		display: grid;
-		gap: 0.1rem;
-		width: fit-content;
-		max-width: 88%;
-		margin: 0.45rem 0 0;
-		padding: 0.4rem 0.7rem;
-		border-radius: 0.2rem;
-		background: var(--night-raised);
-		font-size: 0.9rem;
-		animation: arrive 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+		gap: 1lh 3ch;
+		align-items: start;
 	}
 
-	.bubble b {
-		color: #b9afa2;
-		font: 0.66rem var(--mono);
+	.trace-body h4 {
+		margin: 0 0 0.3lh;
+		color: var(--dim);
+		font-weight: 400;
 	}
 
-	.bubble.person {
-		margin-left: auto;
-		background: var(--bone);
-		color: var(--night);
+	/* What the person sees: the conversation, as a terminal shows it. */
+	.trace-chat p {
+		margin: 0 0 0.5lh;
 	}
 
-	.bubble.person b {
-		color: #5c5450;
+	.trace-chat b {
+		display: block;
 	}
 
-	.bubble.tool {
-		border-left: 2px solid var(--ember);
-		font-family: var(--mono);
-		font-size: 0.8rem;
+	.trace-chat .tool {
+		color: var(--dim);
 	}
 
-	.bubble.model span {
-		min-height: 1.4em;
-	}
-
-	.trace-log {
-		min-width: 0;
-		padding: clamp(0.8rem, 2vw, 1.3rem);
-		border-left: 1px solid var(--night-line);
-	}
-
+	/* The frames, one per line. The current one is the one that acts. */
 	.trace-log ol {
 		position: relative;
+		max-height: 13lh;
 		margin: 0;
 		padding: 0;
+		overflow: auto;
 		list-style: none;
-	}
-
-	.interactive .trace-log ol {
-		max-height: 41rem;
-		overflow-y: auto;
+		border-top: 1px solid var(--ink);
+		border-bottom: 1px solid var(--ink);
 		scrollbar-width: thin;
-		scrollbar-color: var(--night-line) transparent;
-	}
-
-	.trace-log li + li {
-		margin-top: 0.35rem;
+		scrollbar-color: var(--rule) transparent;
 	}
 
 	.trace-log button {
 		display: grid;
-		grid-template-columns: auto minmax(0, 1fr);
-		gap: 0.15rem 0.6rem;
+		grid-template-columns: 3ch minmax(0, 1fr);
+		gap: 0 1ch;
 		width: 100%;
-		padding: 0.55rem 0.65rem;
-		border: 1px solid transparent;
-		border-left: 3px solid var(--night-line);
-		border-radius: 0;
+		padding: 0.15lh 0;
+		border: 0;
+		border-bottom: 1px dotted var(--rule);
 		background: none;
-		color: inherit;
+		color: var(--dim);
 		text-align: left;
-		transition:
-			background 0.3s,
-			border-color 0.3s,
-			opacity 0.3s;
+		cursor: pointer;
 	}
 
-	.row-index {
-		grid-row: span 3;
-		color: #8d837c;
-		font: 0.72rem/1.7 var(--mono);
+	.trace-log li:last-child button {
+		border-bottom: 0;
 	}
 
-	.row-route {
-		color: #cfc4b6;
-		font: 0.7rem/1.5 var(--mono);
+	.trace-log .row-index {
+		grid-row: span 2;
 	}
 
 	.trace-log code {
-		color: var(--bone);
-		font: 0.8rem/1.45 var(--mono);
+		grid-column: 2;
+		font-weight: 400;
 		overflow-wrap: anywhere;
 	}
 
-	.row-detail {
-		color: #cfc4b6;
-		font-size: 0.84rem;
-		line-height: 1.45;
+	.trace-log .row-detail {
+		display: none;
 	}
 
-	/* What has not happened yet is there to read, but waits in the dark. */
-	.interactive li:not(.now):not(.done) button {
-		opacity: 0.42;
+	.trace-log .done button {
+		color: var(--ink);
 	}
 
-	.interactive li button:hover,
-	.interactive li button:focus-visible {
-		opacity: 1;
-		background: var(--night-raised);
+	.trace-log .now button {
+		color: var(--red);
+		font-weight: 800;
 	}
 
-	li.done button {
-		border-left-color: #8d837c;
+	.trace-log .now code {
+		font-weight: 800;
 	}
 
-	li.now button {
-		border-left-color: var(--seal);
-		background: var(--night-raised);
+	.trace-log button:hover {
+		color: var(--red);
 	}
 
-	li.now .row-index,
-	li.now code {
-		color: var(--ember);
+	/* Without a script, nothing can be stepped through: the frames are a
+	   list to read. */
+	run-trace:not(.interactive) .trace-log button {
+		color: var(--ink);
+		cursor: default;
 	}
 
-	@keyframes flow {
-		to {
-			stroke-dashoffset: -11;
-		}
-	}
-
-	@keyframes flow-chain {
-		to {
-			stroke-dashoffset: -17;
-		}
+	run-trace:not(.interactive) .trace-now {
+		display: none;
 	}
 
 	@keyframes struck {
-		35% {
-			transform: scale(1.06);
+		50% {
+			transform: scale(1.04);
 		}
 	}
 
-	@keyframes arrive {
-		from {
-			opacity: 0;
-			transform: translateY(0.6rem);
-		}
-	}
-
-	@media (max-width: 62rem) {
+	@container (max-width: 44rem) {
 		.trace-body {
 			grid-template-columns: minmax(0, 1fr);
 		}
 
-		.trace-log {
-			border-left: 0;
-			border-top: 1px solid var(--night-line);
-		}
-
-		.interactive .trace-log ol {
-			max-height: 24rem;
+		.trace-actions {
+			margin-left: 0;
 		}
 	}
 
-	@media (max-width: 40rem) {
+	@container (max-width: 36rem) {
 		.stage.wide {
 			display: none;
 		}
@@ -1019,29 +833,15 @@ const stages = [
 		.stage.tall {
 			display: block;
 		}
-
-		.control,
-		.trace-actions {
-			flex: 1 1 100%;
-		}
-
-		.trace-actions [data-playback] {
-			flex: 1;
-		}
-
-		.trace-actions {
-			margin-left: 0;
-		}
-
-		.trace-count {
-			margin-right: auto;
-		}
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		run-trace * {
-			animation: none !important;
-			transition: none !important;
+		.struck {
+			animation: none;
+		}
+
+		.node {
+			transition: none;
 		}
 	}
 </style>

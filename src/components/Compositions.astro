@@ -1,10 +1,9 @@
 ---
 import { href, type Locale } from '../navigation';
-import Rule from './Rule.astro';
 import Icon from './Icon.astro';
 
-// What the parts make when they are put together: each card is a chain of
-// three programs, with the command that sets it up. The commands are
+// What the parts make when they are put together: each example is a chain
+// of three programs, with the command that sets it up. The commands are
 // rumbo 0.12.0's own.
 const { locale } = Astro.props as { locale: Locale };
 
@@ -65,208 +64,72 @@ const chains = [
 ];
 ---
 
-<section class="chapter" aria-labelledby="chains-title">
-	<Rule seed={3} />
-	<div class="section-label" data-seen><span>03 /</span><h2 id="chains-title">{copy.title}</h2></div>
-	<div class="chain-grid">
-		{chains.map(({ links, both, command, path }, index) => (
-			<a class="recipe" data-seen style={`--order:${index}`} href={href(locale, path)}>
-				<span class="recipe-index">0{index + 1}<Icon name="arrow-up-right" /></span>
-				<h3>{copy.recipes[index][0]}</h3>
-				<ol class="links" aria-hidden="true">
-					{links.map((link, position) => (
-						<li>
-							{position > 0 && (
-								<svg class="wire" viewBox="0 0 56 16">
-									<path class="link" d="M3 8H53" />
-									<path class="hole" d="M3 8H53" />
-									<circle class="dot" cy="8" r="3.6" style={`--after:${index * 0.3 + position * 0.55}s`} />
-									{both && <circle class="dot back" cy="8" r="2.8" style={`--after:${index * 0.3 + position * 0.55 + 0.8}s`} />}
-								</svg>
-							)}
-							<span class="chip">{link}</span>
-						</li>
-					))}
-				</ol>
-				<p>{copy.recipes[index][1]}</p>
-				<code>{command}</code>
-			</a>
-		))}
-	</div>
-</section>
+<h3 id="chains">{copy.title}</h3>
+<ol class="recipes">
+	{chains.map(({ links, both, command, path }, index) => (
+		<li>
+			<h4><a href={href(locale, path)}>{copy.recipes[index][0]}</a></h4>
+			<p class="chain">
+				{links.map((link, position) => (
+					<>
+						{position > 0 && <Icon name={both ? 'arrow-both' : 'arrow-right'} />}
+						<span>{link}</span>
+					</>
+				))}
+			</p>
+			<p>{copy.recipes[index][1]}</p>
+			<pre><code>{command}</code></pre>
+		</li>
+	))}
+</ol>
 
 <style>
-	.chain-grid {
-		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-		gap: 0.9rem;
-	}
-
-	.recipe {
-		display: grid;
-		grid-template-rows: auto auto auto 1fr auto;
-		gap: 0.75rem;
-		padding: 1.1rem 1.1rem 1rem;
-		border: 1px solid var(--line);
-		border-top: 3px solid var(--ink);
-		background: var(--surface);
-		text-decoration: none;
-		transition:
-			border-color 0.25s,
-			box-shadow 0.25s,
-			translate 0.25s;
-	}
-
-	/* The cards of a row arrive one after the other. */
-	:global(.moving) .recipe {
-		transition-delay: calc(var(--order) * 70ms);
-	}
-
-	.recipe:hover,
-	.recipe:focus-visible {
-		border-top-color: var(--seal);
-		box-shadow: 0.35rem 0.35rem 0 var(--wash);
-		translate: -0.15rem -0.15rem;
-		transition-delay: 0s;
-	}
-
-	.recipe-index {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		color: var(--accent);
-		font: 0.72rem var(--mono);
-	}
-
-	.recipe-index :global(.icon) {
-		font-size: 0.95rem;
-	}
-
-	h3 {
-		margin: 0;
-		font: 400 1.42rem/1.2 var(--serif);
-		letter-spacing: -0.02em;
-	}
-
-	.links {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		row-gap: 0.35rem;
+	.recipes {
 		margin: 0;
 		padding: 0;
 		list-style: none;
+		counter-reset: recipe;
 	}
 
-	/* A link and the chain that leads to it stay together when the row
-	   has to break. */
-	.links li {
+	.recipes > li {
+		position: relative;
+		padding-left: 4ch;
+		counter-increment: recipe;
+	}
+
+	.recipes > li::before {
+		content: counter(recipe) '.';
+		position: absolute;
+		left: 0;
+		top: 0;
+		color: var(--dim);
+	}
+
+	.recipes > li + li {
+		margin-top: 1.5lh;
+	}
+
+	h4 {
+		margin: 0 0 0.3lh;
+	}
+
+	/* The chain of programs: each a box, and between them which way the
+	   frames go. */
+	.chain {
 		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
+		gap: 0.3lh 1ch;
+		margin-bottom: 0.5lh;
+	}
+
+	.chain span {
+		padding: 0 1ch;
+		border: 1px solid var(--ink);
 		white-space: nowrap;
 	}
 
-	.chip {
-		padding: 0.34rem 0.5rem;
-		background: var(--ink);
-		color: var(--surface);
-		font: 0.68rem/1.35 var(--mono);
-	}
-
-	.wire {
-		display: block;
-		flex: none;
-		width: 2.6rem;
-		height: 1rem;
-		overflow: visible;
-	}
-
-	.wire path {
-		fill: none;
-		stroke-linecap: round;
-		stroke-dasharray: 8 9;
-		animation: run 1.4s linear infinite;
-	}
-
-	.link {
-		stroke: var(--ink);
-		stroke-width: 6;
-	}
-
-	.hole {
-		stroke: var(--surface);
-		stroke-width: 2.4;
-	}
-
-	.dot {
-		fill: var(--seal);
-		animation: cross 2.2s var(--after) cubic-bezier(0.45, 0, 0.25, 1) infinite both;
-	}
-
-	.dot.back {
-		fill: var(--surface);
-		stroke: var(--ink);
-		stroke-width: 1.6;
-		animation-direction: reverse;
-	}
-
-	p {
-		margin: 0;
-		color: var(--muted);
-		font-size: 0.92rem;
-		line-height: 1.5;
-	}
-
-	code {
-		display: block;
-		padding: 0.5rem 0.6rem;
-		border-left: 2px solid var(--seal);
-		background: var(--wash);
-		font: 0.72rem/1.5 var(--mono);
-		overflow-wrap: anywhere;
-	}
-
-	@keyframes run {
-		to {
-			stroke-dashoffset: -17;
-		}
-	}
-
-	@keyframes cross {
-		0% {
-			transform: translateX(2px);
-			opacity: 0;
-		}
-		15%,
-		55% {
-			opacity: 1;
-		}
-		70%,
-		100% {
-			transform: translateX(54px);
-			opacity: 0;
-		}
-	}
-
-	@media (max-width: 64rem) {
-		.chain-grid {
-			grid-template-columns: repeat(2, minmax(0, 1fr));
-		}
-	}
-
-	@media (max-width: 40rem) {
-		.chain-grid {
-			grid-template-columns: minmax(0, 1fr);
-		}
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.wire * {
-			animation: none !important;
-		}
-
-		.dot {
-			display: none;
-		}
+	.chain :global(.icon) {
+		color: var(--dim);
 	}
 </style>

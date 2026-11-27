@@ -2,83 +2,85 @@
 import { href, type Locale } from '../navigation';
 import Icon from './Icon.astro';
 
-// The three steps of the quick start, as plates on one line that a signal
-// runs along, one step after the other.
-const { locale } = Astro.props as { locale: Locale };
-const [label, ...steps] = {
-	en: ['Steps', 'Connect a model', 'Run a task', 'Continue a session'],
-	es: ['Pasos', 'Conecta un modelo', 'Ejecuta una tarea', 'Continúa una sesión'],
-	fr: ['Étapes', 'Connecter un modèle', 'Lancer une tâche', 'Reprendre une session'],
-	it: ['Passi', 'Collega un modello', 'Esegui un’attività', 'Riprendi una sessione'],
+// The three steps of a first run, as boxes in a row, each opening the guide
+// that goes further. The one being taken is marked in red, in turn.
+const { locale, number = 1 } = Astro.props as { locale: Locale; number?: number };
+const [label, caption, ...steps] = {
+	en: ['Steps', 'Three steps of a first run, each with the guide that goes further.', 'Connect a model', 'Run a task', 'Continue a session'],
+	es: ['Pasos', 'Tres pasos de una primera ejecución, cada uno con la guía que va más allá.', 'Conecta un modelo', 'Ejecuta una tarea', 'Continúa una sesión'],
+	fr: ['Étapes', 'Trois étapes d’une première exécution, chacune avec le guide qui va plus loin.', 'Connecter un modèle', 'Lancer une tâche', 'Reprendre une session'],
+	it: ['Passi', 'Tre passi di una prima esecuzione, ciascuno con la guida che va oltre.', 'Collega un modello', 'Esegui un’attività', 'Riprendi una sessione'],
 }[locale];
 const pages = ['guides/providers', 'guides/scripting', 'guides/sessions'];
 ---
 
-<ol class="flow" aria-label={label}>
-	{steps.map((step, index) => (
-		<li style={`--order:${index}`}>
-			<a href={href(locale, pages[index])}><span>0{index + 1}</span>{step}<Icon name="arrow-up-right" /></a>
-		</li>
-	))}
-</ol>
+<figure class="figure" aria-label={label}>
+	<ol class="flow">
+		{steps.map((step, index) => (
+			<li style={`--order:${index}`}>
+				{index > 0 && <Icon name="arrow-right" />}
+				<a href={href(locale, pages[index])}><span>{index + 1}</span>{step}</a>
+			</li>
+		))}
+	</ol>
+	<figcaption><b>Fig. {number} ·</b> {caption}</figcaption>
+</figure>
 
 <style>
 	.flow {
 		display: grid;
 		grid-template-columns: repeat(3, minmax(0, 1fr));
-		gap: 0.5rem;
-		margin: 0 0 1.75rem;
+		gap: 1ch;
+		margin: 0;
 		padding: 0;
 		list-style: none;
 	}
 
 	li {
 		position: relative;
-		background: var(--surface);
-		border: 1px solid var(--line);
-		border-bottom: 3px solid var(--ink);
+		display: flex;
+		align-items: center;
+		gap: 1ch;
 	}
 
-	/* The signal: it crosses each plate in turn, and starts over. */
-	li::after {
-		content: '';
-		position: absolute;
-		left: 0;
-		right: 0;
-		bottom: -3px;
-		height: 3px;
-		background: var(--seal);
-		transform: scaleX(0);
-		transform-origin: left;
-		animation: cross 4.8s calc(var(--order) * 1.6s) cubic-bezier(0.45, 0, 0.25, 1) infinite backwards;
+	li > :global(.icon) {
+		color: var(--dim);
 	}
 
 	a {
-		display: grid;
-		grid-template-columns: auto minmax(0, 1fr) auto;
-		gap: 0.5rem;
-		align-items: center;
-		height: 100%;
-		padding: 0.75rem 0.8rem;
-		font-size: 0.88rem;
-		font-weight: 600;
+		position: relative;
+		flex: 1;
+		display: flex;
+		gap: 1ch;
+		padding: 0.4lh 1.5ch;
+		border: 1.5px solid var(--ink);
+		font-weight: 800;
 		text-decoration: none;
 	}
 
 	a:hover {
-		background: var(--wash);
-	}
-
-	span,
-	a :global(.icon) {
-		color: var(--accent);
+		color: var(--red);
 	}
 
 	span {
-		font: 0.7rem var(--mono);
+		color: var(--dim);
+		font-weight: 400;
 	}
 
-	@keyframes cross {
+	/* The step being taken: a red rule under its box, drawn in its turn. */
+	a::after {
+		content: '';
+		position: absolute;
+		left: -1.5px;
+		right: -1.5px;
+		bottom: -1.5px;
+		border-bottom: 3px solid var(--red);
+		transform: scaleX(0);
+		transform-origin: left;
+		animation: take 4.8s calc(var(--order) * 1.6s) cubic-bezier(0.45, 0, 0.25, 1) infinite backwards;
+	}
+
+	@keyframes take {
 		0% {
 			transform: scaleX(0);
 			opacity: 1;
@@ -87,22 +89,27 @@ const pages = ['guides/providers', 'guides/scripting', 'guides/sessions'];
 			transform: scaleX(1);
 			opacity: 1;
 		}
-		40%,
+		33%,
 		100% {
 			transform: scaleX(1);
 			opacity: 0;
 		}
 	}
 
-	@media (max-width: 34rem) {
+	@container (max-width: 30rem) {
 		.flow {
 			grid-template-columns: minmax(0, 1fr);
+		}
+
+		li > :global(.icon) {
+			rotate: 90deg;
 		}
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		li::after {
+		a::after {
 			animation: none;
+			opacity: 0;
 		}
 	}
 </style>

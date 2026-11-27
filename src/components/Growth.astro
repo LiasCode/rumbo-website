@@ -1,12 +1,10 @@
 ---
 import { href, type Locale } from '../navigation';
-import Icon from './Icon.astro';
-import { arc, brush, cubic, hairs, line, pressed, tapered, type Point } from './ink';
 
-// The whole of rumbo as one drawing that grows: the host at the heart, the
-// six things it is made to be extended through, and what people build with
-// each. compact leaves the last ring out, for the articles.
-const { locale, compact = false } = Astro.props as { locale: Locale; compact?: boolean };
+// The whole of rumbo as one drawing that grows: the host in the middle, the
+// three protocols above it, what it keeps in files below, and what people
+// build with each. compact leaves what they build out, for the articles.
+const { locale, compact = false, number = 1 } = Astro.props as { locale: Locale; compact?: boolean; number?: number };
 
 const copy = {
 	en: {
@@ -75,159 +73,130 @@ const copy = {
 	},
 }[locale];
 
-// Where each branch sits around the heart, the page its plate opens, and
-// the page of each of its leaves.
-const places = [
-	{ side: -1, row: -1, path: 'extend/front-end', leaves: ['guides/terminal-ui', 'guides/scripting', 'guides/desktop-app', 'extend/front-end', 'extend/front-end'] },
-	{ side: 1, row: -1, path: 'extend/provider', leaves: ['guides/providers', 'guides/providers', 'guides/providers', 'guides/providers', 'extend/provider'] },
-	{ side: 1, row: 0, path: 'extend/extension', leaves: ['guides/extensions', 'extend/extension', 'reference/extension-protocol', 'reference/extension-protocol', 'reference/extension-protocol', 'guides/extensions'] },
-	{ side: -1, row: 0, path: 'guides/sessions', leaves: ['guides/sessions', 'guides/sessions', 'guides/sessions', 'guides/sessions', 'guides/sessions'] },
-	{ side: -1, row: 1, path: 'guides/instructions-and-skills', leaves: ['guides/instructions-and-skills', 'guides/instructions-and-skills', 'guides/instructions-and-skills'] },
-	{ side: 1, row: 1, path: 'guides/plugins', leaves: ['reference/plugins', 'guides/plugins', 'reference/plugins', 'guides/plugins'] },
+// The page each branch's plate opens, and the page of each of its leaves.
+const pages = [
+	{ path: 'extend/front-end', leaves: ['guides/terminal-ui', 'guides/scripting', 'guides/desktop-app', 'extend/front-end', 'extend/front-end'] },
+	{ path: 'extend/provider', leaves: ['guides/providers', 'guides/providers', 'guides/providers', 'guides/providers', 'extend/provider'] },
+	{ path: 'extend/extension', leaves: ['guides/extensions', 'extend/extension', 'reference/extension-protocol', 'reference/extension-protocol', 'reference/extension-protocol', 'guides/extensions'] },
+	{ path: 'guides/sessions', leaves: ['guides/sessions', 'guides/sessions', 'guides/sessions', 'guides/sessions', 'guides/sessions'] },
+	{ path: 'guides/instructions-and-skills', leaves: ['guides/instructions-and-skills', 'guides/instructions-and-skills', 'guides/instructions-and-skills'] },
+	{ path: 'guides/plugins', leaves: ['reference/plugins', 'guides/plugins', 'reference/plugins', 'guides/plugins'] },
 ];
 
-const width = compact ? 800 : 1380;
-const height = compact ? 640 : 800;
-const heart: Point = [width / 2, height / 2];
-const plate = { width: 176, height: 60 };
-const reach = compact ? 262 : 250;
-const rise = compact ? 215 : 250;
+// The sheet is three columns. The first three branches stand above the
+// host with their leaves over them; the other three hang below it.
+const width = 780;
+const middle = width / 2;
+const columns = [130, 390, 650];
+const plate = { width: 224, height: 56 };
+const host = { width: 268, height: 108 };
+const leafStep = 22;
+const reach = 60;
 const share = (value: number) => value.toFixed(3);
+const most = (branches: typeof copy.branches) => (compact ? 0 : Math.max(...branches.map(([, , leaves]) => leaves.length)));
 
-const enso = arc(heart, 88, -98, 338, 5);
-const ensoShape = brush(enso, pressed(27), 11, 0.24);
-const ensoHairs = hairs(enso, 19, 5, 5);
+const above = most(copy.branches.slice(0, 3));
+const below = most(copy.branches.slice(3));
+const top = 14 + (above ? above * leafStep + 10 : 0);
+const hostTop = top + plate.height + reach;
+const bottom = hostTop + host.height + reach;
+const height = bottom + plate.height + (below ? below * leafStep + 10 : 0) + 14;
 
 const branches = copy.branches.map(([name, caption, leaves], index) => {
-	const { side, row, path, leaves: pages } = places[index];
-	const center: Point = [heart[0] + side * reach, heart[1] + row * rise];
-	// Each branch leaves the ring of the heart sideways and reaches its plate
-	// from the heart's side, so the axis above and below the seal stays free
-	// for what the host holds.
-	const angle = ((side < 0 ? 180 - row * 24 : row * 24) * Math.PI) / 180;
-	const away: Point = [Math.cos(angle), Math.sin(angle)];
-	const from: Point = [heart[0] + away[0] * 84, heart[1] + away[1] * 84];
-	const to: Point = row ? [center[0] - side * 46, center[1] - (row * plate.height) / 2 + row * 6] : [center[0] - (side * plate.width) / 2 + side * 6, center[1]];
-	const spine = cubic(from, [from[0] + away[0] * 76, from[1] + away[1] * 76], [to[0] - side * 8, to[1] - row * 104], to);
-	const start = 0.16 + index * 0.125;
-	const outer: Point = [center[0] + (side * plate.width) / 2, center[1]];
+	const up = index < 3;
+	const column = index % 3;
+	const x = columns[column] - plate.width / 2;
+	const y = up ? top : bottom;
+	// The line leaves the host from its own place on the host's edge, turns
+	// once halfway, and meets the plate in the middle of its edge.
+	const from = [middle + (column - 1) * 70, up ? hostTop : hostTop + host.height];
+	const to = [columns[column], up ? y + plate.height : y];
+	const turn = (from[1] + to[1]) / 2;
+	const start = 0.12 + index * 0.13;
+	const spine = x + 14;
+	const edge = up ? y : y + plate.height;
+	const list = leaves as string[];
+	const placed = list.map((label, leaf) => ({
+		label,
+		href: href(locale, pages[index].leaves[leaf]),
+		y: up ? edge - 10 - (list.length - leaf) * leafStep + leafStep / 2 : edge + 10 + leaf * leafStep + leafStep / 2,
+		span: `${share(start + 0.07 + leaf * 0.008)} ${share(start + 0.1 + leaf * 0.008)}`,
+	}));
+	const far = up ? placed[0]?.y : placed.at(-1)?.y;
 
 	return {
 		name: name as string,
 		caption: caption as string,
-		side,
-		center,
-		href: href(locale, path),
-		spine: line(spine),
-		shape: brush(spine, tapered(21, 6), 30 + index, 0.26),
-		hairs: hairs(spine, 9, 60 + index, 2),
-		spans: { stroke: `${share(start)} ${share(start + 0.075)}`, plate: `${share(start + 0.05)} ${share(start + 0.105)}` },
-		leaves: (leaves as string[]).map((label, leaf, all) => {
-			const end: Point = [outer[0] + side * 76, center[1] + (leaf - (all.length - 1) / 2) * 38];
-			const begin = start + 0.095 + leaf * 0.014;
-
-			return {
-				label,
-				end,
-				href: href(locale, pages[leaf]),
-				chain: line(cubic(outer, [outer[0] + side * 44, outer[1]], [end[0] - side * 46, end[1]], end, 16)),
-				spans: { chain: `${share(begin)} ${share(begin + 0.05)}`, label: `${share(begin + 0.03)} ${share(begin + 0.075)}` },
-			};
-		}),
+		href: href(locale, pages[index].path),
+		x,
+		y,
+		connector: `M${from[0]} ${from[1]}V${turn}H${to[0]}V${to[1]}`,
+		tree: far === undefined ? '' : `M${spine} ${edge}V${far}${placed.map(({ y }) => `M${spine} ${y}h9`).join('')}`,
+		spine,
+		leaves: placed,
+		spans: { connector: `${share(start)} ${share(start + 0.04)}`, plate: `${share(start + 0.03)} ${share(start + 0.07)}`, tree: `${share(start + 0.06)} ${share(start + 0.1)}` },
 	};
 });
 ---
 
 <ink-growth class:list={[{ compact }]} data-play={copy.play} data-pause={copy.pause}>
-	<figure aria-label={copy.title}>
-		<svg class="growth-map" viewBox={`0 0 ${width} ${height}`} role="group" aria-label={copy.title}>
-			<defs>
-				<mask id="growth-enso" maskUnits="userSpaceOnUse" x="0" y="0" {width} {height}>
-					<path class="draw" data-span="0 0.1" d={line(enso)} pathLength="1" stroke="#fff" stroke-width="56" fill="none" />
-				</mask>
-				{branches.map(({ spine, spans }, index) => (
-					<mask id={`growth-branch-${index}`} maskUnits="userSpaceOnUse" x="0" y="0" {width} {height}>
-						<path class="draw" data-span={spans.stroke} d={spine} pathLength="1" stroke="#fff" stroke-width="40" stroke-linecap="round" fill="none" />
-					</mask>
-				))}
-			</defs>
-
-			{branches.map(({ shape, hairs, spine }, index) => (
-				<g class="branch">
-					<g mask={`url(#growth-branch-${index})`}>
-						<path class="ink" d={shape} />
-						{hairs.map((hair) => <path class="hair" d={hair} />)}
-					</g>
-					<circle class="pulse" r="5" style={`offset-path:path('${spine}');--delay:${index * 0.55}s`} />
+	<figure class="figure" aria-label={copy.title}>
+		<svg class="drawing wide" viewBox={`0 0 ${width} ${height}`} role="group" aria-label={copy.title}>
+			{branches.map(({ connector, tree, spans }, index) => (
+				<g class="branch" data-branch={index}>
+					<path class="wire draw" data-span={spans.connector} d={connector} pathLength="1" />
+					{!compact && tree && <path class="wire draw" data-span={spans.tree} d={tree} pathLength="1" />}
 				</g>
 			))}
 
-			<g class="heart">
-				<g mask="url(#growth-enso)">
-					<path class="ink" d={ensoShape} />
-					{ensoHairs.map((hair) => <path class="hair" d={hair} />)}
+			<a href={href(locale, 'reference/architecture')}>
+				<g class="press" data-span="0 0.08">
+					<rect class="box" x={middle - host.width / 2} y={hostTop} width={host.width} height={host.height} />
+					<rect class="inner" x={middle - host.width / 2 + 4} y={hostTop + 4} width={host.width - 8} height={host.height - 8} />
+					<text class="name" x={middle} y={hostTop + 30} text-anchor="middle">rumbo</text>
 				</g>
-				<circle class="beat" cx={heart[0]} cy={heart[1]} r="52" />
-				<circle class="beat late" cx={heart[0]} cy={heart[1]} r="52" />
-				<a href={href(locale, 'reference/architecture')}>
-					<g class="seal press" data-span="0.07 0.14">
-						<rect x={heart[0] - 50} y={heart[1] - 44} width="100" height="88" rx="3" />
-						<text class="seal-kind" x={heart[0] - 38} y={heart[1] - 20}>HOST</text>
-						<text class="seal-name" x={heart[0]} y={heart[1] + 18} text-anchor="middle">rumbo</text>
-					</g>
-				</a>
-				{copy.organs.map((organ, index) => (
-					<text class="organ settle" data-span={`${share(0.1 + index * 0.02)} ${share(0.16 + index * 0.02)}`} x={heart[0]} y={heart[1] + (index ? 126 + index * 19 : -118)} text-anchor="middle">{organ}</text>
-				))}
-			</g>
+			</a>
+			{copy.organs.map((organ, index) => (
+				<text class="settle" data-span={`${share(0.05 + index * 0.02)} ${share(0.11 + index * 0.02)}`} x={middle} y={hostTop + 54 + index * 19} text-anchor="middle">{organ}</text>
+			))}
 
-			{branches.map(({ name, caption, center, side, href, spans, leaves }, index) => (
-				<g class="limb">
-					{!compact && leaves.map(({ chain, spans }) => (
-						<g class="chain settle" data-span={spans.chain}>
-							<path class="link" d={chain} />
-							<path class="hole" d={chain} />
-							<path class="pin" d={chain} />
-						</g>
-					))}
+			{branches.map(({ name, caption, href, x, y, leaves }, index) => (
+				<g class="branch" data-branch={index}>
 					<a href={href}>
-						<g class="plate press" data-span={spans.plate}>
-							<rect x={center[0] - plate.width / 2} y={center[1] - plate.height / 2} width={plate.width} height={plate.height} rx="3" />
-							<text class="plate-index" x={center[0] - plate.width / 2 + 12} y={center[1] - 9}>0{index + 1}</text>
-							<text class="plate-name" x={center[0] - plate.width / 2 + 34} y={center[1] - 5}>{name}</text>
-							<text class="plate-caption" x={center[0] - plate.width / 2 + 12} y={center[1] + 17}>{caption}</text>
+						<g class="press" data-span={branches[index].spans.plate}>
+							<rect class="box" {x} {y} width={plate.width} height={plate.height} />
+							<text x={x + 12} y={y + 23}>0{index + 1}</text>
+							<text class="name" x={x + 40} y={y + 23}>{name}</text>
+							<text x={x + 12} y={y + 44}>{caption}</text>
 						</g>
 					</a>
-					{!compact && leaves.map(({ label, end, href, spans }) => (
-						<a class="leaf settle" data-span={spans.label} style={`--from:${side * -14}px`} href={href}>
-							<circle cx={end[0]} cy={end[1]} r="4.5" />
-							<text x={end[0] + side * 14} y={end[1] + 5} text-anchor={side < 0 ? 'end' : 'start'}>{label}</text>
+					{!compact && leaves.map(({ label, href, y, span }) => (
+						<a class="leaf settle" data-span={span} {href}>
+							<text x={branches[index].spine + 15} y={y + 4.5}>{label}</text>
 						</a>
 					))}
 				</g>
 			))}
 		</svg>
 
-		{!compact && (
-			<ol class="growth-list">
-				<li class="list-heart settle" data-span="0 0.12"><strong>rumbo</strong><span>{copy.organs.join(' · ')}</span></li>
-				{branches.map(({ name, caption, href, spans, leaves }, index) => (
-					<li class="list-branch">
-						<i class="list-stem" data-span={spans.stroke}></i>
-						<a class="list-plate settle" data-span={spans.plate} href={href}><b>0{index + 1}</b><strong>{name}</strong><span>{caption}</span></a>
-						<ul>{leaves.map(({ label, href, spans }) => <li class="settle" data-span={spans.label}><a href={href}>{label}</a></li>)}</ul>
-					</li>
-				))}
-			</ol>
-		)}
+		<ol class="growth-list">
+			<li class="settle" data-span="0 0.12"><a href={href(locale, 'reference/architecture')}><b>rumbo</b></a> <span>{copy.organs.join(' · ')}</span></li>
+			{branches.map(({ name, caption, href, spans, leaves }, index) => (
+				<li class="branch" data-branch={index}>
+					<a class="settle" data-span={spans.plate} {href}><span>0{index + 1}</span> <b>{name}</b></a>
+					<span class="caption settle" data-span={spans.plate}>{caption}</span>
+					{!compact && <ul>{leaves.map(({ label, href, span }) => <li class="settle" data-span={span}><a {href}>{label}</a></li>)}</ul>}
+				</li>
+			))}
+		</ol>
 
-		<figcaption>{copy.summary}</figcaption>
+		<div class="growth-controls" hidden>
+			<button type="button" class="control" data-toggle><span class="when-off">{copy.play}</span><span class="when-on">{copy.pause}</span></button>
+			<input type="range" min="0" max="1000" value="1000" aria-label={copy.position} />
+		</div>
+
+		<figcaption><b>Fig. {number} ·</b> {copy.summary}</figcaption>
 	</figure>
-
-	<div class="growth-controls" hidden>
-		<button type="button" class="button small" data-toggle><Icon name="play" class="when-off" /><Icon name="pause" class="when-on" /><span data-label>{copy.play}</span></button>
-		<input type="range" min="0" max="1000" value="1000" aria-label={copy.position} />
-	</div>
 </ink-growth>
 
 <script>
@@ -236,27 +205,34 @@ const branches = copy.branches.map(([name, caption, leaves], index) => {
 	// How long the drawing takes to grow by itself, in milliseconds.
 	const length = 11000;
 
+	// Which branch is growing at a point of the drawing, as its spans say:
+	// branch n takes from 0.12 + 0.13 n, for 0.13.
+	const growing = (progress: number) => (progress >= 1 ? -1 : Math.min(5, Math.floor((progress - 0.12) / 0.13)));
+
 	class InkGrowth extends HTMLElement {
 		connectedCallback() {
 			const show = spans(this);
 			const toggle = this.querySelector<HTMLButtonElement>('[data-toggle]')!;
-			const label = toggle.querySelector('[data-label]')!;
 			const range = this.querySelector<HTMLInputElement>('input')!;
+			const branches = [...this.querySelectorAll<HTMLElement | SVGElement>('[data-branch]')];
 			let progress = 1;
 			let frame = 0;
 			let before = 0;
 
 			const render = () => {
+				const acting = growing(progress);
+
 				show(progress);
 				range.value = String(Math.round(progress * 1000));
-				this.classList.toggle('alive', progress === 1);
+				for (const branch of branches) {
+					branch.classList.toggle('acting', Number(branch.dataset.branch) === acting);
+				}
 			};
 
 			const stop = () => {
 				cancelAnimationFrame(frame);
 				frame = 0;
 				delete toggle.dataset.on;
-				label.textContent = this.dataset.play!;
 			};
 
 			const step = (now: number) => {
@@ -278,7 +254,6 @@ const branches = copy.branches.map(([name, caption, leaves], index) => {
 
 				before = performance.now();
 				toggle.dataset.on = '';
-				label.textContent = this.dataset.pause!;
 				frame = requestAnimationFrame(step);
 			};
 
@@ -317,308 +292,48 @@ const branches = copy.branches.map(([name, caption, leaves], index) => {
 		min-width: 0;
 	}
 
-	figure {
-		margin: 0;
+	.inner {
+		fill: none;
+		stroke: var(--ink);
+		stroke-width: 0.8;
 	}
 
-	figcaption {
-		max-width: 46ch;
-		margin: 0.4rem auto 0;
-		color: var(--muted);
-		font: italic 1.05rem/1.45 var(--serif);
-		text-align: center;
-	}
-
-	.growth-map {
-		display: block;
-		width: 100%;
-		height: auto;
-		overflow: visible;
-	}
-
-	/* What the timeline moves. Without a script --t stays at 1, so the
-	   whole drawing is there. */
-	[data-span] {
-		--t: 1;
-	}
-
+	/* What grows: a line is drawn, a box is set down, a label settles. With
+	   no script, --t is never set, and everything is simply there. */
 	.draw {
 		stroke-dasharray: 1;
-		stroke-dashoffset: calc(1 - var(--t));
+		stroke-dashoffset: calc(1 - var(--t, 1));
 	}
 
 	.press {
-		opacity: var(--t);
-		transform: scale(calc(1.28 - 0.28 * var(--t)));
+		opacity: var(--t, 1);
+		transform: scale(calc(0.96 + 0.04 * var(--t, 1)));
 		transform-box: fill-box;
 		transform-origin: center;
-	}
-
-	.seal.press {
-		transform: rotate(-4deg) scale(calc(1.5 - 0.5 * var(--t)));
 	}
 
 	.settle {
-		opacity: var(--t);
-		transform: translateX(calc((1 - var(--t)) * var(--from, 0px)));
-	}
-
-	.ink {
-		fill: var(--ink);
-	}
-
-	.hair {
-		fill: none;
-		stroke: var(--paper);
-		stroke-width: 1.1;
-		opacity: 0.55;
-	}
-
-	.seal rect {
-		fill: var(--seal);
-	}
-
-	.seal-kind {
-		fill: #ffe9dc;
-		font: 600 11px var(--mono);
-		letter-spacing: 0.16em;
-	}
-
-	.seal-name {
-		fill: #fff7ee;
-		font: 900 31px var(--sans);
-		letter-spacing: -0.07em;
-	}
-
-	.organ {
-		fill: var(--muted);
-		font: 12.5px var(--mono);
-		letter-spacing: 0.04em;
-	}
-
-	.beat {
-		fill: none;
-		stroke: var(--seal);
-		stroke-width: 2;
-		opacity: 0;
-		transform-box: fill-box;
-		transform-origin: center;
-	}
-
-	.pulse {
-		fill: var(--seal);
-		opacity: 0;
-		offset-rotate: 0deg;
-	}
-
-	.plate rect {
-		fill: var(--ink);
-		transition: fill 0.2s;
-	}
-
-	a:hover .plate rect,
-	a:focus-visible .plate rect {
-		fill: var(--accent);
-	}
-
-	.plate-index {
-		fill: #ff8a66;
-		font: 11px var(--mono);
-	}
-
-	.plate-name {
-		fill: var(--surface);
-		font: 700 18px var(--sans);
-		letter-spacing: -0.02em;
-	}
-
-	.plate-caption {
-		fill: #cfc6b6;
-		font: 10.5px var(--mono);
-		letter-spacing: 0.03em;
-	}
-
-	/* A chain seen from its side: links, the hole in each, and the pins
-	   that join one to the next. */
-	.chain path {
-		fill: none;
-		stroke-linecap: round;
-		stroke-dasharray: 8 9;
-	}
-
-	.link {
-		stroke: var(--ink);
-		stroke-width: 5.5;
-	}
-
-	.hole {
-		stroke: var(--paper);
-		stroke-width: 2.2;
-	}
-
-	.chain .pin {
-		stroke: var(--ink);
-		stroke-width: 1.4;
-		stroke-dasharray: 7 10;
-		stroke-dashoffset: -9;
-	}
-
-	.leaf circle {
-		fill: var(--paper);
-		stroke: var(--seal);
-		stroke-width: 2.4;
-		transition: fill 0.2s;
+		opacity: var(--t, 1);
+		transform: translateY(calc((1 - var(--t, 1)) * 6px));
 	}
 
 	.leaf text {
 		fill: var(--ink);
-		font: 15.5px var(--sans);
-		transition: fill 0.2s;
-	}
-
-	.leaf:hover circle {
-		fill: var(--seal);
 	}
 
 	.leaf:hover text {
-		fill: var(--accent);
+		fill: var(--red);
+		text-decoration: underline;
 	}
 
-	svg a:focus-visible {
-		outline: 2px solid var(--accent);
-		outline-offset: 3px;
+	/* The branch that is growing is the one that acts. */
+	.acting .wire,
+	.acting .box {
+		stroke: var(--red);
 	}
 
-	/* Once grown, the drawing goes on living: the heart beats, the chains
-	   run, and a signal travels each branch. */
-	.alive .beat {
-		animation: beat 2.6s ease-out infinite;
-	}
-
-	.alive .beat.late {
-		animation-delay: 0.45s;
-	}
-
-	.alive .pulse {
-		animation: travel 3.3s var(--delay) cubic-bezier(0.5, 0, 0.3, 1) infinite;
-	}
-
-	.alive .chain path {
-		animation: run 1.5s linear infinite;
-	}
-
-	.alive .seal rect {
-		animation: throb 2.6s ease-in-out infinite;
-		transform-box: fill-box;
-		transform-origin: center;
-	}
-
-	@keyframes beat {
-		0% {
-			opacity: 0.75;
-			transform: scale(1);
-		}
-		70%,
-		100% {
-			opacity: 0;
-			transform: scale(2.1);
-		}
-	}
-
-	@keyframes throb {
-		0%,
-		24%,
-		100% {
-			transform: scale(1);
-		}
-		8% {
-			transform: scale(1.07);
-		}
-		16% {
-			transform: scale(0.98);
-		}
-	}
-
-	@keyframes travel {
-		0% {
-			offset-distance: 4%;
-			opacity: 0;
-		}
-		12%,
-		80% {
-			opacity: 1;
-		}
-		100% {
-			offset-distance: 100%;
-			opacity: 0;
-		}
-	}
-
-	@keyframes run {
-		to {
-			stroke-dashoffset: -17;
-		}
-	}
-
-	.alive .chain .pin {
-		animation-name: run-pin;
-	}
-
-	@keyframes run-pin {
-		to {
-			stroke-dashoffset: -26;
-		}
-	}
-
-	.growth-controls {
-		display: flex;
-		align-items: center;
-		gap: 0.75rem;
-		max-width: 34rem;
-		margin: 1.1rem auto 0;
-	}
-
-	.growth-controls .button {
-		min-width: 7rem;
-	}
-
-	/* The slider is a line of ink with the seal as its handle. */
-	.growth-controls input {
-		flex: 1;
-		min-width: 0;
-		height: 2rem;
-		margin: 0;
-		appearance: none;
-		background: none;
-		cursor: pointer;
-	}
-
-	.growth-controls input::-webkit-slider-runnable-track {
-		height: 2px;
-		background: var(--ink);
-	}
-
-	.growth-controls input::-moz-range-track {
-		height: 2px;
-		background: var(--ink);
-	}
-
-	.growth-controls input::-webkit-slider-thumb {
-		width: 0.9rem;
-		height: 0.9rem;
-		margin-top: calc(-0.45rem + 1px);
-		appearance: none;
-		border: 0;
-		border-radius: 2px;
-		background: var(--seal);
-	}
-
-	.growth-controls input::-moz-range-thumb {
-		width: 0.9rem;
-		height: 0.9rem;
-		border: 0;
-		border-radius: 2px;
-		background: var(--seal);
+	.acting .name {
+		fill: var(--red);
 	}
 
 	.growth-list {
@@ -628,122 +343,99 @@ const branches = copy.branches.map(([name, caption, leaves], index) => {
 		list-style: none;
 	}
 
-	.compact {
-		max-width: 44rem;
-		margin-block: 1.5rem 2.25rem;
+	.growth-list > li + li {
+		position: relative;
+		margin-top: 0.5lh;
+		padding-left: 3ch;
+		border-left: 1px solid var(--ink);
 	}
 
-	.compact .plate-name {
-		font-size: 19px;
+	.growth-list > li + li::before {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 0.85em;
+		width: 2ch;
+		border-top: 1px solid var(--ink);
 	}
 
-	/* A screen too narrow to read the drawing gets the same growth as a
-	   column: the heart, then each branch under a stem of ink. */
-	@media (max-width: 56rem) {
-		ink-growth:not(.compact) .growth-map {
+	.growth-list a {
+		text-decoration-color: var(--red);
+	}
+
+	.growth-list a span,
+	.growth-list > li > span {
+		color: var(--dim);
+	}
+
+	.growth-list .caption {
+		display: block;
+	}
+
+	.growth-list ul {
+		margin: 0.2lh 0 0;
+		padding: 0 0 0 2ch;
+		list-style: none;
+	}
+
+	.growth-list .acting > a,
+	.growth-list .acting > a b {
+		color: var(--red);
+	}
+
+	.growth-controls {
+		display: flex;
+		align-items: center;
+		gap: 2ch;
+		margin-top: 0.75lh;
+	}
+
+	.growth-controls input {
+		flex: 1;
+		max-width: 40ch;
+		height: 1lh;
+		margin: 0;
+		background: none;
+		appearance: none;
+		cursor: pointer;
+	}
+
+	.growth-controls input::-webkit-slider-runnable-track {
+		height: 1px;
+		background: var(--ink);
+	}
+
+	.growth-controls input::-moz-range-track {
+		height: 1px;
+		background: var(--ink);
+	}
+
+	.growth-controls input::-webkit-slider-thumb {
+		width: 0.8em;
+		height: 0.8em;
+		margin-top: calc(-0.4em + 0.5px);
+		border: 0;
+		border-radius: 0;
+		background: var(--ink);
+		appearance: none;
+	}
+
+	.growth-controls input::-moz-range-thumb {
+		width: 0.8em;
+		height: 0.8em;
+		border: 0;
+		border-radius: 0;
+		background: var(--ink);
+	}
+
+	/* Too narrow for the drawing to be read: the same tree, as a list. */
+	@container (max-width: 40rem) {
+		.wide {
 			display: none;
 		}
 
 		.growth-list {
-			display: grid;
-			gap: 0.4rem;
-		}
-
-		.list-heart {
-			display: grid;
-			justify-items: center;
-			gap: 0.3rem;
-			margin: 0 auto 0.3rem;
-			padding: 0.9rem 1.2rem;
-			background: var(--seal);
-			color: #fff7ee;
-			transform-origin: center;
-		}
-
-		.list-heart strong {
-			font: 900 1.9rem/1 var(--sans);
-			letter-spacing: -0.07em;
-		}
-
-		.list-heart span {
-			font: 0.68rem var(--mono);
-			text-align: center;
-		}
-
-		.list-branch {
-			position: relative;
-			padding: 0 0 0.5rem 1.4rem;
-		}
-
-		.list-stem {
-			--t: 1;
-			position: absolute;
-			left: 0.3rem;
-			top: -0.4rem;
-			bottom: 0.4rem;
-			width: 5px;
-			border-radius: 3px 3px 60% 60%;
-			background: var(--ink);
-			transform: scaleY(var(--t));
-			transform-origin: top;
-		}
-
-		.list-plate {
-			--from: -10px;
-			display: grid;
-			grid-template-columns: auto 1fr;
-			gap: 0 0.5rem;
-			padding: 0.55rem 0.75rem;
-			background: var(--ink);
-			color: var(--surface);
-			text-decoration: none;
-		}
-
-		.list-plate b {
-			color: #ff8a66;
-			font: 0.72rem/1.9 var(--mono);
-		}
-
-		.list-plate span {
-			grid-column: 1 / -1;
-			color: #cfc6b6;
-			font: 0.68rem var(--mono);
-		}
-
-		.list-branch ul {
-			display: grid;
-			gap: 0.1rem;
-			margin: 0.45rem 0 0;
-			padding: 0;
-			list-style: none;
-		}
-
-		.list-branch ul li {
-			--from: -10px;
-			position: relative;
-			padding-left: 1.1rem;
-			font-size: 0.93rem;
-		}
-
-		.list-branch ul li::before {
-			content: '';
-			position: absolute;
-			left: 0;
-			top: 0.52em;
-			width: 0.45rem;
-			height: 0.45rem;
-			border: 2px solid var(--seal);
-			border-radius: 50%;
-		}
-
-		.list-branch ul a {
-			text-decoration: none;
-		}
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.alive * {
-			animation: none !important;
+			display: block;
 		}
 	}
 </style>

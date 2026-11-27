@@ -2,10 +2,9 @@
 import type { MarkdownHeading } from 'astro';
 import Site from './Site.astro';
 import Growth from '../components/Growth.astro';
-import Icon from '../components/Icon.astro';
 import Flow from '../components/Flow.astro';
 import Sequence from '../components/Sequence.astro';
-import { href, interfaceCopy, type Locale } from '../navigation';
+import { href, interfaceCopy, section, type Locale } from '../navigation';
 import type { directory, documents } from '../documents';
 import { release } from '../site.mjs';
 
@@ -23,85 +22,98 @@ const copy = interfaceCopy[locale];
 const { title, description } = entry.data;
 const links = sidebar.flatMap(({ items }) => items);
 const index = links.findIndex((item) => item.slug === slug);
+const [previous, next] = [links[index - 1], links[index + 1]];
 const group = sidebar.find(({ items }) => items.some((item) => item.slug === slug))!;
 const outline = headings.filter(({ depth }) => depth === 2 || depth === 3);
+const name = `${title}(${section(slug)})`;
+const written = fallback ? 'en' : locale;
+
 // A first cell this short names its row, and stays on one line; a longer
 // one wraps between its words. The styles never break a word of either.
 const labelLength = 34;
-const article = (await Astro.slots.render('default')).replace(/<tr>\s*<(td|th)([^>]*)>([\s\S]*?)<\/\1>/g, (row, tag, attributes, inner) =>
-	inner.replace(/<[^>]+>/g, '').length <= labelLength ? row.replace(`<${tag}${attributes}>`, `<${tag}${attributes} class="label">`) : row,
-);
+const article = (await Astro.slots.render('default'))
+	.replace(/<tr>\s*<(td|th)([^>]*)>([\s\S]*?)<\/\1>/g, (row, tag, attributes, inner) =>
+		inner.replace(/<[^>]+>/g, '').length <= labelLength ? row.replace(`<${tag}${attributes}>`, `<${tag}${attributes} class="label">`) : row,
+	)
+	// A section that is a numbered step shows its number as a step.
+	.replace(/<h2 id="([^"]+)">(\d+)\.\s+/g, '<h2 id="$1"><span class="step">$2</span> ')
+	// A notice whose first line is only its label shows it as the label.
+	.replace(/<blockquote>\s*<p><strong>([^<]+)<\/strong><\/p>/g, '<blockquote><p class="notice-label"><strong>$1</strong></p>');
 
 // The articles that open with the frames of a protocol, drawn in motion.
 const sequences = ['reference/provider-protocol', 'reference/frontend-protocol', 'reference/extension-protocol', 'reference/plugins', 'extend/provider', 'extend/front-end', 'extend/extension', 'guides/extensions', 'guides/plugins'];
 ---
 
-<Site {locale} {title} {description} {slug} {alternates} canonicalLocale={fallback ? 'en' : locale}>
-	<div class="docs-layout">
-		<aside class="docs-sidebar">
-			<details class="docs-menu" open>
-				<summary>{copy.docs}<Icon name="chevron-down" /></summary>
-				<nav aria-label={copy.docs}>
-					{sidebar.map(({ label, items }, i) => <section><h2><span>0{i + 1}</span> {label}</h2><ul>{items.map((item) => <li><a lang={item.fallback ? 'en' : locale} href={item.href} aria-current={item.slug === slug ? 'page' : undefined}>{item.title}</a></li>)}</ul></section>)}
-				</nav>
-			</details>
-		</aside>
-		<main id="main" class="doc-main">
-			<p class="breadcrumb"><a href={href(locale, 'start/introduction')}>{copy.docs}</a><span>/</span>{group.label}<a class="release-tag" href={href(locale, 'reference/changelog')}>{copy.release} {release.version}</a></p>
-			{fallback && <p class="translation-note" role="note">{copy.fallback} <a class="with-icon" href={href('en', slug)} lang="en">English <Icon name="arrow-up-right" /></a></p>}
-			<article lang={fallback ? 'en' : locale}>
-				<header class="article-header"><h1>{title}</h1><p>{description}</p></header>
-				{outline.length > 0 && <details class="mobile-outline"><summary>{copy.contents}<Icon name="chevron-down" /></summary><ul>{outline.map(({ depth, slug, text }) => <li class:list={[{ sub: depth === 3 }]}><a href={`#${slug}`}>{text}</a></li>)}</ul></details>}
-				{['start/introduction', 'reference/architecture'].includes(slug) && <Growth {locale} compact />}
-				{slug === 'start/quick-start' && <Flow {locale} />}
-				{sequences.includes(slug) && <Sequence {locale} {slug} />}
-				<div class="prose" data-copy={copy.copy} data-copied={copy.copied} set:html={article} />
-			</article>
-			<nav class="chapter-links" aria-label={copy.docs}>
-				{links[index - 1] ? <a href={links[index - 1].href}><small><Icon name="arrow-left" />{copy.prev}</small><span lang={links[index - 1].fallback ? 'en' : locale}>{links[index - 1].title}</span></a> : <span />}
-				{links[index + 1] ? <a href={links[index + 1].href}><small>{copy.next}<Icon name="arrow-right" /></small><span lang={links[index + 1].fallback ? 'en' : locale}>{links[index + 1].title}</span></a> : <span />}
-			</nav>
-		</main>
-		{outline.length > 0 && <aside class="doc-outline"><nav aria-label={copy.contents}><p>{copy.contents}</p><ul lang={fallback ? 'en' : locale}>{outline.map(({ depth, slug, text }) => <li class:list={[{ sub: depth === 3 }]}><a href={`#${slug}`}>{text}</a></li>)}</ul></nav></aside>}
-	</div>
-	<template id="copy-button"><button type="button" class="button small"><Icon name="copy" class="when-off" /><Icon name="check" class="when-on" /><span data-label>{copy.copy}</span></button></template>
+<Site {locale} {title} {description} {slug} {alternates} canonicalLocale={fallback ? 'en' : locale} previous={previous?.href} next={next?.href}>
+	<main id="main" class="page">
+		<header class="running" lang={written}><span>{name}</span><span lang={locale}>{copy.manual} · {group.label}</span><span>{name}</span></header>
+		<article lang={written}>
+			<p class="head" lang={locale}>{copy.heads.name}</p>
+			<div class="body">
+				<h1>{title}</h1>
+				<p class="lede">{description}</p>
+				{fallback && <p class="note" lang={locale}>{copy.fallback} <a href={href('en', slug)} lang="en">English</a></p>}
+			</div>
+
+			{outline.length > 0 && (
+				<>
+					<h2 class="head" lang={locale}>{copy.contents}</h2>
+					<ol class="body contents">{outline.map(({ depth, slug, text }) => <li class:list={[{ sub: depth === 3 }]}><a href={`#${slug}`}>{text.replace(/^\d+\.\s+/, '')}</a></li>)}</ol>
+				</>
+			)}
+
+			{['start/introduction', 'reference/architecture'].includes(slug) && <Growth {locale} compact />}
+			{slug === 'start/quick-start' && <Flow {locale} />}
+			{sequences.includes(slug) && <Sequence {locale} {slug} />}
+
+			<div class="prose" set:html={article} />
+		</article>
+
+		<h2 class="head">{copy.heads.seeAlso}</h2>
+		<dl class="body entries">
+			{previous && <div><dt><a rel="prev" href={previous.href} lang={previous.fallback ? 'en' : locale}>{previous.title}({section(previous.slug)})</a></dt><dd>{copy.prev} · k</dd></div>}
+			{next && <div><dt><a rel="next" href={next.href} lang={next.fallback ? 'en' : locale}>{next.title}({section(next.slug)})</a></dt><dd>{copy.next} · j</dd></div>}
+		</dl>
+
+		<footer class="running foot"><a href={href(locale, 'reference/changelog')}>rumbo {release.version}</a><span>{release.date}</span><span lang={written}>{name}</span></footer>
+	</main>
 </Site>
 
-<script>
-	const menu = document.querySelector<HTMLDetailsElement>('.docs-menu')!;
-	const desktop = matchMedia('(min-width: 64rem)');
-	const setMenu = () => { menu.open = desktop.matches; };
-	setMenu();
-	desktop.addEventListener('change', setMenu);
+<style>
+	.contents {
+		padding: 0;
+		list-style: none;
+		counter-reset: part;
+	}
 
-	const prose = document.querySelector<HTMLElement>('.prose')!;
-	const template = document.querySelector<HTMLTemplateElement>('#copy-button')!;
-	for (const pre of prose.querySelectorAll('pre')) {
-		const code = pre.querySelector('code');
-		if (!code || !navigator.clipboard) {
-			continue;
+	.contents li {
+		position: relative;
+		padding-left: 4ch;
+	}
+
+	.contents li:not(.sub) {
+		counter-increment: part;
+	}
+
+	.contents li:not(.sub)::before {
+		content: counter(part) '.';
+		position: absolute;
+		left: 0;
+		color: var(--dim);
+	}
+
+	.contents .sub {
+		padding-left: 7ch;
+	}
+
+	@media (min-width: 1100px) {
+		.contents:has(li:nth-child(9)) {
+			columns: 2;
+			column-gap: 4ch;
 		}
 
-		const frame = document.createElement('div');
-		frame.className = 'code-frame night';
-		pre.before(frame);
-		frame.append(pre);
-
-		const button = template.content.firstElementChild!.cloneNode(true) as HTMLButtonElement;
-		const label = button.querySelector('[data-label]')!;
-		button.addEventListener('click', async () => {
-			try {
-				await navigator.clipboard.writeText(code.textContent!.trimEnd());
-				button.dataset.on = '';
-				label.textContent = prose.dataset.copied!;
-				setTimeout(() => {
-					delete button.dataset.on;
-					label.textContent = prose.dataset.copy!;
-				}, 1500);
-			} catch {
-				button.hidden = true;
-			}
-		});
-		frame.append(button);
+		.contents li {
+			break-inside: avoid;
+		}
 	}
-</script>
+</style>

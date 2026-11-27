@@ -1,20 +1,24 @@
 ---
 import Site from '../layouts/Site.astro';
-import Heart from './Heart.astro';
 import Growth from './Growth.astro';
-import Rule from './Rule.astro';
 import Icon from './Icon.astro';
 import RunTrace from './RunTrace.astro';
 import Compositions from './Compositions.astro';
-import { href, type Locale } from '../navigation';
+import { href, interfaceCopy, type Locale } from '../navigation';
 import { repository, release } from '../site.mjs';
 
+// The front page is the manual page of rumbo itself: its name, how it is
+// run, what it is, a run and what the parts make, what to build, and what
+// to read next.
 const { locale } = Astro.props as { locale: Locale };
+const ui = interfaceCopy[locale];
+// The head of the section about what people build.
+const yours = { en: 'Your own parts', es: 'Piezas propias', fr: 'Vos propres pièces', it: 'Pezzi tuoi' }[locale];
 const copy = {
-	en: { grow: 'Watch it grow', growth: 'From the heart outwards', title: 'A minimal agent harness', first: 'A small core.', second: 'An open system.', caption: 'OPEN SOURCE AGENT HARNESS', description: 'One host orchestrates the work. Choose the interface, connect a model and add the tools you need.', start: 'Get started', pathways: 'Choose your path', install: 'Install and run', installText: 'Linux or macOS. From a release or with Go.', learn: 'Work with rumbo', learnText: 'Sessions, models, settings and scripting.', build: 'Make it yours', buildText: 'Build a provider, interface or extension in any language.', task: 'Summarize this directory without changing files' },
-	es: { grow: 'Verlo crecer', growth: 'Del corazón hacia fuera', title: 'Un motor de agentes minimalista', first: 'Un núcleo pequeño.', second: 'Un sistema abierto.', caption: 'MOTOR DE AGENTES DE CÓDIGO ABIERTO', description: 'Un núcleo coordina el trabajo. Elige la interfaz, conecta un modelo y añade las herramientas que necesites.', start: 'Empezar', pathways: 'Elige tu camino', install: 'Instalar y ejecutar', installText: 'Linux o macOS. Desde una versión publicada o con Go.', learn: 'Trabajar con rumbo', learnText: 'Sesiones, modelos, configuración y scripts.', build: 'Hazlo tuyo', buildText: 'Crea un proveedor, una interfaz o una extensión en cualquier lenguaje.', task: 'Summarize this directory without changing files' },
-	fr: { grow: 'Le voir grandir', growth: 'Du cœur vers l’extérieur', title: 'Un moteur d’agents minimaliste', first: 'Un petit noyau.', second: 'Un système ouvert.', caption: 'MOTEUR D’AGENTS OPEN SOURCE', description: 'Un noyau orchestre le travail. Choisissez une interface, connectez un modèle et ajoutez les outils nécessaires.', start: 'Commencer', pathways: 'Choisissez votre voie', install: 'Installer et lancer', installText: 'Linux ou macOS. Depuis une version publiée ou avec Go.', learn: 'Travailler avec rumbo', learnText: 'Sessions, modèles, configuration et scripts.', build: 'À votre façon', buildText: 'Créez un fournisseur, une interface ou une extension dans le langage de votre choix.', task: 'Summarize this directory without changing files' },
-	it: { grow: 'Guardalo crescere', growth: 'Dal cuore verso l’esterno', title: 'Un motore per agenti minimalista', first: 'Un nucleo piccolo.', second: 'Un sistema aperto.', caption: 'MOTORE PER AGENTI OPEN SOURCE', description: 'Un nucleo coordina il lavoro. Scegli l’interfaccia, collega un modello e aggiungi gli strumenti che ti servono.', start: 'Inizia', pathways: 'Scegli il tuo percorso', install: 'Installa ed esegui', installText: 'Linux o macOS. Da una versione pubblicata o con Go.', learn: 'Lavora con rumbo', learnText: 'Sessioni, modelli, configurazione e script.', build: 'Fallo tuo', buildText: 'Crea un provider, un’interfaccia o un’estensione in qualsiasi linguaggio.', task: 'Summarize this directory without changing files' },
+	en: { title: 'A minimal agent harness', first: 'A small core.', second: 'An open system.', description: 'One host orchestrates the work. Choose the interface, connect a model and add the tools you need.', start: 'Get started', install: 'Install and run', installText: 'Linux or macOS. From a release or with Go.', learn: 'Work with rumbo', learnText: 'Sessions, models, settings and scripting.', build: 'Make it yours', buildText: 'Build a provider, interface or extension in any language.', task: 'Summarize this directory without changing files' },
+	es: { title: 'Un motor de agentes minimalista', first: 'Un núcleo pequeño.', second: 'Un sistema abierto.', description: 'Un núcleo coordina el trabajo. Elige la interfaz, conecta un modelo y añade las herramientas que necesites.', start: 'Empezar', install: 'Instalar y ejecutar', installText: 'Linux o macOS. Desde una versión publicada o con Go.', learn: 'Trabajar con rumbo', learnText: 'Sesiones, modelos, configuración y scripts.', build: 'Hazlo tuyo', buildText: 'Crea un proveedor, una interfaz o una extensión en cualquier lenguaje.', task: 'Summarize this directory without changing files' },
+	fr: { title: 'Un moteur d’agents minimaliste', first: 'Un petit noyau.', second: 'Un système ouvert.', description: 'Un noyau orchestre le travail. Choisissez une interface, connectez un modèle et ajoutez les outils nécessaires.', start: 'Commencer', install: 'Installer et lancer', installText: 'Linux ou macOS. Depuis une version publiée ou avec Go.', learn: 'Travailler avec rumbo', learnText: 'Sessions, modèles, configuration et scripts.', build: 'À votre façon', buildText: 'Créez un fournisseur, une interface ou une extension dans le langage de votre choix.', task: 'Summarize this directory without changing files' },
+	it: { title: 'Un motore per agenti minimalista', first: 'Un nucleo piccolo.', second: 'Un sistema aperto.', description: 'Un nucleo coordina il lavoro. Scegli l’interfaccia, collega un modello e aggiungi gli strumenti che ti servono.', start: 'Inizia', install: 'Installa ed esegui', installText: 'Linux o macOS. Da una versione pubblicata o con Go.', learn: 'Lavora con rumbo', learnText: 'Sessioni, modelli, configurazione e script.', build: 'Fallo tuo', buildText: 'Crea un provider, un’interfaccia o un’estensione in qualsiasi linguaggio.', task: 'Summarize this directory without changing files' },
 }[locale];
 
 const own = {
@@ -122,69 +126,58 @@ const software = {
 };
 ---
 
-<Site locale={locale} title={copy.title} description={copy.description}>
+<Site locale={locale} title={copy.title} description={copy.description} next={href(locale, 'start/introduction')}>
 	<script type="application/ld+json" set:html={JSON.stringify(software)} />
-	<main id="main" class="landing">
-		<section class="hero-grid">
-			<div class="hero-copy">
-				<p class="eyebrow"><span></span>{copy.caption}</p>
-				<h1>{copy.first}<br /><em>{copy.second}</em></h1>
-				<p class="hero-description">{copy.description}</p>
-				<div class="hero-actions"><a class="button solid" href={href(locale, 'start/quick-start')}>{copy.start} <Icon name="arrow-right" /></a><a class="text-link with-icon" href="#growth">{copy.grow} <Icon name="arrow-down" /></a></div>
-				<p class="hero-meta"><a href={href(locale, 'reference/changelog')}>v{release.version}</a> <span>·</span> Linux / macOS <span>·</span> MIT</p>
-			</div>
-			<Heart {locale} />
-		</section>
-		<section id="growth" class="chapter">
-			<Rule seed={1} />
-			<div class="section-label" data-seen><span>01 /</span><h2>{copy.growth}</h2></div>
-			<Growth {locale} />
-		</section>
-		<RunTrace {locale} />
-		<Compositions {locale} />
-		<section id="build" class="chapter">
-			<Rule seed={4} />
-			<div class="section-label" data-seen><span>04 /</span><h2>{own[0]}</h2></div>
-			<p class="own-lead" data-seen>{own[1]}</p>
-			<div class="own-grid" data-seen>
-				{own[2].map(([title, detail], index) => <a href={href(locale, ownPages[index])}><span class="path-number">0{index + 1}</span><h3>{title}</h3><p>{detail}</p><span class="path-arrow"><Icon name="arrow-up-right" /></span></a>)}
-			</div>
-			<p class="own-share" data-seen><code>rumbo plugin add https://github.com/you/your-plugin</code><span><a href="https://github.com/LiasCode/rumbo-claude">rumbo-claude</a> · <a href="https://github.com/LiasCode/rumbo-gui">rumbo-gui</a></span></p>
-		</section>
-		<section class="chapter pathways">
-			<Rule seed={5} />
-			<div class="section-label" data-seen><span>05 /</span><h2>{copy.pathways}</h2></div>
-			<div class="path-grid" data-seen>{paths.map(([title, detail, path], index) => <a href={href(locale, path)}><span class="path-number">0{index + 1}</span><h3>{title}</h3><p>{detail}</p><span class="path-arrow"><Icon name="arrow-up-right" /></span></a>)}</div>
-		</section>
-		<section class="terminal-strip" aria-label="Terminal" data-seen>
-			<span>TERMINAL</span><pre><code><i>$</i> go install github.com/LiasCode/rumbo/cmd/rumbo@v{release.version}{'\n'}<i>$</i> rumbo "{copy.task}"</code></pre>
-		</section>
+	<main id="main" class="page">
+		<header class="running"><span>rumbo(1)</span><span>{ui.manual}</span><span>rumbo(1)</span></header>
+
+		<p class="head">{ui.heads.name}</p>
+		<div class="body">
+			<h1>rumbo</h1>
+			<p class="lede">{copy.title}. <b>{copy.first} {copy.second}</b></p>
+			<pre><code>go install github.com/LiasCode/rumbo/cmd/rumbo@v{release.version}{'\n'}rumbo "{copy.task}"</code></pre>
+			<p><a href={href(locale, 'start/quick-start')}>{copy.start} <Icon name="arrow-right" /></a> · <a href={href(locale, 'reference/changelog')}>v{release.version}</a> · Linux / macOS · MIT</p>
+		</div>
+
+		<h2 class="head">{ui.heads.synopsis}</h2>
+		<div class="body synopsis">
+			<p><b>rumbo</b> [<i>flags</i>] [<i>objective</i>]</p>
+			<p><b>rumbo -c</b> [<i>objective</i>]</p>
+			<p><b>rumbo -r</b></p>
+			<p><b>rumbo serve</b> [<i>flags</i>]</p>
+			<p><b>rumbo plugin add</b> <i>source</i></p>
+		</div>
+
+		<h2 class="head">{ui.heads.description}</h2>
+		<p class="body lede">{copy.description}</p>
+		<Growth {locale} number={1} />
+
+		<h2 class="head">{ui.heads.examples}</h2>
+		<RunTrace {locale} number={2} />
+		<div class="body">
+			<Compositions {locale} />
+		</div>
+
+		<h2 class="head">{yours}</h2>
+		<div class="body">
+			<p class="lede"><b>{own[0]}.</b> {own[1]}</p>
+			<dl class="entries">{own[2].map(([title, detail], index) => <div><dt><a href={href(locale, ownPages[index])}>{title}</a></dt><dd>{detail}</dd></div>)}</dl>
+			<pre><code>rumbo plugin add https://github.com/you/your-plugin</code></pre>
+			<p><a href="https://github.com/LiasCode/rumbo-claude">rumbo-claude</a> · <a href="https://github.com/LiasCode/rumbo-gui">rumbo-gui</a></p>
+		</div>
+
+		<h2 class="head">{ui.heads.seeAlso}</h2>
+		<dl class="body entries">{paths.map(([title, detail, path]) => <div><dt><a href={href(locale, path)}>{title}</a></dt><dd>{detail}</dd></div>)}</dl>
+
+		<footer class="running foot"><a href={href(locale, 'reference/changelog')}>rumbo {release.version}</a><span>{release.date}</span><span>rumbo(1)</span></footer>
 	</main>
 </Site>
 
-<script>
-	import { reducedMotion } from './timeline';
-
-	// What is marked data-seen arrives as it is scrolled to. The page is
-	// only told it moves once this runs, so without a script, or for someone
-	// who asked for less motion, everything is simply there.
-	if (!reducedMotion.matches) {
-		document.documentElement.classList.add('moving');
-
-		const observer = new IntersectionObserver(
-			(entries) => {
-				for (const entry of entries) {
-					if (entry.isIntersecting) {
-						entry.target.classList.add('seen');
-						observer.unobserve(entry.target);
-					}
-				}
-			},
-			{ threshold: 0.2 },
-		);
-
-		for (const element of document.querySelectorAll('[data-seen]')) {
-			observer.observe(element);
-		}
+<style>
+	.synopsis p {
+		margin: 0;
+		padding-left: 4ch;
+		text-indent: -4ch;
 	}
-</script>
+
+</style>
