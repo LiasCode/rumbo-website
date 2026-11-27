@@ -1,9 +1,9 @@
 ---
 title: What each part can do
-description: What the rumbo host, a provider, a front end, an extension, and a plugin must do, can do, and never do in rumbo 0.12.0, with where to read more.
+description: What the rumbo host, a provider, a front end, an extension, and a plugin must do, can do, and never do in rumbo 0.13.0, with where to read more.
 ---
 
-Find the part you are working on, and what it is allowed to do. Each line was checked against the source of rumbo 0.12.0; the protocol pages have the frames.
+Find the part you are working on, and what it is allowed to do. Each line was checked against the source of rumbo 0.13.0; the protocol pages have the frames.
 
 ## Host
 
@@ -22,6 +22,7 @@ Find the part you are working on, and what it is allowed to do. Each line was ch
 | Manage providers and extensions     | `rumbo provider` and `rumbo extension`, or their functions from any front end, such as `/extensions add`.      |
 | See what a rumbo costs the machine  | `processes`, or `/rumbos`: each process, its memory, and its processor time.                                   |
 | Limit what the agent can touch      | Run rumbo in a container, a virtual machine, or another account. There are no permission prompts.              |
+| Ask the model about rumbo           | rumbo's own skill, [`rumbo`](/guides/instructions-and-skills/#skills), points it at rumbo's documentation.     |
 
 ## Provider
 

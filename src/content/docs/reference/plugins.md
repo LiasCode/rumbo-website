@@ -3,7 +3,7 @@ title: Plugin manifest
 description: What a rumbo plugin is made of. The plugin.yaml manifest, the placeholders in its commands, the build step, where plugins are kept, and what adding, updating, and removing one does, from the source.
 ---
 
-A plugin is a directory with a `plugin.yaml` at its root. It brings **providers, front ends, extensions, and skills** in one piece, and adds no kind of thing: once it is added, what it brings is there as what rumbo has built in is, and is set with the same commands. rumbo's own providers and terminal UI are a plugin too, called `rumbo`, built into the executable.
+A plugin is a directory with a `plugin.yaml` at its root. It brings **providers, front ends, extensions, and skills** in one piece, and adds no kind of thing: once it is added, what it brings is there as what rumbo has built in is, and is set with the same commands. What comes with rumbo besides the host is a plugin too, called `rumbo`, built into the executable: its providers, its terminal UI, its MCP extension, and its skill `rumbo`, which points the model at rumbo's documentation.
 
 ## The manifest
 
@@ -42,7 +42,7 @@ frontends:
 
 A key that is none of these is refused, saying which, rather than ignored. So is a program named like one rumbo has built in.
 
-**Skills** need no entry: each directory in `skills/` with a `SKILL.md` is one.
+**Skills** need no entry: each directory in `skills/` with a `SKILL.md` is one. rumbo's own plugin has no directory, so the host writes its skills to `~/.rumbo/builtin/skills/`, again whenever they differ from the release's; a skill of the same name in a plugin you added, in yours, or in the project replaces one of them.
 
 ## Placeholders
 
@@ -78,4 +78,4 @@ What you agree to must be all it asks for, and an update that asks for more is r
 
 > A plugin's build and its programs run as you, with your rights. Add one whose code you trust.
 
-**Source:** [`internal/cli/plugins.go`](https://github.com/LiasCode/rumbo/blob/v0.12.0/internal/cli/plugins.go), [`internal/cli/programs.go`](https://github.com/LiasCode/rumbo/blob/v0.12.0/internal/cli/programs.go), rumbo's [own manifest](https://github.com/LiasCode/rumbo/blob/v0.12.0/plugins/rumbo/plugin.yaml), and a [plugin to copy from](https://github.com/LiasCode/rumbo/tree/v0.12.0/examples/plugin). [Install a plugin](/guides/plugins/).
+**Source:** [`internal/cli/plugins.go`](https://github.com/LiasCode/rumbo/blob/v0.13.0/internal/cli/plugins.go), [`internal/cli/programs.go`](https://github.com/LiasCode/rumbo/blob/v0.13.0/internal/cli/programs.go), rumbo's [own manifest](https://github.com/LiasCode/rumbo/blob/v0.13.0/plugins/rumbo/plugin.yaml), and a [plugin to copy from](https://github.com/LiasCode/rumbo/tree/v0.13.0/examples/plugin). [Install a plugin](/guides/plugins/).

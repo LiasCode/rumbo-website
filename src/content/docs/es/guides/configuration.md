@@ -101,12 +101,12 @@ dónde está, en lugar de adivinar.
 
 ## Variables de entorno
 
-| Variable       | Qué cambia                                                             |
-| -------------- | ---------------------------------------------------------------------- |
-| `RUMBO_HOME`   | El directorio donde rumbo lo guarda todo, en lugar de `~/.rumbo/`      |
-| `RUMBO_CONFIG` | El archivo de configuración que se usa en lugar de `config.yaml`       |
-| `RUMBO_DATA`   | El directorio que guarda las sesiones y los plugins                    |
-| `NO_COLOR`     | La interfaz de terminal no muestra colores, con su `theme` por defecto |
+| Variable       | Qué cambia                                                                    |
+| -------------- | ----------------------------------------------------------------------------- |
+| `RUMBO_HOME`   | El directorio donde rumbo lo guarda todo, en lugar de `~/.rumbo/`             |
+| `RUMBO_CONFIG` | El archivo de configuración que se usa en lugar de `config.yaml`              |
+| `RUMBO_DATA`   | El directorio que guarda las sesiones, los plugins y la skill propia de rumbo |
+| `NO_COLOR`     | La interfaz de terminal no muestra colores, con su `theme` por defecto        |
 
 Los proveedores leen las suyas, como `ANTHROPIC_API_KEY` y `OPENAI_API_KEY`. Consulta
 [modelos y proveedores](/es/guides/providers/).

@@ -15,10 +15,10 @@ const ui = interfaceCopy[locale];
 // The head of the section about what people build.
 const yours = { en: 'Your own parts', es: 'Piezas propias', fr: 'Vos propres pièces', it: 'Pezzi tuoi' }[locale];
 const copy = {
-	en: { title: 'A minimal agent harness', first: 'A small core.', second: 'An open system.', description: 'One host orchestrates the work. Choose the interface, connect a model and add the tools you need.', start: 'Get started', install: 'Install and run', installText: 'Linux or macOS. From a release or with Go.', learn: 'Work with rumbo', learnText: 'Sessions, models, settings and scripting.', build: 'Make it yours', buildText: 'Build a provider, interface or extension in any language.', task: 'Summarize this directory without changing files' },
-	es: { title: 'Un motor de agentes minimalista', first: 'Un núcleo pequeño.', second: 'Un sistema abierto.', description: 'Un núcleo coordina el trabajo. Elige la interfaz, conecta un modelo y añade las herramientas que necesites.', start: 'Empezar', install: 'Instalar y ejecutar', installText: 'Linux o macOS. Desde una versión publicada o con Go.', learn: 'Trabajar con rumbo', learnText: 'Sesiones, modelos, configuración y scripts.', build: 'Hazlo tuyo', buildText: 'Crea un proveedor, una interfaz o una extensión en cualquier lenguaje.', task: 'Summarize this directory without changing files' },
-	fr: { title: 'Un moteur d’agents minimaliste', first: 'Un petit noyau.', second: 'Un système ouvert.', description: 'Un noyau orchestre le travail. Choisissez une interface, connectez un modèle et ajoutez les outils nécessaires.', start: 'Commencer', install: 'Installer et lancer', installText: 'Linux ou macOS. Depuis une version publiée ou avec Go.', learn: 'Travailler avec rumbo', learnText: 'Sessions, modèles, configuration et scripts.', build: 'À votre façon', buildText: 'Créez un fournisseur, une interface ou une extension dans le langage de votre choix.', task: 'Summarize this directory without changing files' },
-	it: { title: 'Un motore per agenti minimalista', first: 'Un nucleo piccolo.', second: 'Un sistema aperto.', description: 'Un nucleo coordina il lavoro. Scegli l’interfaccia, collega un modello e aggiungi gli strumenti che ti servono.', start: 'Inizia', install: 'Installa ed esegui', installText: 'Linux o macOS. Da una versione pubblicata o con Go.', learn: 'Lavora con rumbo', learnText: 'Sessioni, modelli, configurazione e script.', build: 'Fallo tuo', buildText: 'Crea un provider, un’interfaccia o un’estensione in qualsiasi linguaggio.', task: 'Summarize this directory without changing files' },
+	en: { title: 'A minimal agent harness', first: 'A small core.', second: 'An open system.', description: 'One host orchestrates the work. Choose the interface, connect a model and add the tools you need.', start: 'Get started', install: 'Install and run', installText: 'Linux, macOS, or Windows. From a release or with Go.', learn: 'Work with rumbo', learnText: 'Sessions, models, settings and scripting.', build: 'Make it yours', buildText: 'Build a provider, interface or extension in any language.', task: 'Summarize this directory without changing files' },
+	es: { title: 'Un motor de agentes minimalista', first: 'Un núcleo pequeño.', second: 'Un sistema abierto.', description: 'Un núcleo coordina el trabajo. Elige la interfaz, conecta un modelo y añade las herramientas que necesites.', start: 'Empezar', install: 'Instalar y ejecutar', installText: 'Linux, macOS o Windows. Desde una versión publicada o con Go.', learn: 'Trabajar con rumbo', learnText: 'Sesiones, modelos, configuración y scripts.', build: 'Hazlo tuyo', buildText: 'Crea un proveedor, una interfaz o una extensión en cualquier lenguaje.', task: 'Summarize this directory without changing files' },
+	fr: { title: 'Un moteur d’agents minimaliste', first: 'Un petit noyau.', second: 'Un système ouvert.', description: 'Un noyau orchestre le travail. Choisissez une interface, connectez un modèle et ajoutez les outils nécessaires.', start: 'Commencer', install: 'Installer et lancer', installText: 'Linux, macOS ou Windows. Depuis une version publiée ou avec Go.', learn: 'Travailler avec rumbo', learnText: 'Sessions, modèles, configuration et scripts.', build: 'À votre façon', buildText: 'Créez un fournisseur, une interface ou une extension dans le langage de votre choix.', task: 'Summarize this directory without changing files' },
+	it: { title: 'Un motore per agenti minimalista', first: 'Un nucleo piccolo.', second: 'Un sistema aperto.', description: 'Un nucleo coordina il lavoro. Scegli l’interfaccia, collega un modello e aggiungi gli strumenti che ti servono.', start: 'Inizia', install: 'Installa ed esegui', installText: 'Linux, macOS o Windows. Da una versione pubblicata o con Go.', learn: 'Lavora con rumbo', learnText: 'Sessioni, modelli, configurazione e script.', build: 'Fallo tuo', buildText: 'Crea un provider, un’interfaccia o un’estensione in qualsiasi linguaggio.', task: 'Summarize this directory without changing files' },
 }[locale];
 
 const own = {
@@ -121,7 +121,7 @@ const paths = [
 
 const software = {
 	'@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'rumbo', description: copy.description, url: new URL(href(locale), Astro.site),
-	applicationCategory: 'DeveloperApplication', operatingSystem: 'Linux, macOS', license: 'https://opensource.org/licenses/MIT',
+	applicationCategory: 'DeveloperApplication', operatingSystem: 'Linux, macOS, Windows', license: 'https://opensource.org/licenses/MIT',
 	downloadUrl: `${repository}/releases`, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
 };
 ---
@@ -136,7 +136,7 @@ const software = {
 			<h1>rumbo</h1>
 			<p class="lede">{copy.title}. <b>{copy.first} {copy.second}</b></p>
 			<pre><code>go install github.com/LiasCode/rumbo/cmd/rumbo@v{release.version}{'\n'}rumbo "{copy.task}"</code></pre>
-			<p><a href={href(locale, 'start/quick-start')}>{copy.start} <Icon name="arrow-right" /></a> · <a href={href(locale, 'reference/changelog')}>v{release.version}</a> · Linux / macOS · MIT</p>
+			<p><a href={href(locale, 'start/quick-start')}>{copy.start} <Icon name="arrow-right" /></a> · <a href={href(locale, 'reference/changelog')}>v{release.version}</a> · Linux / macOS / Windows · MIT</p>
 		</div>
 
 		<h2 class="head">{ui.heads.synopsis}</h2>

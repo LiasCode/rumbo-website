@@ -100,12 +100,12 @@ says where it is, instead of guessing.
 
 ## Environment variables
 
-| Variable       | What it changes                                                 |
-| -------------- | --------------------------------------------------------------- |
-| `RUMBO_HOME`   | The directory rumbo keeps everything in, instead of `~/.rumbo/` |
-| `RUMBO_CONFIG` | The configuration file to use instead of `config.yaml`          |
-| `RUMBO_DATA`   | The directory that holds the sessions and plugins               |
-| `NO_COLOR`     | The terminal UI shows no colors, with its default `theme`       |
+| Variable       | What it changes                                                           |
+| -------------- | ------------------------------------------------------------------------- |
+| `RUMBO_HOME`   | The directory rumbo keeps everything in, instead of `~/.rumbo/`           |
+| `RUMBO_CONFIG` | The configuration file to use instead of `config.yaml`                    |
+| `RUMBO_DATA`   | The directory that holds the sessions, the plugins, and rumbo's own skill |
+| `NO_COLOR`     | The terminal UI shows no colors, with its default `theme`                 |
 
 The providers read their own, such as `ANTHROPIC_API_KEY` and `OPENAI_API_KEY`. See
 [models and providers](/guides/providers/).

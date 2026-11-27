@@ -86,8 +86,8 @@ address.
 
 ## Signing in
 
-The built-in providers offer three functions, which a front end offers as commands. In the
-terminal UI, they are of the session's provider:
+The built-in providers offer three functions for their credentials, which a front end offers as
+commands. In the terminal UI, they are of the session's provider:
 
 | Command                     | Does                                                                                                                                  |
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |

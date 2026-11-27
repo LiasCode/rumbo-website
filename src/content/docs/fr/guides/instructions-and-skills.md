@@ -58,6 +58,13 @@ Les skills se placent dans :
 - `skills/<name>/` dans un [plugin](/fr/guides/plugins/) que vous avez ajouté. L'une des vôtres
   portant le même nom la remplace.
 
+rumbo apporte une skill à lui, `rumbo`, qui dit au modèle où se trouve la documentation de rumbo dans
+[son dépôt](https://github.com/LiasCode/rumbo), pour qu'il puisse répondre aux questions sur rumbo et
+vous aider à écrire un plugin, un fournisseur, une interface ou une extension. La skill ne contient
+que des liens, que le modèle télécharge quand une tâche en a besoin. rumbo l'écrit dans
+`~/.rumbo/builtin/skills/rumbo/`, de nouveau chaque fois qu'elle diffère de celle de sa version : ne
+la modifiez donc pas là. Une skill nommée `rumbo` dans l'un des emplacements ci-dessus la remplace.
+
 Seuls le nom, la description et le chemin sont envoyés avec chaque requête. Le modèle lit la skill
 quand une tâche en a besoin, donc une skill coûte une ligne tant qu'elle n'est pas utilisée.
 

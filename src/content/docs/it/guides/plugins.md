@@ -66,5 +66,5 @@ lì viene rifiutato, dicendo quali strumenti ha rumbo.
 ## Prossimi passi
 
 - Il [manifesto di un plugin](/it/reference/plugins/) dice tutto ciò che un `plugin.yaml` può contenere.
-- [`examples/plugin`](https://github.com/LiasCode/rumbo/tree/v0.12.0/examples/plugin) è uno da cui partire.
+- [`examples/plugin`](https://github.com/LiasCode/rumbo/tree/v0.13.0/examples/plugin) è uno da cui partire.
 - L'[applicazione desktop](/it/guides/desktop-app/) è distribuita come plugin.

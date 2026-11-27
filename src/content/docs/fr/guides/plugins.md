@@ -66,5 +66,5 @@ y est refusé, en disant quels outils rumbo a.
 ## Ensuite
 
 - Le [manifeste d'un plugin](/fr/reference/plugins/) dit tout ce qu'un `plugin.yaml` peut contenir.
-- [`examples/plugin`](https://github.com/LiasCode/rumbo/tree/v0.12.0/examples/plugin) est un modèle à copier.
+- [`examples/plugin`](https://github.com/LiasCode/rumbo/tree/v0.13.0/examples/plugin) est un modèle à copier.
 - L'[application de bureau](/fr/guides/desktop-app/) est distribuée comme un plugin.

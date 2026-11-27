@@ -1,11 +1,11 @@
 ---
 title: Agent Frontend Protocol
-description: Version 3 of the protocol between a front end and the rumbo host, as rumbo 0.12.0 speaks it. Both ways of connecting, one host per session, every method, every event, and the functions the host offers, from the source.
+description: Version 3 of the protocol between a front end and the rumbo host, as rumbo 0.13.0 speaks it. Both ways of connecting, one host per session, every method, every event, and the functions the host offers, from the source.
 ---
 
 A front end is the program a person uses: it sends tasks and shows what happens. It speaks **JSON-RPC 2.0, one object per line**, with the host. Lines that are not JSON are skipped.
 
-This page describes **version 3, which rumbo 0.12.0 speaks**. rumbo 0.10.0 and 0.11.0 spoke version 2, in which a person gave images, in base64, where version 3 gives files by their paths. rumbo 0.9.0 spoke version 1, in which one host worked in several sessions of a project. A host and a front end that speak different versions refuse each other in `initialize`.
+This page describes **version 3, which rumbo 0.12.0 and 0.13.0 speak**. rumbo 0.10.0 and 0.11.0 spoke version 2, in which a person gave images, in base64, where version 3 gives files by their paths. rumbo 0.9.0 spoke version 1, in which one host worked in several sessions of a project. A host and a front end that speak different versions refuse each other in `initialize`.
 
 ## Two ways to connect
 
@@ -137,7 +137,7 @@ Ignore a type or a field you do not know. A live run is over when its `run` requ
 
 `invoke` takes the function's `name`, its `params`, and a `target`: `provider` (the default), `host`, or `extension`, which `extension` then names. A function of the host answers `{ "text", "values", "state" }`: the outcome in words, the values of a function that lists something, and what the front end is attached to after the call (`dir`, `session`, `title`, `provider`, `model`), since the call may have changed it. `branch` answers with the session it made as its one value, and the host stays in its own: another host goes on in the branch, started with `-s` and that id.
 
-The host of rumbo 0.12.0 offers these, by `group`:
+The host of rumbo 0.13.0 offers these, by `group`:
 
 | Group       | Functions                                                                                                         |
 | ----------- | ----------------------------------------------------------------------------------------------------------------- |
@@ -170,6 +170,6 @@ Do not take a role you do not know for an error; more may be added. A front end 
 
 ## In Go
 
-The [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.12.0/protocol) package has these types and `DialFrontend`, which answers `initialize` and returns a connection whose methods are the requests above.
+The [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.13.0/protocol) package has these types and `DialFrontend`, which answers `initialize` and returns a connection whose methods are the requests above.
 
-**Source:** [`protocol/frontend.go`](https://github.com/LiasCode/rumbo/blob/v0.12.0/protocol/frontend.go) for the wire, [`internal/frontend/frontend.go`](https://github.com/LiasCode/rumbo/blob/v0.12.0/internal/frontend/frontend.go) for the host's side and the two pipes, with `pass_windows.go` and `attached_windows.go` for Windows, and [`internal/cli/functions.go`](https://github.com/LiasCode/rumbo/blob/v0.12.0/internal/cli/functions.go) for the host's functions. [Write a front end](/extend/front-end/).
+**Source:** [`protocol/frontend.go`](https://github.com/LiasCode/rumbo/blob/v0.13.0/protocol/frontend.go) for the wire, [`internal/frontend/frontend.go`](https://github.com/LiasCode/rumbo/blob/v0.13.0/internal/frontend/frontend.go) for the host's side and the two pipes, with `pass_windows.go` and `attached_windows.go` for Windows, and [`internal/cli/functions.go`](https://github.com/LiasCode/rumbo/blob/v0.13.0/internal/cli/functions.go) for the host's functions. [Write a front end](/extend/front-end/).

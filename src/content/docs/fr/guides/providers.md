@@ -87,8 +87,9 @@ enregistré pour cette adresse.
 
 ## Se connecter
 
-Les fournisseurs intégrés proposent trois fonctions, qu'une interface propose comme des commandes.
-Dans l'interface en terminal, ce sont celles du fournisseur de la session :
+Les fournisseurs intégrés proposent trois fonctions pour leurs identifiants, qu'une interface
+propose comme des commandes. Dans l'interface en terminal, ce sont celles du fournisseur de la
+session :
 
 | Commande                    | Action                                                                                                                                     |
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |

@@ -87,8 +87,8 @@ che il suo `/login` ha salvato per quell'indirizzo.
 
 ## Accedere
 
-I provider integrati offrono tre funzioni, che un'interfaccia offre come comandi.
-Nell'interfaccia da terminale, sono quelle del provider della sessione:
+I provider integrati offrono tre funzioni per le loro credenziali, che un'interfaccia offre come
+comandi. Nell'interfaccia da terminale, sono quelle del provider della sessione:
 
 | Comando                     | Cosa fa                                                                                                                                           |
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |

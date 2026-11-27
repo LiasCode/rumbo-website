@@ -47,7 +47,7 @@ person asked before (`recall`), and say what the host's processes use (`processe
 
 ## A complete example
 
-[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.12.0/examples/frontend.py) is a whole
+[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.13.0/examples/frontend.py) is a whole
 front end in one Python file: it asks for tasks with `input()` and prints events as they arrive.
 
 ```python
@@ -77,7 +77,7 @@ rumbo frontend add simple python3 /path/to/examples/frontend.py
 rumbo -f simple
 ```
 
-In Go, the [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.12.0/protocol) package has the
+In Go, the [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.13.0/protocol) package has the
 types and `DialFrontend`, a ready-made connection.
 
 ## Commands without knowing them

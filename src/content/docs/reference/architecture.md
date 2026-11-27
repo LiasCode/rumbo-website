@@ -1,6 +1,6 @@
 ---
 title: Architecture
-description: How rumbo 0.12.0 is put together. The host and what it owns, the three protocols around it, the loop that turns a task into an answer, and the rules the design depends on, from the source.
+description: How rumbo 0.13.0 is put together. The host and what it owns, the three protocols around it, the loop that turns a task into an answer, and the rules the design depends on, from the source.
 ---
 
 rumbo is one process, **the host**, and the programs it starts. The host owns the loop, the tools, and one session; another session is another host. It draws nothing, calls no model API, and knows nothing of MCP: each of those is another program, reached through a protocol.
@@ -15,12 +15,14 @@ rumbo is one process, **the host**, and the programs it starts. The host owns th
 | **Extension** | Tools of its own, sections of context, commands, and what it does with events.     | Changes a message, another extension's tool, or when a run ends. |
 | **Plugin**    | Nothing at run time: it is a package of the three kinds of program, and of skills. | Adds a kind of thing, or a protocol.                             |
 
+What comes with rumbo besides the host is a plugin too, [`rumbo`](/reference/plugins/), built into the executable: its providers, the terminal UI, the MCP extension, and a skill that points the model at rumbo's documentation. Its programs speak the same protocols as yours.
+
 Every line between two programs is **JSON-RPC 2.0, one object per line**, over pipes. No part listens on a port. A provider, or the MCP extension, may use HTTP beyond its own side.
 
 ## The loop
 
 1. **Accept.** The front end sends `run`, which goes to the host's session. The host starts the provider and the extensions the run needs.
-2. **Prepare.** The host records the system prompt if it changed, and the sections of context that changed: the environment, your instructions, your skills, and what extensions say. Then the task.
+2. **Prepare.** The host records the system prompt if it changed, and the sections of context that changed: the environment, your instructions, the skills, and what extensions say. Then the task.
 3. **Ask.** The host rebuilds the whole request from the session's entries and sends the provider `complete`. Text streams to the front end as it comes; what is recorded is the finished message.
 4. **Act.** Each tool the model called runs in order, rumbo's own in the host and an extension's through `call`, and each result is recorded with the id of its call.
 5. **Repeat** from 3, until the model answers without calling a tool. That is how it says it is done. rumbo runs no checks of its own and sends the model back for nothing.
@@ -78,4 +80,4 @@ A front end that shows several sessions, as the [terminal UI](/guides/terminal-u
 | The host never touches the terminal once a front end is attached. | The front end owns what the person sees. What they must see is an event.                          |
 | The agent acts with your rights.                                  | Limits come from a sandbox you choose, not from prompts. See [before you run it](/start/safety/). |
 
-**Source:** [`internal/cli`](https://github.com/LiasCode/rumbo/tree/v0.12.0/internal/cli) wires the host; [`internal/agent/agent.go`](https://github.com/LiasCode/rumbo/blob/v0.12.0/internal/agent/agent.go) is the loop; [`internal/transcript`](https://github.com/LiasCode/rumbo/tree/v0.12.0/internal/transcript) rebuilds requests; [`internal/store/files.go`](https://github.com/LiasCode/rumbo/blob/v0.12.0/internal/store/files.go) keeps sessions; [`internal/tool`](https://github.com/LiasCode/rumbo/tree/v0.12.0/internal/tool) has the tools.
+**Source:** [`internal/cli`](https://github.com/LiasCode/rumbo/tree/v0.13.0/internal/cli) wires the host; [`internal/agent/agent.go`](https://github.com/LiasCode/rumbo/blob/v0.13.0/internal/agent/agent.go) is the loop; [`internal/transcript`](https://github.com/LiasCode/rumbo/tree/v0.13.0/internal/transcript) rebuilds requests; [`internal/store/files.go`](https://github.com/LiasCode/rumbo/blob/v0.13.0/internal/store/files.go) keeps sessions; [`internal/tool`](https://github.com/LiasCode/rumbo/tree/v0.13.0/internal/tool) has the tools.

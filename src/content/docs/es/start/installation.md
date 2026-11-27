@@ -13,7 +13,7 @@ rumbo es un único binario para Linux, macOS y Windows, en amd64 y arm64.
 
 Cada [versión](https://github.com/LiasCode/rumbo/releases) tiene un archivo por plataforma, con el
 binario, el README, el changelog y la licencia, y un archivo `SHA256SUMS` para comprobarlos. La última
-es rumbo 0.12.0, del 2026-11-26.
+es rumbo 0.13.0, del 2026-11-27.
 
 | OS      | CPU           | `platform`      |
 | ------- | ------------- | --------------- |
@@ -25,7 +25,7 @@ es rumbo 0.12.0, del 2026-11-26.
 | Windows | ARM64         | `windows-arm64` |
 
 ```sh
-version=0.12.0
+version=0.13.0
 platform=linux-amd64
 archive=rumbo-$version-$platform
 base=https://github.com/LiasCode/rumbo/releases/download/v$version
@@ -42,7 +42,7 @@ Elige `platform` en la tabla. Si tu shell no encuentra `rumbo`, añade `~/.local
 En Windows el archivo es un zip con `rumbo.exe`. En PowerShell:
 
 ```powershell
-$version = "0.12.0"
+$version = "0.13.0"
 $platform = "windows-amd64"
 $archive = "rumbo-$version-$platform"
 $base = "https://github.com/LiasCode/rumbo/releases/download/v$version"
@@ -66,7 +66,7 @@ PowerShell, y la [herramienta computer](/es/guides/computer-use/) no está dispo
 Con Go 1.27.3 o posterior:
 
 ```sh
-go install github.com/LiasCode/rumbo/cmd/rumbo@v0.12.0
+go install github.com/LiasCode/rumbo/cmd/rumbo@v0.13.0
 ```
 
 ## Compruébalo
@@ -75,7 +75,7 @@ go install github.com/LiasCode/rumbo/cmd/rumbo@v0.12.0
 rumbo version
 ```
 
-Imprime la versión y la versión del protocolo de proveedores que habla: `rumbo 0.12.0 (protocol 1)`.
+Imprime la versión y la versión del protocolo de proveedores que habla: `rumbo 0.13.0 (protocol 1)`.
 
 ## Dónde guarda rumbo las cosas
 
@@ -90,9 +90,11 @@ en todos los sistemas: `~/.rumbo/` (`%USERPROFILE%\.rumbo\` en Windows), o el qu
 | Sesiones, un directorio cada una                         | `sessions/`            |
 | Plugins añadidos desde un repositorio Git                | `plugins/`             |
 | Imágenes pegadas en la interfaz de terminal              | `pasted/`              |
+| La skill propia de rumbo, que escribe él mismo           | `builtin/skills/`      |
 
 rumbo 0.11.0 y anteriores guardaban esto en `~/.config/rumbo/` (`~/Library/Application Support/rumbo/`
-en macOS) y `~/.local/share/rumbo/`. 0.12.0 no lo mueve: mueve a `~/.rumbo/` lo que quieras conservar.
+en macOS) y `~/.local/share/rumbo/`. Las versiones posteriores no lo mueven: mueve a `~/.rumbo/` lo
+que quieras conservar.
 
 Para desinstalar rumbo, borra el binario, y `~/.rumbo/` si ya no quieres lo que guarda.
 

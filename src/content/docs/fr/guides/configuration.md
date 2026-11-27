@@ -106,7 +106,7 @@ où il se trouve, au lieu de deviner.
 | -------------- | ------------------------------------------------------------------------------ |
 | `RUMBO_HOME`   | Le répertoire où rumbo garde tout, à la place de `~/.rumbo/`                   |
 | `RUMBO_CONFIG` | Le fichier de configuration à utiliser à la place de `config.yaml`             |
-| `RUMBO_DATA`   | Le répertoire qui contient les sessions et les plugins                         |
+| `RUMBO_DATA`   | Le répertoire qui contient les sessions, les plugins et la skill de rumbo      |
 | `NO_COLOR`     | L'interface en terminal n'affiche pas de couleurs, avec son `theme` par défaut |
 
 Les fournisseurs lisent les leurs, comme `ANTHROPIC_API_KEY` et `OPENAI_API_KEY`. Voir

@@ -51,7 +51,7 @@ richiamare ciò che la persona ha chiesto prima (`recall`) e dire cosa usano i p
 
 ## Un esempio completo
 
-[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.12.0/examples/frontend.py) è
+[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.13.0/examples/frontend.py) è
 un'interfaccia completa in un solo file Python: chiede compiti con `input()` e stampa gli eventi man mano
 che arrivano.
 
@@ -82,7 +82,7 @@ rumbo frontend add simple python3 /path/to/examples/frontend.py
 rumbo -f simple
 ```
 
-In Go, il pacchetto [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.12.0/protocol) contiene i tipi
+In Go, il pacchetto [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.13.0/protocol) contiene i tipi
 e `DialFrontend`, una connessione pronta all'uso.
 
 ## Comandi senza conoscerli

@@ -15,7 +15,7 @@ stdout ne porte que des messages du protocole. Les diagnostics vont sur stderr, 
 
 ## Un exemple complet
 
-[examples/extension.py](https://github.com/LiasCode/rumbo/blob/v0.12.0/examples/extension.py) est une extension entière dans un seul fichier Python. Elle garde des notes : un outil pour en retenir une, une section qui les dit toutes au modèle, et une commande qui les oublie. Voici comment elle répond à un appel :
+[examples/extension.py](https://github.com/LiasCode/rumbo/blob/v0.13.0/examples/extension.py) est une extension entière dans un seul fichier Python. Elle garde des notes : un outil pour en retenir une, une section qui les dit toutes au modèle, et une commande qui les oublie. Voici comment elle répond à un appel :
 
 ```python
 def call(params):
@@ -50,7 +50,7 @@ tools, declared to the model in every request (161 bytes):
   remember  Keep a note for later in this rumbo.
 ```
 
-En Go, le paquet [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.12.0/protocol) fournit les types et `ServeExtension`, un serveur tout fait.
+En Go, le paquet [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.13.0/protocol) fournit les types et `ServeExtension`, un serveur tout fait.
 
 ## Ce qu'une extension doit faire
 
@@ -66,7 +66,7 @@ En Go, le paquet [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.12.0/pro
 - **Proposer des commandes à la personne**, en déclarant des `functions`. L'interface en terminal appelle `forget`, d'une extension enregistrée sous `notes`, par `/extensions notes forget`.
 - **Lister les valeurs d'un champ de sa configuration**, avec une fonction du nom du champ marquée `lists`. L'interface en terminal complète le champ avec elles, comme elle le fait pour `tools` avec l'extension `mcp`.
 - **Parler avec la personne** pendant qu'un outil ou une commande travaille : `delta` dit quelque chose, et `ask` pose une question, dont la réponse peut être marquée secrète.
-- **Appeler les outils de rumbo** pendant qu'elle répond à un appel : c'est ainsi qu'une extension qui remplace `bash` transmet ce qu'elle laisse passer. [examples/guard.py](https://github.com/LiasCode/rumbo/blob/v0.12.0/examples/guard.py) le fait.
+- **Appeler les outils de rumbo** pendant qu'elle répond à un appel : c'est ainsi qu'une extension qui remplace `bash` transmet ce qu'elle laisse passer. [examples/guard.py](https://github.com/LiasCode/rumbo/blob/v0.13.0/examples/guard.py) le fait.
 - **Être informée de ce que font les exécutions**, en déclarant les `events` qu'elle veut, comme `ended`.
 - **Dire que ce qu'elle déclare a changé**, avec `changed`, comme lorsqu'une connexion lui donne des outils.
 

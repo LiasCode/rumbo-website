@@ -86,8 +86,8 @@ esa dirección.
 
 ## Iniciar sesión
 
-Los proveedores integrados ofrecen tres funciones, que una interfaz ofrece como comandos. En la
-interfaz de terminal, son del proveedor de la sesión:
+Los proveedores integrados ofrecen tres funciones para sus credenciales, que una interfaz ofrece
+como comandos. En la interfaz de terminal, son del proveedor de la sesión:
 
 | Comando                     | Hace                                                                                                                                               |
 | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |

@@ -54,6 +54,13 @@ Skills go in:
 - `skills/<name>/` in a [plugin](/guides/plugins/) you added. One of yours with the same name replaces
   it.
 
+rumbo brings one skill of its own, `rumbo`, which tells the model where rumbo's documentation is in
+[its repository](https://github.com/LiasCode/rumbo), so it can answer questions about rumbo and help
+you write a plugin, a provider, a front end, or an extension. The skill holds only links, which the
+model fetches when a task needs them. rumbo writes it to `~/.rumbo/builtin/skills/rumbo/`, again
+whenever it differs from the release's, so do not edit it there: a skill called `rumbo` in any of the
+places above replaces it.
+
 Only the name, the description, and the path are sent with every request. The model reads the
 skill when a task needs it, so a skill costs a line until it is used.
 

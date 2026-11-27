@@ -3,28 +3,28 @@ title: Releases
 description: What each release of rumbo brought, which one this site describes, and whether the development branch has anything no release does yet.
 ---
 
-This site describes **rumbo 0.12.0**. The exact notes of every release are in the repository's [CHANGELOG](https://github.com/LiasCode/rumbo/blob/main/CHANGELOG.md), and the archives on its [releases page](https://github.com/LiasCode/rumbo/releases).
+This site describes **rumbo 0.13.0**. The exact notes of every release are in the repository's [CHANGELOG](https://github.com/LiasCode/rumbo/blob/main/CHANGELOG.md), and the archives on its [releases page](https://github.com/LiasCode/rumbo/releases).
 
 ## Unreleased
 
-Nothing yet: the `main` branch is the 0.12.0 release. [What changes after 0.12.0](/reference/next/).
+Nothing yet: the `main` branch is the 0.13.0 release. [What changes after 0.13.0](/reference/next/).
 
-## 0.12.0 (2026-11-26)
+## 0.13.0 (2026-11-27)
 
-**The current release.** rumbo runs on Windows, keeps everything in one directory, and the model is given files of any kind.
+**The current release.** rumbo comes with a skill that tells the model where its documentation is, and `anthropic` sends a tool's whole schema.
 
-- **Windows.** The releases have a zip with `rumbo.exe`, for amd64 and arm64. The model runs commands with PowerShell there, through a tool called `powershell` in place of `bash`; the computer tool, Ctrl-V, and what the processes use are not available yet, and say so. rumbo passes its checks on Windows and macOS but is used every day only on Linux. [Installation](/start/installation/).
-- **Everything in `~/.rumbo/`**: `config.yaml`, your instructions and skills, credentials, plugins, sessions, and pasted images, the same on every system, or where `RUMBO_HOME` says. What 0.11.0 kept elsewhere is not moved. [Where rumbo keeps things](/start/installation/#where-rumbo-keeps-things).
-- **Files of any kind with what you ask.** `/attach <file>`, Ctrl-V for the files copied in a file manager or the image held, and a file dropped on the terminal give the model the file's path, and it reads the file when it needs to. [Files](/guides/terminal-ui/#files).
-- **The front end protocol is version 3.** `files`, a list of paths, takes the place of `images` in `run`, `steer`, and the `objective` and `steer` events. On Windows a front end rumbo starts reads the protocol from the handles `RUMBO_FRONTEND_HANDLES` names. [Front end protocol](/reference/frontend-protocol/).
-- A plugin built with Go builds into a directory, `-o bin/`, so that Windows gets the `.exe` it runs. [Plugins](/reference/plugins/).
+- **The skill `rumbo`.** rumbo's own plugin brings a skill that points the model at rumbo's documentation in its repository, so it can answer questions about rumbo and help write plugins, providers, front ends, and extensions. rumbo writes it to `~/.rumbo/builtin/skills/`, and a skill of yours called `rumbo` replaces it. [Skills](/guides/instructions-and-skills/#skills).
+- **A tool's whole schema with `anthropic`**, as with `openai` and `chatgpt`, instead of only its properties and which are required. A tool of an MCP server whose schema refers to definitions of its own (`$defs` and `$ref`), or allows no fields but its own, reaches the model as the server wrote it. [MCP servers](/guides/extensions/#add-an-mcp-server).
 
-[Release](https://github.com/LiasCode/rumbo/releases/tag/v0.12.0) · [What changed in the source](https://github.com/LiasCode/rumbo/compare/v0.11.0...v0.12.0)
+Nothing changes in the protocols, the commands, or where rumbo keeps the rest.
+
+[Release](https://github.com/LiasCode/rumbo/releases/tag/v0.13.0) · [What changed in the source](https://github.com/LiasCode/rumbo/compare/v0.12.0...v0.13.0)
 
 ## Earlier releases
 
 | Version | Date       | What it brought                                                                                        |
 | ------- | ---------- | ------------------------------------------------------------------------------------------------------ |
+| 0.12.0  | 2026-11-26 | Windows, everything in `~/.rumbo/`, and files of any kind. The front end protocol is at version 3.     |
 | 0.11.0  | 2026-11-25 | Commands typed in the composer take the place of the palette, and the conversation the whole width.    |
 | 0.10.0  | 2026-11-25 | A rumbo is one session, rooted where it starts. The front end protocol is at version 2.                |
 | 0.9.0   | 2026-11-24 | Extensions, MCP servers, and plugins. rumbo's own providers and terminal UI become the `rumbo` plugin. |

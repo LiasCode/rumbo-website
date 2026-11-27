@@ -53,7 +53,7 @@ l'hôte (`processes`).
 
 ## Un exemple complet
 
-[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.12.0/examples/frontend.py) est une
+[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.13.0/examples/frontend.py) est une
 interface complète dans un seul fichier Python : elle demande des tâches avec `input()` et affiche les
 événements à mesure qu'ils arrivent.
 
@@ -84,7 +84,7 @@ rumbo frontend add simple python3 /path/to/examples/frontend.py
 rumbo -f simple
 ```
 
-En Go, le paquet [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.12.0/protocol) contient les types
+En Go, le paquet [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.13.0/protocol) contient les types
 et `DialFrontend`, une connexion prête à l'emploi.
 
 ## Des commandes sans les connaître

@@ -5,7 +5,7 @@ description: Version 1 of the protocol between the rumbo host and an extension, 
 
 An extension is a program the host starts as a child process. They exchange **JSON-RPC 2.0 objects, one per line**, on the extension's stdin and stdout; stderr reaches the person as a diagnostic, and a stdout line that is not JSON is skipped. The framing, `initialize`, `invoke`, `delta`, `ask`, `cancel`, and `shutdown` are the [provider protocol's](/reference/provider-protocol/).
 
-This page describes protocol **version 1**, which rumbo 0.12.0 speaks, as 0.9.0 to 0.11.0 did.
+This page describes protocol **version 1**, which rumbo 0.13.0 speaks, as 0.9.0 to 0.12.0 did.
 
 ## Four things an extension can declare
 
@@ -94,6 +94,6 @@ The host starts an extension when a run first needs it and keeps that **one proc
 
 ## In Go
 
-The [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.12.0/protocol) package has these types and `ServeExtension`, which turns an `ExtensionHandler` into an extension.
+The [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.13.0/protocol) package has these types and `ServeExtension`, which turns an `ExtensionHandler` into an extension.
 
-**Source:** [`protocol/extension.go`](https://github.com/LiasCode/rumbo/blob/v0.12.0/protocol/extension.go) for the wire, [`internal/extension/process.go`](https://github.com/LiasCode/rumbo/blob/v0.12.0/internal/extension/process.go) for one process, and [`set.go`](https://github.com/LiasCode/rumbo/blob/v0.12.0/internal/extension/set.go) for the rules on names, replacement, and sections. [Write an extension](/extend/extension/) · [Extensions and MCP](/guides/extensions/).
+**Source:** [`protocol/extension.go`](https://github.com/LiasCode/rumbo/blob/v0.13.0/protocol/extension.go) for the wire, [`internal/extension/process.go`](https://github.com/LiasCode/rumbo/blob/v0.13.0/internal/extension/process.go) for one process, and [`set.go`](https://github.com/LiasCode/rumbo/blob/v0.13.0/internal/extension/set.go) for the rules on names, replacement, and sections. [Write an extension](/extend/extension/) · [Extensions and MCP](/guides/extensions/).

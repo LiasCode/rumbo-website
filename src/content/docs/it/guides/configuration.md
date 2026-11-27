@@ -105,7 +105,7 @@ dove si trova, invece di tirare a indovinare.
 | -------------- | ---------------------------------------------------------------------------- |
 | `RUMBO_HOME`   | La directory in cui rumbo conserva tutto, al posto di `~/.rumbo/`            |
 | `RUMBO_CONFIG` | Il file di configurazione da usare al posto di `config.yaml`                 |
-| `RUMBO_DATA`   | La directory che contiene le sessioni e i plugin                             |
+| `RUMBO_DATA`   | La directory che contiene le sessioni, i plugin e la skill di rumbo          |
 | `NO_COLOR`     | L'interfaccia da terminale non mostra colori, con il suo `theme` predefinito |
 
 I provider leggono le proprie, come `ANTHROPIC_API_KEY` e `OPENAI_API_KEY`. Vedi

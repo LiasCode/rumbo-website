@@ -66,5 +66,5 @@ Windows, diciendo qué herramientas tiene rumbo.
 ## Siguiente
 
 - El [manifiesto de un plugin](/es/reference/plugins/) dice todo lo que puede tener un `plugin.yaml`.
-- [`examples/plugin`](https://github.com/LiasCode/rumbo/tree/v0.12.0/examples/plugin) es uno del que partir.
+- [`examples/plugin`](https://github.com/LiasCode/rumbo/tree/v0.13.0/examples/plugin) es uno del que partir.
 - La [aplicación de escritorio](/es/guides/desktop-app/) se distribuye como plugin.

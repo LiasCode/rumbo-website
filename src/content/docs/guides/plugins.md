@@ -66,5 +66,5 @@ Windows, saying which tools rumbo has.
 ## Next
 
 - The [plugin manifest](/reference/plugins/) says everything a `plugin.yaml` can have.
-- [`examples/plugin`](https://github.com/LiasCode/rumbo/tree/v0.12.0/examples/plugin) is one to copy from.
+- [`examples/plugin`](https://github.com/LiasCode/rumbo/tree/v0.13.0/examples/plugin) is one to copy from.
 - The [desktop app](/guides/desktop-app/) is distributed as a plugin.

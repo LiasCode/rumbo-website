@@ -50,7 +50,7 @@ la persona preguntó antes (`recall`) y decir lo que usan los procesos del host 
 
 ## Un ejemplo completo
 
-[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.12.0/examples/frontend.py) es una
+[examples/frontend.py](https://github.com/LiasCode/rumbo/blob/v0.13.0/examples/frontend.py) es una
 interfaz entera en un archivo de Python: pide tareas con `input()` e imprime los eventos según llegan.
 
 ```python
@@ -80,7 +80,7 @@ rumbo frontend add simple python3 /path/to/examples/frontend.py
 rumbo -f simple
 ```
 
-En Go, el paquete [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.12.0/protocol) tiene los tipos
+En Go, el paquete [`protocol`](https://github.com/LiasCode/rumbo/tree/v0.13.0/protocol) tiene los tipos
 y `DialFrontend`, una conexión ya hecha.
 
 ## Comandos sin conocerlos
