@@ -42,6 +42,9 @@ Il liste les modèles que votre compte peut utiliser, propose une option `effort
 raisonnement du modèle pour pouvoir le poursuivre.
 
 > Le fournisseur intégré `anthropic` utilise des identifiants API. Il ne propose pas de connexion via un abonnement Claude.
+> Pour un abonnement Claude Pro ou Max, il y a le plugin externe
+> [rumbo-claude](https://github.com/LiasCode/rumbo-claude), qui apporte un fournisseur, `claude`. Ce n'est
+> pas une intégration officielle d'Anthropic : lisez d'abord son README.
 
 ## OpenAI
 

@@ -53,9 +53,6 @@ Esto son decisiones, no carencias:
 - **No tiene sistema de permisos.** El agente actúa con los permisos del usuario que lo inició. Quien
   necesite límites ejecuta rumbo dentro de un sandbox de su elección. Consulta
   [antes de ejecutarlo](/es/start/safety/).
-- **Inicia sesión en un plan solo donde un proveedor lo implementa.** `chatgpt` inicia sesión con un
-  plan de ChatGPT. `anthropic` usa credenciales de API y no tiene inicio de sesión por suscripción.
-  Cualquier otra forma de entrar es un proveedor propio, que se añade como cualquier otro.
 - **No rastrea archivos.** Una sesión guarda la conversación, no el disco: no hay puntos de
   restauración, y una rama empieza desde un punto anterior de la conversación con los archivos tal como
   están.

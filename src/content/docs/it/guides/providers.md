@@ -42,6 +42,9 @@ Elenca i modelli che il tuo account può usare, offre un'opzione `effort` e cons
 modello per poterlo continuare.
 
 > Il provider integrato `anthropic` usa credenziali API. Non implementa l’accesso tramite un abbonamento Claude.
+> Per un abbonamento Claude Pro o Max c'è il plugin esterno
+> [rumbo-claude](https://github.com/LiasCode/rumbo-claude), che porta un provider, `claude`. Non è
+> un'integrazione ufficiale di Anthropic: leggi prima il suo README.
 
 ## OpenAI
 

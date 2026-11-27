@@ -54,9 +54,6 @@ Ce sont des choix, pas des manques :
 - **Il n'a pas de système de permissions.** L'agent agit avec les droits de l'utilisateur qui l'a
   lancé. Qui a besoin de limites lance rumbo dans un bac à sable de son choix. Voir
   [avant de le lancer](/fr/start/safety/).
-- **Il ne se connecte à une offre que là où un fournisseur l'implémente.** `chatgpt` se connecte avec
-  une offre ChatGPT. `anthropic` utilise des identifiants d'API et n'a pas de connexion par
-  abonnement. Toute autre façon d'entrer est un fournisseur à part, ajouté comme les autres.
 - **Il ne suit pas les fichiers.** Une session garde la conversation, pas le disque : il n'y a pas de
   points de restauration, et une branche part d'un point antérieur de la conversation avec les fichiers
   tels qu'ils sont.

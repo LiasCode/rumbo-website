@@ -53,9 +53,6 @@ Queste sono scelte, non lacune:
 - **Non ha un sistema di permessi.** L'agente agisce con i permessi dell'utente che l'ha avviato. Chi ha
   bisogno di limiti esegue rumbo dentro una sandbox di sua scelta. Vedi
   [prima di eseguirlo](/it/start/safety/).
-- **Accede a un piano solo dove un provider lo implementa.** `chatgpt` accede con un piano ChatGPT.
-  `anthropic` usa credenziali API e non ha un accesso tramite abbonamento. Ogni altro modo di
-  entrare è un provider a sé, aggiunto come gli altri.
 - **Non traccia i file.** Una sessione conserva la conversazione, non il disco: non ci sono punti di
   ripristino, e un ramo parte da un punto precedente della conversazione con i file così come sono.
 

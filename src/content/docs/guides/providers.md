@@ -41,6 +41,9 @@ It lists the models your account can use, offers an `effort` option, and keeps t
 so it can continue it.
 
 > The built-in `anthropic` provider uses API credentials. It does not implement Claude subscription sign-in.
+> For a Claude Pro or Max subscription there is the external plugin
+> [rumbo-claude](https://github.com/LiasCode/rumbo-claude), which brings a provider, `claude`. It is not an
+> official Anthropic integration: read its README first.
 
 ## OpenAI
 

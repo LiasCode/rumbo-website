@@ -41,6 +41,9 @@ Lista los modelos que puede usar tu cuenta, ofrece una opción `effort` y conser
 modelo para poder continuarlo.
 
 > El proveedor integrado `anthropic` usa credenciales de API. No implementa el inicio de sesión con una suscripción de Claude.
+> Para una suscripción Claude Pro o Max está el plugin externo
+> [rumbo-claude](https://github.com/LiasCode/rumbo-claude), que trae un proveedor, `claude`. No es una
+> integración oficial de Anthropic: lee antes su README.
 
 ## OpenAI
 
